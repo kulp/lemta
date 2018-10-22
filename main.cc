@@ -23,3 +23,4 @@ int main()
     return 0;
 }
 
+/* vi:set ts=4 sw=4 et cindent: */
