@@ -4,11 +4,7 @@
 #include <cassert>
 #include <cstdio>
 
-class Model_device;
-
-extern "C" int model_api_ver();
-extern "C" Model_device *model_ctor(const char *);
-extern "C" int model_dtor(Model_device *);
+#include "model.h"
 
 int main()
 {
@@ -22,6 +18,9 @@ int main()
     assert(("found scope", scope != NULL));
 
     ((VerilatedScope*)scope)->scopeDump();
+
+    Model_core *mc = dev->getCore(0);
+    assert(("model core exists", mc != NULL));
 
     int rc = model_dtor(dev);
     assert(("destructor succeeded", rc == 0));

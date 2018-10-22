@@ -7,6 +7,8 @@ all: main
 main: LDFLAGS += -Llib
 main: LDLIBS += -lattinyxc
 
+main.o: model.h
+
 run: main
 	LD_LIBRARY_PATH=lib $(realpath $<)
 
