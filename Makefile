@@ -7,5 +7,8 @@ all: main
 main: LDFLAGS += -Llib
 main: LDLIBS += -lattinyxc
 
+run: main
+	LD_LIBRARY_PATH=lib $(realpath $<)
+
 clean:
 	$(RM) main *.o
