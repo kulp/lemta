@@ -1,6 +1,7 @@
 CXXFLAGS += -g
 CPPFLAGS += -I/usr/share/verilator/include
 CPPFLAGS += -I/usr/share/verilator/include/vltstd
+DEBUGGER = gdb
 
 all: main
 
@@ -9,8 +10,10 @@ main: LDLIBS += -lattinyxc
 
 main.o: model.h
 
-run: main
-	LD_LIBRARY_PATH=lib $(realpath $<)
+run debug: export LD_LIBRARY_PATH=lib
+debug: prefix = $(DEBUGGER)
+run debug: main
+	$(prefix) $(realpath $<)
 
 clean:
 	$(RM) main *.o
