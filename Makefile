@@ -3,6 +3,8 @@ CPPFLAGS += -I/usr/share/verilator/include
 CPPFLAGS += -I/usr/share/verilator/include/vltstd
 DEBUGGER = gdb
 
+LINK.o = $(LINK.cc)
+
 all: main
 
 main: LDFLAGS += -Llib
