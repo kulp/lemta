@@ -115,6 +115,19 @@ public:
 class Model_device : public Model
 {
 public:
+    Model_device(char const*);
+    ~Model_device();
+    UnknownType dev_config(char const*);
+    UnknownType dev_init(char const*);
+    UnknownType dev_reset(ResetType);
+    UnknownType getHaltReason();
+    UnknownType step(int);
+
+    UnknownType removePendingBreak(Breakpoint*);
+
+    // order of field not known
+    UnknownType m_timeStamp;
+
     // inherited from Model
     virtual Model_core *getCore(unsigned int);
     virtual UnknownType reset(ResetType);
