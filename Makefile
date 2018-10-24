@@ -5,10 +5,12 @@ DEBUGGER = gdb
 
 LINK.o = $(LINK.cc)
 
-all: main ctors
+TARGETS = main ctors
 
-main ctors: LDFLAGS += -Llib
-main ctors: LDLIBS += -lattinyxc
+all: $(TARGETS)
+
+$(TARGETS): LDFLAGS += -Llib
+$(TARGETS): LDLIBS += -lattinyxc
 
 ctors: CXXFLAGS += -O
 
@@ -20,4 +22,4 @@ run debug: main
 	$(prefix) $(realpath $<)
 
 clean:
-	$(RM) main ctors *.o
+	$(RM) $(TARGETS) *.o
