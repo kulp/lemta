@@ -1,3 +1,6 @@
+#ifndef MODEL_H_
+#define MODEL_H_
+
 /* Inferred from libattiny*.so */
 
 #include <deque>
@@ -285,4 +288,6 @@ public:
 extern "C" int model_api_ver();
 extern "C" Model_device *model_ctor(const char *);
 extern "C" int model_dtor(Model_device *);
+
+#endif
 
