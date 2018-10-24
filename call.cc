@@ -19,10 +19,21 @@ struct Monologuist
     }
 };
 
+template<class T, typename U>
+static void test(T *that, U T::* method)
+{
+    Monologuist<T> wrap(method);
+    (that->*wrap)();
+}
+
 int main()
 {
     Model_device *rec = model_ctor("attiny1616");
-    Monologuist<Model_device> method(&Model_device::step);
-    (rec->*method)();
+
+    test(rec, &Model_device::step);
+
+    Model_core *core = rec->getCore(0);
+
+    test(core, &Model_core::step);
 }
 
