@@ -1,5 +1,7 @@
 /* Inferred from libattiny*.so */
 
+#include <vector>
+
 // inferred from presence of typeinfo
 class Avr8;
 class BasicMemUnit;
@@ -131,6 +133,53 @@ public:
 class Avr8 : public Model_core
 {
     // no other virtual methods
+};
+
+class MemUnit
+{
+public:
+    virtual ~MemUnit();
+
+    virtual UnknownType getName() const = 0;
+    virtual UnknownType isChanged(unsigned long, unsigned long) = 0;
+    virtual UnknownType update(unsigned long, unsigned long) = 0;
+    virtual UnknownType read(unsigned long, unsigned long, std::vector<unsigned char, std::allocator<unsigned char> >&) = 0;
+    virtual UnknownType write(unsigned long, unsigned long, std::vector<unsigned char, std::allocator<unsigned char> > const&) = 0;
+    virtual UnknownType getAddress() const = 0;
+    virtual UnknownType getSize() const = 0;
+};
+
+class BasicMemUnit : public MemUnit
+{
+public:
+    virtual ~BasicMemUnit();
+
+    // inherited from MemUnit
+    virtual UnknownType getName() const;
+    virtual UnknownType isChanged(unsigned long, unsigned long);
+    virtual UnknownType update(unsigned long, unsigned long);
+    virtual UnknownType read(unsigned long, unsigned long, std::vector<unsigned char, std::allocator<unsigned char> >&);
+    virtual UnknownType write(unsigned long, unsigned long, std::vector<unsigned char, std::allocator<unsigned char> > const&);
+    virtual UnknownType getAddress() const;
+    virtual UnknownType getSize() const;
+};
+
+class VerilogMemUnit : public MemUnit
+{
+public:
+    virtual ~VerilogMemUnit();
+
+    // inherited from BasicMemUnit
+    virtual UnknownType getName() const;
+    virtual UnknownType isChanged(unsigned long, unsigned long);
+    virtual UnknownType update(unsigned long, unsigned long);
+    virtual UnknownType read(unsigned long, unsigned long, std::vector<unsigned char, std::allocator<unsigned char> >&);
+    virtual UnknownType write(unsigned long, unsigned long, std::vector<unsigned char, std::allocator<unsigned char> > const&);
+    virtual UnknownType getAddress() const;
+    virtual UnknownType getSize() const;
+
+    // VerilogMemUnit only
+    virtual UnknownType getBits() const;
 };
 
 extern "C" int model_api_ver();
