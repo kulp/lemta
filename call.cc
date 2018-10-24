@@ -26,11 +26,24 @@ static void test(T *that, U T::* method)
     (that->*wrap)();
 }
 
+template<class T>
+struct SiteDescriptor
+{
+    T *base;
+    Monologuist<T> method;
+};
+
 int main()
 {
     Model_device *rec = model_ctor("attiny1616");
 
-    test(rec, &Model_device::step);
+    SiteDescriptor<Model_device> methods[] = {
+        rec, &Model_device::step,
+    };
+
+    for (SiteDescriptor<Model_device> & c : methods) {
+        (c.base->*(c.method))();
+    }
 
     Model_core *core = rec->getCore(0);
 
