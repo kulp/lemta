@@ -13,6 +13,7 @@ $(TARGETS): LDFLAGS += -Llib
 $(TARGETS): LDLIBS += -lattinyxc
 
 ctors: CXXFLAGS += -O
+call: CXXFLAGS += -O3
 
 main.o: model.h
 
