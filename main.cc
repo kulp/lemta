@@ -22,6 +22,9 @@ int main()
     Model_core *mc = dev->getCore(0);
     assert(("model core exists", mc != NULL));
 
+    Model_device *md = mc->getModel();
+    assert(("model device is same", md == dev));
+
     dev->cycle(1);
 
     unsigned long ul = -1;

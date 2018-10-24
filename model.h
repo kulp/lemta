@@ -46,7 +46,7 @@ public:
     virtual UnknownType setIntProperty(int, unsigned long, char const*) = 0;
     virtual UnknownType getStringProperty(int, unsigned long, char*, unsigned long const*) = 0;
     virtual UnknownType setStringProperty(int, char*, unsigned long const*) = 0;
-    virtual UnknownType getModel() = 0;
+    virtual Model_device *getModel() = 0;
     virtual UnknownType addBreakpoint(Breakpoint*) = 0;
     virtual UnknownType removeBreakpoint(int) = 0;
     virtual UnknownType getBreakpoints(BPtype) = 0;
@@ -74,7 +74,7 @@ public:
     virtual UnknownType setIntProperty(int, unsigned long, char const*);
     virtual UnknownType getStringProperty(int, unsigned long, char*, unsigned long const*);
     virtual UnknownType setStringProperty(int, char*, unsigned long const*);
-    virtual UnknownType getModel();
+    virtual Model_device *getModel();
     virtual UnknownType addBreakpoint(Breakpoint*);
     virtual UnknownType removeBreakpoint(int);
     virtual UnknownType getBreakpoints(BPtype);
