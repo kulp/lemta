@@ -5,7 +5,7 @@ DEBUGGER = gdb
 
 LINK.o = $(LINK.cc)
 
-TARGETS = main ctors
+TARGETS = main ctors call
 
 all: $(TARGETS)
 
