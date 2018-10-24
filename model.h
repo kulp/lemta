@@ -106,6 +106,27 @@ public:
     virtual UnknownType core_setIntProperty(int, unsigned long);
 };
 
+class Avr8 : public Model_core
+{
+public:
+    Avr8(Model_device*, int);
+    ~Avr8();
+
+    // inherited from Core
+    virtual UnknownType writeMemory(unsigned long, unsigned long, unsigned char const*, Segment);
+    virtual UnknownType peekReg(int, unsigned long*);
+    virtual UnknownType pokeReg(int, unsigned long);
+    virtual UnknownType readMemory(unsigned long, unsigned long, unsigned char*, Segment);
+
+    // inherited from Model_core
+    virtual UnknownType core_init();
+    virtual UnknownType core_config(char const*);
+    virtual UnknownType core_reset(ResetType);
+    virtual UnknownType core_isBreakInstr(unsigned int);
+    virtual UnknownType core_getIntProperty(int, unsigned long*);
+    virtual UnknownType core_setIntProperty(int, unsigned long);
+};
+
 class Model
 {
 public:
@@ -156,11 +177,6 @@ public:
     virtual UnknownType loadSim(SimState*);
     virtual UnknownType debug(char const*, int (*)(char const*, ...));
     virtual UnknownType test(int, Test*, int (*)(Model*));
-};
-
-class Avr8 : public Model_core
-{
-    // no other virtual methods
 };
 
 class MemUnit
