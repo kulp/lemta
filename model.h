@@ -1,5 +1,6 @@
 /* Inferred from libattiny*.so */
 
+#include <deque>
 #include <map>
 #include <string>
 #include <vector>
@@ -60,7 +61,19 @@ public:
 class Model_core : public Core
 {
 public:
+    Model_core(Model_device*, int);
+    ~Model_core();
     UnknownType readVerilogSig(char const*, unsigned long*);
+    UnknownType deleteBreakpointFrom(int, std::multimap<unsigned int, Breakpoint>&);
+    // need definition of Breakpoint type
+    //UnknownType insertBreakpointTo(Breakpoint&, std::multimap<unsigned int, Breakpoint> >&);
+    UnknownType execStepCallback();
+    UnknownType checkBreak(std::deque<Breakpoint*>&, Breakpoint*&, unsigned int, unsigned long);
+    UnknownType checkTrace(std::deque<Breakpoint*>&, Breakpoint*&);
+    UnknownType checkWatch(std::deque<Breakpoint*>&, Breakpoint*&);
+
+    // order of field not known
+    UnknownType m_nextBreakId;
 
     // inherited from Core
     virtual UnknownType reset(ResetType);
