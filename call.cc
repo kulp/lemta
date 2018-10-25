@@ -29,7 +29,7 @@ static void test(T *that, U T::* method)
 template<class T>
 struct SiteDescriptor
 {
-    T *base;
+    T * const base;
     Monologuist<T> method;
 };
 
@@ -42,7 +42,7 @@ int main()
     };
 
     for (SiteDescriptor<Model_device> & c : methods) {
-        (c.base->*(c.method))();
+        (c.base->*c.method)();
     }
 
     Model_core *core = rec->getCore(0);
