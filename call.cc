@@ -20,15 +20,15 @@ struct Monologuist
 };
 
 template<class T>
-struct SiteDescriptor
+struct CallSite
 {
     Monologuist<T> method;
 };
 
 template<class T, int N>
-static void run_tests(T *t, SiteDescriptor<T> (&methods)[N])
+static void run_tests(T *t, CallSite<T> (&methods)[N])
 {
-    for (SiteDescriptor<T> & c : methods) {
+    for (CallSite<T> & c : methods) {
         (t->*c.method)();
     }
 }
@@ -37,9 +37,9 @@ static void run_tests(T *t, SiteDescriptor<T> (&methods)[N])
 #include "methods.Model_core.xi"
 
 template<class T>
-struct SiteDescriptorArray
+struct CallSiteList
 {
-    static SiteDescriptor<T> methods[];
+    static CallSite<T> methods[];
 };
 
 #define CAT_(a,b) a##b
@@ -47,7 +47,7 @@ struct SiteDescriptorArray
 
 #define Record(Type,Method) &Type::Method,
 #define METHODS(Type) CAT(CAT(METHODS_,Type),_)
-#define DESCRIPTORS(T) template<> SiteDescriptor<T> SiteDescriptorArray<T>::methods[] = { METHODS(T)(Record) };
+#define DESCRIPTORS(T) template<> CallSite<T> CallSiteList<T>::methods[] = { METHODS(T)(Record) };
 
 #define TYPE_LIST(_) \
     _(Model_device) \
@@ -59,13 +59,9 @@ TYPE_LIST(DESCRIPTORS)
 int main()
 {
     Model_device *rec = model_ctor("attiny1616");
-    {
-        run_tests(rec, SiteDescriptorArray<Model_device>::methods);
-    }
-
     Model_core *core = rec->getCore(0);
-    {
-        run_tests(core, SiteDescriptorArray<Model_core>::methods);
-    }
+
+    run_tests(rec, CallSiteList<Model_device>::methods);
+    run_tests(core, CallSiteList<Model_core>::methods);
 }
 
