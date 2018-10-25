@@ -22,5 +22,14 @@ debug: prefix = $(DEBUGGER)
 run debug: main
 	$(prefix) $(realpath $<)
 
+model.%.xml: model.hh
+	castxml -o $@ --castxml-output=1 --castxml-start $* $<
+
+methods.%.txt: model.%.xml
+	xmllint --xpath '//Method[@context=string(//Class[@name="$*"]/@id)]/@name' $< | grep -o '"[^"]*"' | tr -d '"' > $@ || (rm $@; false)
+
+methods.%.xi: methods.%.txt
+	(echo "#define METHODS_$*_(_) \\"; sed 's/^/    _($*,/; s/$$/) \\/' $<; echo "    // end METHODS_$*_") > $@ || (rm $@; false)
+
 clean:
-	$(RM) $(TARGETS) *.o
+	$(RM) $(TARGETS) *.o methods.*.txt methods.*.txt methods.*.xi model.*.xml
