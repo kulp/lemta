@@ -4,7 +4,7 @@
 #include <cassert>
 #include <cstdio>
 
-#include "model.h"
+#include "model.hh"
 
 int main()
 {

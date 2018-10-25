@@ -1,6 +1,6 @@
 #define _FORTIFY_SOURCE 1
 
-#include "model.h"
+#include "model.hh"
 
 int main()
 {

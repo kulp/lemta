@@ -15,7 +15,7 @@ $(TARGETS): LDLIBS += -lattinyxc
 ctors: CXXFLAGS += -O
 call: CXXFLAGS += -O3
 
-main.o: model.h
+main.o: model.hh
 
 run debug: export LD_LIBRARY_PATH=lib
 debug: prefix = $(DEBUGGER)

@@ -1,4 +1,4 @@
-#include "model.h"
+#include "model.hh"
 
 template<class T>
 struct Monologuist
