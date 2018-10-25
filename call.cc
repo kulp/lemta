@@ -42,12 +42,15 @@ struct SiteDescriptorArray
     static SiteDescriptor<T> methods[];
 };
 
-#define Record(Type,Method) &Type::Method,
-template<>
-SiteDescriptor<Model_device> SiteDescriptorArray<Model_device>::methods[] = { METHODS_Model_device_(Record) };
+#define CAT_(a,b) a##b
+#define CAT(a,b) CAT_(a,b)
 
-template<>
-SiteDescriptor<Model_core> SiteDescriptorArray<Model_core>::methods[] = { METHODS_Model_core_(Record) };
+#define Record(Type,Method) &Type::Method,
+#define METHODS(Type) CAT(CAT(METHODS_,Type),_)
+#define DESCRIPTORS(T) template<> SiteDescriptor<T> SiteDescriptorArray<T>::methods[] = { METHODS(T)(Record) };
+
+DESCRIPTORS(Model_device)
+DESCRIPTORS(Model_core)
 
 int main()
 {
