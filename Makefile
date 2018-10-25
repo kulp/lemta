@@ -31,5 +31,8 @@ methods.%.txt: model.%.xml
 methods.%.xi: methods.%.txt
 	(echo "#define METHODS_$*_(_) \\"; sed 's/^/    _($*,/; s/$$/) \\/' $<; echo "    // end METHODS_$*_") > $@ || (rm $@; false)
 
+call.o: methods.Model_device.xi
+call.o: methods.Model_core.xi
+
 clean:
 	$(RM) $(TARGETS) *.o methods.*.txt methods.*.txt methods.*.xi model.*.xml

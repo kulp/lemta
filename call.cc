@@ -29,24 +29,36 @@ static void test(T *that, U T::* method)
 template<class T>
 struct SiteDescriptor
 {
-    T * const base;
     Monologuist<T> method;
 };
 
+#include "methods.Model_device.xi"
+#include "methods.Model_core.xi"
+
 int main()
 {
+#define Record(Type,Method) &Type::Method,
+
     Model_device *rec = model_ctor("attiny1616");
+    {
+        SiteDescriptor<Model_device> methods[] = {
+            METHODS_Model_device_(Record)
+        };
 
-    SiteDescriptor<Model_device> methods[] = {
-        rec, &Model_device::step,
-    };
-
-    for (SiteDescriptor<Model_device> & c : methods) {
-        (c.base->*c.method)();
+        for (SiteDescriptor<Model_device> & c : methods) {
+            (rec->*c.method)();
+        }
     }
 
     Model_core *core = rec->getCore(0);
+    {
+        SiteDescriptor<Model_core> methods[] = {
+            METHODS_Model_core_(Record)
+        };
 
-    test(core, &Model_core::step);
+        for (SiteDescriptor<Model_core> & c : methods) {
+            (core->*c.method)();
+        }
+    }
 }
 
