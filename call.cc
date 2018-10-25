@@ -25,6 +25,15 @@ struct SiteDescriptor
     Monologuist<T> method;
 };
 
+template<class T, int N>
+static void run_tests(T *t, SiteDescriptor<T> (&methods)[N])
+{
+    for (SiteDescriptor<T> & c : methods) {
+        (t->*c.method)();
+    }
+}
+
+
 #include "methods.Model_device.xi"
 #include "methods.Model_core.xi"
 
@@ -37,10 +46,7 @@ int main()
         SiteDescriptor<Model_device> methods[] = {
             METHODS_Model_device_(Record)
         };
-
-        for (SiteDescriptor<Model_device> & c : methods) {
-            (rec->*c.method)();
-        }
+        run_tests(rec, methods);
     }
 
     Model_core *core = rec->getCore(0);
@@ -48,10 +54,7 @@ int main()
         SiteDescriptor<Model_core> methods[] = {
             METHODS_Model_core_(Record)
         };
-
-        for (SiteDescriptor<Model_core> & c : methods) {
-            (core->*c.method)();
-        }
+        run_tests(core, methods);
     }
 }
 
