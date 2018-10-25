@@ -33,28 +33,32 @@ static void run_tests(T *t, SiteDescriptor<T> (&methods)[N])
     }
 }
 
-
 #include "methods.Model_device.xi"
 #include "methods.Model_core.xi"
 
+template<class T>
+struct SiteDescriptorArray
+{
+    static SiteDescriptor<T> methods[];
+};
+
+#define Record(Type,Method) &Type::Method,
+template<>
+SiteDescriptor<Model_device> SiteDescriptorArray<Model_device>::methods[] = { METHODS_Model_device_(Record) };
+
+template<>
+SiteDescriptor<Model_core> SiteDescriptorArray<Model_core>::methods[] = { METHODS_Model_core_(Record) };
+
 int main()
 {
-#define Record(Type,Method) &Type::Method,
-
     Model_device *rec = model_ctor("attiny1616");
     {
-        SiteDescriptor<Model_device> methods[] = {
-            METHODS_Model_device_(Record)
-        };
-        run_tests(rec, methods);
+        run_tests(rec, SiteDescriptorArray<Model_device>::methods);
     }
 
     Model_core *core = rec->getCore(0);
     {
-        SiteDescriptor<Model_core> methods[] = {
-            METHODS_Model_core_(Record)
-        };
-        run_tests(core, methods);
+        run_tests(core, SiteDescriptorArray<Model_core>::methods);
     }
 }
 
