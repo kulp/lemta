@@ -19,13 +19,6 @@ struct Monologuist
     }
 };
 
-template<class T, typename U>
-static void test(T *that, U T::* method)
-{
-    Monologuist<T> wrap(method);
-    (that->*wrap)();
-}
-
 template<class T>
 struct SiteDescriptor
 {
