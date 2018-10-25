@@ -49,8 +49,12 @@ struct SiteDescriptorArray
 #define METHODS(Type) CAT(CAT(METHODS_,Type),_)
 #define DESCRIPTORS(T) template<> SiteDescriptor<T> SiteDescriptorArray<T>::methods[] = { METHODS(T)(Record) };
 
-DESCRIPTORS(Model_device)
-DESCRIPTORS(Model_core)
+#define TYPE_LIST(_) \
+    _(Model_device) \
+    _(Model_core) \
+    // end TYPE_LIST
+
+TYPE_LIST(DESCRIPTORS)
 
 int main()
 {
