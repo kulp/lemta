@@ -1,14 +1,14 @@
 #include "model.hh"
 
 template<class T>
-struct Monologuist
+struct CallSite
 {
     // Define a type that calls, but with no arguments, and expects no response
     typedef void (T::*Type)(void);
     Type holder;
 
     template<typename _>
-    Monologuist<T>(_ T::*in)
+    CallSite<T>(_ T::*in)
     {
         holder = reinterpret_cast<Type>(in);
     }
@@ -19,17 +19,11 @@ struct Monologuist
     }
 };
 
-template<class T>
-struct CallSite
-{
-    Monologuist<T> method;
-};
-
 template<class T, int N>
 static void run_tests(T *t, CallSite<T> (&methods)[N])
 {
     for (CallSite<T> & c : methods) {
-        (t->*c.method)();
+        (t->*c)();
     }
 }
 
