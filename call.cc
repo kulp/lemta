@@ -2,6 +2,7 @@
 #include <dlfcn.h>
 
 #include <cxxabi.h>
+#include <cstdint>
 
 #include "model.hh"
 
@@ -11,10 +12,12 @@ struct CallSite
     // Define a type that calls, but with no arguments, and expects no response
     typedef void (T::*Type)(void);
     Type holder;
+    intptr_t pc;
 
     template<typename _>
     CallSite<T>(_ T::*in)
         : holder(reinterpret_cast<Type>(in))
+        , pc(0)
     {
         // no body
     }
