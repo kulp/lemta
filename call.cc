@@ -1,8 +1,13 @@
 #define _GNU_SOURCE
+#include <link.h>
 #include <dlfcn.h>
 
 #include <cxxabi.h>
 #include <cstdint>
+#include <cerrno>
+#include <unistd.h> /* for sysconf */
+
+#include <sys/mman.h> /* for mprotect */
 
 #include "model.hh"
 
@@ -64,14 +69,28 @@ int main()
     Model_device *rec = model_ctor("attiny1616");
     Model_core *core = rec->getCore(0);
 
+    typedef void voidfunc(void);
+
     Dl_info info;
-    if (dladdr((void*)&Model_device::getCore, &info)) {
-        char *out = abi::__cxa_demangle(info.dli_sname, NULL, NULL, NULL);
-        printf("%s = %s\n", info.dli_sname, out);
-        free(out);
-    }
+
+    if (dladdr(dlsym(RTLD_DEFAULT, "model_ctor"), &info) == 0)
+        return __LINE__;
+
+    printf("%s loaded at %p\n", info.dli_fname, info.dli_fbase);
+    void *begin = dlsym(RTLD_NEXT, "_init");
+    void *end   = dlsym(RTLD_NEXT, "_fini");
+    ptrdiff_t len = (char*)end - (char*)info.dli_fbase;
+
+    long pagesize = sysconf(_SC_PAGESIZE);
+
+    if (mprotect(info.dli_fbase, len, PROT_READ) != 0)
+        perror("mprotect");
 
     run_tests(rec, List< CallSite<Model_device> >::array);
     run_tests(core, List< CallSite<Model_core> >::array);
+
+    if (mprotect(info.dli_fbase, len, PROT_READ | PROT_EXEC) != 0)
+        perror("mprotect");
+
 }
 

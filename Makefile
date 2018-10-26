@@ -13,7 +13,7 @@ $(TARGETS): LDFLAGS += -Llib
 $(TARGETS): LDLIBS += -lattinyxc
 
 ctors: CXXFLAGS += -O
-call: CXXFLAGS += -O3
+#call: CXXFLAGS += -O3
 
 call: LDLIBS += -ldl
 
