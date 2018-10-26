@@ -31,9 +31,9 @@ static void run_tests(T *t, CallSite<T> (&methods)[N])
 #include "methods.Model_core.xi"
 
 template<class T>
-struct CallSiteList
+struct List
 {
-    static CallSite<T> methods[];
+    static T array[];
 };
 
 #define CAT_(a,b) a##b
@@ -41,7 +41,7 @@ struct CallSiteList
 
 #define Record(Type,Method) &Type::Method,
 #define METHODS(Type) CAT(CAT(METHODS_,Type),_)
-#define DESCRIPTORS(T) template<> CallSite<T> CallSiteList<T>::methods[] = { METHODS(T)(Record) };
+#define DESCRIPTORS(T) template<> CallSite<T> List< CallSite<T> >::array[] = { METHODS(T)(Record) };
 
 #define TYPE_LIST(_) \
     _(Model_device) \
@@ -55,7 +55,7 @@ int main()
     Model_device *rec = model_ctor("attiny1616");
     Model_core *core = rec->getCore(0);
 
-    run_tests(rec, CallSiteList<Model_device>::methods);
-    run_tests(core, CallSiteList<Model_core>::methods);
+    run_tests(rec, List< CallSite<Model_device> >::array);
+    run_tests(core, List< CallSite<Model_core> >::array);
 }
 
