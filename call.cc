@@ -1,3 +1,8 @@
+#define _GNU_SOURCE
+#include <dlfcn.h>
+
+#include <cxxabi.h>
+
 #include "model.hh"
 
 template<class T>
@@ -54,6 +59,13 @@ int main()
 {
     Model_device *rec = model_ctor("attiny1616");
     Model_core *core = rec->getCore(0);
+
+    Dl_info info;
+    if (dladdr((void*)&Model_device::getCore, &info)) {
+        char *out = abi::__cxa_demangle(info.dli_sname, NULL, NULL, NULL);
+        printf("%s = %s\n", info.dli_sname, out);
+        free(out);
+    }
 
     run_tests(rec, List< CallSite<Model_device> >::array);
     run_tests(core, List< CallSite<Model_core> >::array);

@@ -15,6 +15,8 @@ $(TARGETS): LDLIBS += -lattinyxc
 ctors: CXXFLAGS += -O
 call: CXXFLAGS += -O3
 
+call: LDLIBS += -ldl
+
 main.o: model.hh
 
 run debug: export LD_LIBRARY_PATH=lib
