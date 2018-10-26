@@ -14,8 +14,9 @@ struct CallSite
 
     template<typename _>
     CallSite<T>(_ T::*in)
+        : holder(reinterpret_cast<Type>(in))
     {
-        holder = reinterpret_cast<Type>(in);
+        // no body
     }
 
     operator Type()
