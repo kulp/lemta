@@ -47,16 +47,6 @@ struct List
 
 static volatile intptr_t *current_pc = nullptr;
 
-template<class T>
-static void run_tests(T *t)
-{
-    typedef List< CallSite<T> > ThisList;
-    if (ThisList::start < ThisList::end) {
-        current_pc = &ThisList::start->pc;
-        (t->*(*ThisList::start++))();
-    }
-}
-
 #define CAT_(a,b) a##b
 #define CAT(a,b) CAT_(a,b)
 
@@ -82,24 +72,71 @@ static void segv_handler(int /*signo*/, siginfo_t * /*info*/, void *context)
 }
 
 template<typename T>
-int dump_results(T *)
+struct BaseBehavior
 {
-    std::size_t buflen = 256;
-    char *buf = static_cast<char*>(malloc(buflen)); // need malloc for __cxa_demangle
-    for (auto & c : List< CallSite<T> >::array) {
-        void * pc = reinterpret_cast<void*>(c.pc);
-        Dl_info info;
-        if (dladdr(pc, &info) == 0)
-            return __LINE__;
+    static int dump_results()
+    {
+        std::size_t buflen = 256;
+        char *buf = static_cast<char*>(malloc(buflen)); // need malloc for __cxa_demangle
+        for (auto & c : List< CallSite<T> >::array) {
+            void * pc = reinterpret_cast<void*>(c.pc);
+            Dl_info info;
+            if (dladdr(pc, &info) == 0)
+                return __LINE__;
 
-        int status = -4;
-        abi::__cxa_demangle(info.dli_sname, buf, &buflen, &status);
-        printf("status = %d: got %p = %s\n", status, pc, buf);
+            int status = -4;
+            abi::__cxa_demangle(info.dli_sname, buf, &buflen, &status);
+            printf("status = %d: got %p = %s\n", status, pc, buf);
+        }
+        free(buf);
+
+        return 0;
     }
-    free(buf);
 
-    return 0;
-}
+    static void run_tests(T *t)
+    {
+        typedef List< CallSite<T> > ThisList;
+        if (ThisList::start < ThisList::end) {
+            current_pc = &ThisList::start->pc;
+            (t->*(*ThisList::start++))();
+        }
+    }
+
+};
+
+template<typename T>
+struct DerivedBehavior : public BaseBehavior<T>
+{
+    // no body
+};
+
+template<>
+struct DerivedBehavior<Model_device> : public BaseBehavior<Model_device>
+{
+    static Model_device *create()
+    {
+        return model_ctor("attiny1616");
+    }
+
+    static int destroy(Model_device *victim)
+    {
+        return model_dtor(victim);
+    }
+};
+
+template<>
+struct DerivedBehavior<Model_core> : public BaseBehavior<Model_core>
+{
+    static Model_core *create()
+    {
+        return model_ctor("attiny1616")->getCore(0);
+    }
+
+    static int destroy(Model_core *victim)
+    {
+        return model_dtor(victim->getModel());
+    }
+};
 
 int main()
 {
@@ -132,11 +169,11 @@ int main()
     sigaddset(&sigs, SIGSEGV);
     sigprocmask(SIG_UNBLOCK, &sigs, NULL);
 
-    run_tests(rec);
-    run_tests(core);
+    DerivedBehavior<Model_device>::run_tests(rec);
+    DerivedBehavior<Model_core>::run_tests(core);
 
-    dump_results(rec);
-    dump_results(core);
+    DerivedBehavior<Model_device>::dump_results();
+    DerivedBehavior<Model_core>::dump_results();
 
     if (mprotect(info.dli_fbase, len, PROT_READ | PROT_EXEC) != 0)
         perror("mprotect");
