@@ -129,7 +129,7 @@ struct DerivedBehavior<Model_core> : public BaseBehavior<Model_core>
 {
     static Model_core *create(int argc, char *argv[])
     {
-        return model_ctor("attiny1616")->getCore(0);
+        return DerivedBehavior<Model_device>::create(argc, argv)->getCore(0);
     }
 
     static int destroy(Model_core *victim)
