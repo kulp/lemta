@@ -113,7 +113,7 @@ struct DerivedBehavior : public BaseBehavior<T>
 template<>
 struct DerivedBehavior<Model_device> : public BaseBehavior<Model_device>
 {
-    static Model_device *create()
+    static Model_device *create(int argc, char *argv[])
     {
         return model_ctor("attiny1616");
     }
@@ -127,7 +127,7 @@ struct DerivedBehavior<Model_device> : public BaseBehavior<Model_device>
 template<>
 struct DerivedBehavior<Model_core> : public BaseBehavior<Model_core>
 {
-    static Model_core *create()
+    static Model_core *create(int argc, char *argv[])
     {
         return model_ctor("attiny1616")->getCore(0);
     }
@@ -141,16 +141,16 @@ struct DerivedBehavior<Model_core> : public BaseBehavior<Model_core>
 template<>
 struct DerivedBehavior<Avr8> : public DerivedBehavior<Model_core>
 {
-    static Avr8 *create()
+    static Avr8 *create(int argc, char *argv[])
     {
-        return dynamic_cast<Avr8*>(DerivedBehavior<Model_core>::create());
+        return dynamic_cast<Avr8*>(DerivedBehavior<Model_core>::create(argc, argv));
     }
 };
 
 template<typename T>
-static int execute()
+static int execute(int argc, char *argv[])
 {
-    T *rec = DerivedBehavior<T>::create();
+    T *rec = DerivedBehavior<T>::create(argc, argv);
 
     Dl_info info;
 
@@ -186,8 +186,8 @@ static int execute()
     return DerivedBehavior<T>::destroy(rec);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
-    return execute<Model_device>();
+    return execute<Avr8>(argc, argv);
 }
 
