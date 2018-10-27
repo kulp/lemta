@@ -36,29 +36,37 @@ struct CallSite
     }
 };
 
-template<class T, int N>
-static void run_tests(T *t, CallSite<T> (&methods)[N])
-{
-    for (CallSite<T> & c : methods) {
-        (t->*c)();
-    }
-}
-
 #include "methods.Model_device.xi"
 #include "methods.Model_core.xi"
 
 template<class T>
 struct List
 {
+    static std::size_t offset;
     static T array[];
 };
+
+#define countof(X) (sizeof(X) / sizeof (X)[0])
+
+template<class T>
+static void run_tests(T *t)
+{
+    typedef List< CallSite<T> > ThisList;
+    for (std::size_t i = ThisList::offset; i < countof(ThisList::array); ++i) {
+        CallSite<T> & c = ThisList::array[i];
+        (t->*c)();
+    }
+}
 
 #define CAT_(a,b) a##b
 #define CAT(a,b) CAT_(a,b)
 
 #define Record(Type,Method) &Type::Method,
 #define METHODS(Type) CAT(CAT(METHODS_,Type),_)
-#define DESCRIPTORS(T) template<> CallSite<T> List< CallSite<T> >::array[] = { METHODS(T)(Record) };
+#define DESCRIPTORS(T) \
+    template<> CallSite<T> List< CallSite<T> >::array[] = { METHODS(T)(Record) }; \
+    template<> std::size_t List< CallSite<T> >::offset = 0; \
+    // end DESCRIPTORS
 
 #define TYPE_LIST(_) \
     _(Model_device) \
@@ -116,8 +124,8 @@ int main()
     sigaddset(&sigs, SIGSEGV);
     sigprocmask(SIG_UNBLOCK, &sigs, NULL);
 
-    run_tests(rec, List< CallSite<Model_device> >::array);
-    run_tests(core, List< CallSite<Model_core> >::array);
+    run_tests(rec);
+    run_tests(core);
 
     if (mprotect(info.dli_fbase, len, PROT_READ | PROT_EXEC) != 0)
         perror("mprotect");
