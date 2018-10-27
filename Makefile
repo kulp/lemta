@@ -41,7 +41,11 @@ methods.%.txt: model.%.xml
 methods.%.xi: methods.%.txt
 	(echo "#define METHODS_$*_(_) \\"; sed 's/^/    _($*,/; s/$$/) \\/' $<; echo "    // end METHODS_$*_") > $@ || (rm $@; false)
 
+call.o: types.xi
 call.o: $(TYPES:%=methods.%.xi)
+
+types.xi:
+	($(foreach f,$(TYPES),echo '#include "methods.$f.xi"';) echo '#define TYPE_LIST(_) \'; $(foreach f,$(TYPES),echo '    _($f) \';) echo '    // end TYPE_LIST') > $@ || (rm $@; false)
 
 supposed.%: flatten.h methods.%.xi
 	cpp -P -DTYPE=$* $< | tr ' ' '\n' > $@ || (rm $@; false)

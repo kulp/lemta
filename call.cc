@@ -35,9 +35,6 @@ struct CallSite
     }
 };
 
-#include "methods.Model_device.xi"
-#include "methods.Avr8.xi"
-
 template<class T>
 struct List
 {
@@ -71,10 +68,7 @@ static void run_tests(T *t)
     template<> CallSite<T> const * List< CallSite<T> >::end = &List< CallSite<T> >::array[countof(List< CallSite<T> >::array) ]; \
     // end DESCRIPTORS
 
-#define TYPE_LIST(_) \
-    _(Model_device) \
-    _(Avr8) \
-    // end TYPE_LIST
+#include "types.xi"
 
 TYPE_LIST(DESCRIPTORS)
 
