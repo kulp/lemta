@@ -42,8 +42,9 @@ struct CallSite
 template<class T>
 struct List
 {
-    static std::size_t offset;
     static T array[];
+    static T *start;
+    static T const *end;
 };
 
 #define countof(X) (sizeof(X) / sizeof (X)[0])
@@ -52,12 +53,8 @@ template<class T>
 static void run_tests(T *t)
 {
     typedef List< CallSite<T> > ThisList;
-    if (ThisList::offset < countof(ThisList::array)) {
-        // Increment of offset must happen in the body of the block, above the
-        // method pointer call, because the remainder of the body of the block
-        // will never be executed due to SIGSEGV.
-        CallSite<T> & c = ThisList::array[ThisList::offset++];
-        (t->*c)();
+    if (ThisList::start < ThisList::end) {
+        (t->*(*ThisList::start++))();
     }
 }
 
@@ -68,7 +65,8 @@ static void run_tests(T *t)
 #define METHODS(Type) CAT(CAT(METHODS_,Type),_)
 #define DESCRIPTORS(T) \
     template<> CallSite<T> List< CallSite<T> >::array[] = { METHODS(T)(Record) }; \
-    template<> std::size_t List< CallSite<T> >::offset = 0; \
+    template<> CallSite<T> * List< CallSite<T> >::start = &List< CallSite<T> >::array[0]; \
+    template<> CallSite<T> const * List< CallSite<T> >::end = &List< CallSite<T> >::array[countof(List< CallSite<T> >::array) ]; \
     // end DESCRIPTORS
 
 #define TYPE_LIST(_) \
