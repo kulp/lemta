@@ -12,6 +12,8 @@ TARGETS = main ctors call
 
 TYPES = Model_device Model_core Avr8
 
+MCU = ATtiny1616
+
 all: $(TARGETS)
 
 $(TARGETS): LDFLAGS += -Llib
@@ -52,7 +54,7 @@ supposed.%: flatten.h methods.%.xi
 
 run.out: export LD_LIBRARY_PATH=lib
 run.out: call
-	$(realpath $<) > $@ || (rm $@; false)
+	$(realpath $<) $(MCU) > $@ || (rm $@; false)
 
 actual.%: run.out
 	grep $* $< | cut -d: -f4- | cut -d'(' -f1 > $@ || (rm $@; false)

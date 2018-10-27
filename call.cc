@@ -115,7 +115,7 @@ struct DerivedBehavior<Model_device> : public BaseBehavior<Model_device>
 {
     static Model_device *create(int argc, char *argv[])
     {
-        return model_ctor("attiny1616");
+        return argc > 1 ? model_ctor(argv[1]) : nullptr;
     }
 
     static int destroy(Model_device *victim)
@@ -129,7 +129,10 @@ struct DerivedBehavior<Model_core> : public BaseBehavior<Model_core>
 {
     static Model_core *create(int argc, char *argv[])
     {
-        return DerivedBehavior<Model_device>::create(argc, argv)->getCore(0);
+        Model_device *parent = DerivedBehavior<Model_device>::create(argc, argv);
+        if (parent == nullptr)
+            return nullptr;
+        return parent->getCore(0);
     }
 
     static int destroy(Model_core *victim)
@@ -151,6 +154,8 @@ template<typename T>
 static int execute(int argc, char *argv[])
 {
     T *rec = DerivedBehavior<T>::create(argc, argv);
+    if (rec == nullptr)
+        return __LINE__;
 
     Dl_info info;
 
