@@ -138,6 +138,15 @@ struct DerivedBehavior<Model_core> : public BaseBehavior<Model_core>
     }
 };
 
+template<>
+struct DerivedBehavior<Avr8> : public DerivedBehavior<Model_core>
+{
+    static Avr8 *create()
+    {
+        return dynamic_cast<Avr8*>(DerivedBehavior<Model_core>::create());
+    }
+};
+
 template<typename T>
 static int execute()
 {
