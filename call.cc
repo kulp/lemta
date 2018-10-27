@@ -153,5 +153,6 @@ int main()
     if (mprotect(info.dli_fbase, len, PROT_READ | PROT_EXEC) != 0)
         perror("mprotect");
 
+    return model_dtor(rec);
 }
 
