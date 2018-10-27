@@ -5,7 +5,6 @@
 #include <cxxabi.h>
 #include <cstdint>
 #include <cerrno>
-#include <unistd.h> /* for sysconf */
 #include <signal.h> /* for sigaction */
 #include <setjmp.h>
 #include <ucontext.h>
@@ -82,7 +81,7 @@ TYPE_LIST(DESCRIPTORS)
 static jmp_buf bounce;
 static volatile sig_atomic_t bounce_state;
 
-static void segv_handler(int signo, siginfo_t *info, void *context)
+static void segv_handler(int /*signo*/, siginfo_t * /*info*/, void *context)
 {
     ucontext_t *c = static_cast<ucontext_t*>(context);
     *current_pc = c->uc_mcontext.gregs[REG_RIP];
@@ -114,19 +113,14 @@ int main()
     Model_device *rec = model_ctor("attiny1616");
     Model_core *core = rec->getCore(0);
 
-    typedef void voidfunc(void);
-
     Dl_info info;
 
     if (dladdr(dlsym(RTLD_DEFAULT, "model_ctor"), &info) == 0)
         return __LINE__;
 
     printf("%s loaded at %p\n", info.dli_fname, info.dli_fbase);
-    void *begin = dlsym(RTLD_NEXT, "_init");
-    void *end   = dlsym(RTLD_NEXT, "_fini");
+    void *end = dlsym(RTLD_NEXT, "_fini");
     ptrdiff_t len = (char*)end - (char*)info.dli_fbase;
-
-    long pagesize = sysconf(_SC_PAGESIZE);
 
     if (mprotect(info.dli_fbase, len, PROT_READ) != 0)
         perror("mprotect");

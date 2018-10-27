@@ -3,6 +3,8 @@ CPPFLAGS += -I/usr/share/verilator/include
 CPPFLAGS += -I/usr/share/verilator/include/vltstd
 DEBUGGER = gdb
 
+CXXFLAGS += -Wall -Wextra -std=c++11
+
 LINK.o = $(LINK.cc)
 
 TARGETS = main ctors call
@@ -18,6 +20,9 @@ ctors: CXXFLAGS += -O
 call: LDLIBS += -ldl
 
 main.o: model.hh
+main.o: CXXFLAGS += -Wno-unused-value # for asserts
+
+call.o: CXXFLAGS += -Wno-cast-function-type # this is the whole point of `call`
 
 run debug: export LD_LIBRARY_PATH=lib
 debug: prefix = $(DEBUGGER)
