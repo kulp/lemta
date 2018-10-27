@@ -1,2 +1,6 @@
 *.o
 model.*.*
+methods.*.xi
+supposed.*
+actual.*
+types.xi
