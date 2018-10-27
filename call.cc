@@ -140,9 +140,7 @@ struct DerivedBehavior<Model_core> : public BaseBehavior<Model_core>
 
 int main()
 {
-    Model_device *rec = model_ctor("attiny1616");
-    Model_core *core_ = rec->getCore(0);
-    Avr8 *core = dynamic_cast<Avr8*>(core_);
+    Model_device *rec = DerivedBehavior<Model_device>::create();
 
     Dl_info info;
 
@@ -170,14 +168,12 @@ int main()
     sigprocmask(SIG_UNBLOCK, &sigs, NULL);
 
     DerivedBehavior<Model_device>::run_tests(rec);
-    DerivedBehavior<Model_core>::run_tests(core);
 
     DerivedBehavior<Model_device>::dump_results();
-    DerivedBehavior<Model_core>::dump_results();
 
     if (mprotect(info.dli_fbase, len, PROT_READ | PROT_EXEC) != 0)
         perror("mprotect");
 
-    return model_dtor(rec);
+    return DerivedBehavior<Model_device>::destroy(rec);
 }
 
