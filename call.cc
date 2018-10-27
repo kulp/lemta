@@ -79,13 +79,12 @@ static void run_tests(T *t)
 TYPE_LIST(DESCRIPTORS)
 
 static jmp_buf bounce;
-static volatile sig_atomic_t bounce_state;
 
 static void segv_handler(int /*signo*/, siginfo_t * /*info*/, void *context)
 {
     ucontext_t *c = static_cast<ucontext_t*>(context);
     *current_pc = c->uc_mcontext.gregs[REG_RIP];
-    longjmp(bounce, ++bounce_state);
+    longjmp(bounce, 1);
 }
 
 template<typename T>
