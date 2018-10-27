@@ -49,11 +49,14 @@ struct List
 
 #define countof(X) (sizeof(X) / sizeof (X)[0])
 
+static volatile intptr_t *current_pc = nullptr;
+
 template<class T>
 static void run_tests(T *t)
 {
     typedef List< CallSite<T> > ThisList;
     if (ThisList::start < ThisList::end) {
+        current_pc = &ThisList::start->pc;
         (t->*(*ThisList::start++))();
     }
 }
@@ -82,7 +85,7 @@ static volatile sig_atomic_t bounce_state;
 static void segv_handler(int signo, siginfo_t *info, void *context)
 {
     ucontext_t *c = static_cast<ucontext_t*>(context);
-    uintptr_t pc = c->uc_mcontext.gregs[REG_RIP];
+    *current_pc = c->uc_mcontext.gregs[REG_RIP];
     longjmp(bounce, ++bounce_state);
 }
 
@@ -115,7 +118,7 @@ int main()
     long val = setjmp(bounce);
     switch (val) {
         case 0: puts("inited setjmp"); break;
-        default: puts("bounced"); break;
+        default: printf("bounced from %p\n", *current_pc); break;
     }
 
     if (sigaction(SIGSEGV, &action, NULL) != 0)
