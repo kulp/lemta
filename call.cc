@@ -89,6 +89,26 @@ static void segv_handler(int signo, siginfo_t *info, void *context)
     longjmp(bounce, ++bounce_state);
 }
 
+template<typename T>
+int dump_results(T *)
+{
+    std::size_t buflen = 256;
+    char *buf = static_cast<char*>(malloc(buflen)); // need malloc for __cxa_demangle
+    for (auto & c : List< CallSite<T> >::array) {
+        void * pc = reinterpret_cast<void*>(c.pc);
+        Dl_info info;
+        if (dladdr(pc, &info) == 0)
+            return __LINE__;
+
+        int status = -4;
+        abi::__cxa_demangle(info.dli_sname, buf, &buflen, &status);
+        printf("status = %d: got %p = %s\n", status, pc, buf);
+    }
+    free(buf);
+
+    return 0;
+}
+
 int main()
 {
     Model_device *rec = model_ctor("attiny1616");
@@ -126,6 +146,9 @@ int main()
 
     run_tests(rec);
     run_tests(core);
+
+    dump_results(rec);
+    dump_results(core);
 
     if (mprotect(info.dli_fbase, len, PROT_READ | PROT_EXEC) != 0)
         perror("mprotect");
