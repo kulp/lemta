@@ -10,6 +10,8 @@ LINK.o = $(LINK.cc)
 
 TARGETS = main ctors call
 
+TYPES = Model_device Model_core
+
 all: $(TARGETS)
 
 $(TARGETS): LDFLAGS += -Llib
@@ -41,6 +43,16 @@ methods.%.xi: methods.%.txt
 
 call.o: methods.Model_device.xi
 call.o: methods.Model_core.xi
+
+supposed.%: flatten.h methods.%.xi
+	cpp -P -DTYPE=$* $< | tr ' ' '\n' > $@ || (rm $@; false)
+
+run.out: export LD_LIBRARY_PATH=lib
+run.out: call
+	$(realpath $<) > $@ || (rm $@; false)
+
+actual.%: run.out
+	grep $* $< | cut -d: -f4- | cut -d'(' -f1 > $@ || (rm $@; false)
 
 clean:
 	$(RM) $(TARGETS) *.o methods.*.txt methods.*.txt methods.*.xi model.*.xml
