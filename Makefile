@@ -3,7 +3,8 @@ CPPFLAGS += -I/usr/share/verilator/include
 CPPFLAGS += -I/usr/share/verilator/include/vltstd
 DEBUGGER = gdb
 
-CXXFLAGS += -Wall -Wextra -std=c++11
+CXXFLAGS += -std=c++11
+CXXFLAGS += -Wall -Wextra -Wold-style-cast
 
 LINK.o = $(LINK.cc)
 

@@ -120,7 +120,7 @@ int main()
 
     printf("%s loaded at %p\n", info.dli_fname, info.dli_fbase);
     void *end = dlsym(RTLD_NEXT, "_fini");
-    ptrdiff_t len = (char*)end - (char*)info.dli_fbase;
+    ptrdiff_t len = static_cast<char*>(end) - static_cast<char*>(info.dli_fbase);
 
     if (mprotect(info.dli_fbase, len, PROT_READ) != 0)
         perror("mprotect");

@@ -17,7 +17,7 @@ int main()
     svScope scope = svGetScopeFromName("TOP.sim_top");
     assert(("found scope", scope != NULL));
 
-    ((VerilatedScope*)scope)->scopeDump();
+    static_cast<VerilatedScope*>(scope)->scopeDump();
 
     Model_core *mc = dev->getCore(0);
     assert(("model core exists", mc != NULL));
