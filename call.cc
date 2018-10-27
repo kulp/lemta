@@ -52,8 +52,11 @@ template<class T>
 static void run_tests(T *t)
 {
     typedef List< CallSite<T> > ThisList;
-    for (std::size_t i = ThisList::offset; i < countof(ThisList::array); ++i) {
-        CallSite<T> & c = ThisList::array[i];
+    if (ThisList::offset < countof(ThisList::array)) {
+        // Increment of offset must happen in the body of the block, above the
+        // method pointer call, because the remainder of the body of the block
+        // will never be executed due to SIGSEGV.
+        CallSite<T> & c = ThisList::array[ThisList::offset++];
         (t->*c)();
     }
 }
