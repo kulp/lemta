@@ -138,9 +138,10 @@ struct DerivedBehavior<Model_core> : public BaseBehavior<Model_core>
     }
 };
 
-int main()
+template<typename T>
+static int execute()
 {
-    Model_device *rec = DerivedBehavior<Model_device>::create();
+    T *rec = DerivedBehavior<T>::create();
 
     Dl_info info;
 
@@ -166,13 +167,18 @@ int main()
     sigaddset(&sigs, SIGSEGV);
     sigprocmask(SIG_UNBLOCK, &sigs, NULL);
 
-    DerivedBehavior<Model_device>::run_tests(rec);
+    DerivedBehavior<T>::run_tests(rec);
 
-    DerivedBehavior<Model_device>::dump_results();
+    DerivedBehavior<T>::dump_results();
 
     if (mprotect(info.dli_fbase, len, PROT_READ | PROT_EXEC) != 0)
         perror("mprotect");
 
-    return DerivedBehavior<Model_device>::destroy(rec);
+    return DerivedBehavior<T>::destroy(rec);
+}
+
+int main()
+{
+    return execute<Model_device>();
 }
 
