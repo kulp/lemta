@@ -6,6 +6,8 @@
 #include <cstdint>
 #include <cerrno>
 #include <unistd.h> /* for sysconf */
+#include <signal.h> /* for sigaction */
+#include <setjmp.h>
 
 #include <sys/mman.h> /* for mprotect */
 
@@ -64,6 +66,15 @@ struct List
 
 TYPE_LIST(DESCRIPTORS)
 
+static jmp_buf bounce;
+static volatile sig_atomic_t bounce_state;
+
+static void segv_handler(int signo, siginfo_t *info, void *context)
+{
+    // ucontext_t *c = static_cast<ucontext_t*>(context);
+    longjmp(bounce, ++bounce_state);
+}
+
 int main()
 {
     Model_device *rec = model_ctor("attiny1616");
@@ -85,6 +96,22 @@ int main()
 
     if (mprotect(info.dli_fbase, len, PROT_READ) != 0)
         perror("mprotect");
+
+    struct sigaction action = {};
+    action.sa_sigaction = segv_handler;
+    action.sa_flags = SA_SIGINFO;
+
+    switch (setjmp(bounce)) {
+        case 0: puts("inited setjmp"); break;
+        default: puts("bounced"); break;
+    }
+
+    if (sigaction(SIGSEGV, &action, NULL) != 0)
+        perror("sigaction");
+
+    sigset_t sigs = {}, oldsigs = {};
+    sigfillset(&sigs);
+    sigprocmask(SIG_UNBLOCK, &sigs, &oldsigs);
 
     run_tests(rec, List< CallSite<Model_device> >::array);
     run_tests(core, List< CallSite<Model_core> >::array);
