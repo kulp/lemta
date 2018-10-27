@@ -8,6 +8,7 @@
 #include <unistd.h> /* for sysconf */
 #include <signal.h> /* for sigaction */
 #include <setjmp.h>
+#include <ucontext.h>
 
 #include <sys/mman.h> /* for mprotect */
 
@@ -71,7 +72,8 @@ static volatile sig_atomic_t bounce_state;
 
 static void segv_handler(int signo, siginfo_t *info, void *context)
 {
-    // ucontext_t *c = static_cast<ucontext_t*>(context);
+    ucontext_t *c = static_cast<ucontext_t*>(context);
+    uintptr_t pc = c->uc_mcontext.gregs[REG_RIP];
     longjmp(bounce, ++bounce_state);
 }
 
@@ -101,7 +103,8 @@ int main()
     action.sa_sigaction = segv_handler;
     action.sa_flags = SA_SIGINFO;
 
-    switch (setjmp(bounce)) {
+    long val = setjmp(bounce);
+    switch (val) {
         case 0: puts("inited setjmp"); break;
         default: puts("bounced"); break;
     }
