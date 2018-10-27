@@ -109,9 +109,9 @@ int main()
     if (sigaction(SIGSEGV, &action, NULL) != 0)
         perror("sigaction");
 
-    sigset_t sigs = {}, oldsigs = {};
-    sigfillset(&sigs);
-    sigprocmask(SIG_UNBLOCK, &sigs, &oldsigs);
+    sigset_t sigs = {};
+    sigaddset(&sigs, SIGSEGV);
+    sigprocmask(SIG_UNBLOCK, &sigs, NULL);
 
     run_tests(rec, List< CallSite<Model_device> >::array);
     run_tests(core, List< CallSite<Model_core> >::array);
