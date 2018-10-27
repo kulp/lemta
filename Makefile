@@ -10,7 +10,7 @@ LINK.o = $(LINK.cc)
 
 TARGETS = main ctors call
 
-TYPES = Model_device Model_core
+TYPES = Model_device Model_core Avr8
 
 all: $(TARGETS)
 

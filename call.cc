@@ -36,7 +36,7 @@ struct CallSite
 };
 
 #include "methods.Model_device.xi"
-#include "methods.Model_core.xi"
+#include "methods.Avr8.xi"
 
 template<class T>
 struct List
@@ -73,7 +73,7 @@ static void run_tests(T *t)
 
 #define TYPE_LIST(_) \
     _(Model_device) \
-    _(Model_core) \
+    _(Avr8) \
     // end TYPE_LIST
 
 TYPE_LIST(DESCRIPTORS)
@@ -110,7 +110,8 @@ int dump_results(T *)
 int main()
 {
     Model_device *rec = model_ctor("attiny1616");
-    Model_core *core = rec->getCore(0);
+    Model_core *core_ = rec->getCore(0);
+    Avr8 *core = dynamic_cast<Avr8*>(core_);
 
     Dl_info info;
 
