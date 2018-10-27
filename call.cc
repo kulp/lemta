@@ -147,7 +147,6 @@ int main()
     if (dladdr(dlsym(RTLD_DEFAULT, "model_ctor"), &info) == 0)
         return __LINE__;
 
-    printf("%s loaded at %p\n", info.dli_fname, info.dli_fbase);
     void *end = dlsym(RTLD_NEXT, "_fini");
     ptrdiff_t len = static_cast<char*>(end) - static_cast<char*>(info.dli_fbase);
 
