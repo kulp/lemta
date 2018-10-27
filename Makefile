@@ -41,8 +41,7 @@ methods.%.txt: model.%.xml
 methods.%.xi: methods.%.txt
 	(echo "#define METHODS_$*_(_) \\"; sed 's/^/    _($*,/; s/$$/) \\/' $<; echo "    // end METHODS_$*_") > $@ || (rm $@; false)
 
-call.o: methods.Model_device.xi
-call.o: methods.Model_core.xi
+call.o: $(TYPES:%=methods.%.xi)
 
 supposed.%: flatten.h methods.%.xi
 	cpp -P -DTYPE=$* $< | tr ' ' '\n' > $@ || (rm $@; false)
