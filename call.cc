@@ -115,11 +115,7 @@ int main()
     action.sa_sigaction = segv_handler;
     action.sa_flags = SA_SIGINFO;
 
-    long val = setjmp(bounce);
-    switch (val) {
-        case 0: puts("inited setjmp"); break;
-        default: printf("bounced from %p\n", *current_pc); break;
-    }
+    setjmp(bounce);
 
     if (sigaction(SIGSEGV, &action, NULL) != 0)
         perror("sigaction");
