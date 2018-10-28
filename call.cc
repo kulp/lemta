@@ -1,4 +1,5 @@
 #define _GNU_SOURCE
+#define _POSIX_C_SOURCE
 #include <link.h>
 #include <dlfcn.h>
 
@@ -68,7 +69,7 @@ static void segv_handler(int /*signo*/, siginfo_t * /*info*/, void *context)
 {
     ucontext_t *c = static_cast<ucontext_t*>(context);
     *current_pc = c->uc_mcontext.gregs[REG_RIP];
-    longjmp(bounce, 1);
+    siglongjmp(bounce, 1);
 }
 
 template<typename T>
@@ -172,14 +173,10 @@ static int execute(int argc, char *argv[])
     action.sa_sigaction = segv_handler;
     action.sa_flags = SA_SIGINFO;
 
-    setjmp(bounce);
+    sigsetjmp(bounce, 1/*anything nonzero*/);
 
     if (sigaction(SIGSEGV, &action, NULL) != 0)
         perror("sigaction");
-
-    sigset_t sigs = {};
-    sigaddset(&sigs, SIGSEGV);
-    sigprocmask(SIG_UNBLOCK, &sigs, NULL);
 
     DerivedBehavior<T>::run_tests(rec);
 
