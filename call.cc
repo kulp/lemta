@@ -1,4 +1,3 @@
-#define _GNU_SOURCE
 #define _POSIX_C_SOURCE
 #include <link.h>
 #include <dlfcn.h>
