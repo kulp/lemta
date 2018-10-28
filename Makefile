@@ -60,4 +60,4 @@ actual.%: run.out
 	grep $* $< | cut -d: -f4- | cut -d'(' -f1 > $@ || (rm $@; false)
 
 clean:
-	$(RM) $(TARGETS) *.o methods.*.txt methods.*.txt methods.*.xi model.*.xml
+	$(RM) $(TARGETS) *.o methods.*.txt methods.*.txt methods.*.xi model.*.xml types.xi
