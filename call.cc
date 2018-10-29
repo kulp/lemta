@@ -8,6 +8,7 @@
 #include <signal.h> /* for sigaction */
 #include <setjmp.h>
 #include <ucontext.h>
+#include <cstring>
 
 #include <sys/mman.h> /* for mprotect */
 
@@ -115,7 +116,7 @@ struct DerivedBehavior<Model_device> : public BaseBehavior<Model_device>
 {
     static Model_device *create(int argc, char *argv[])
     {
-        return argc > 1 ? model_ctor(argv[1]) : nullptr;
+        return argc > 0 ? model_ctor(*argv) : nullptr;
     }
 
     static int destroy(Model_device *victim)
@@ -191,8 +192,16 @@ int main(int argc, char *argv[])
 {
     int rc = 0;
 
+    // skip command argument
+    argc--;
+    argv++;
+
+    if (argc < 2)
+        return __LINE__;
+
 #define Execute(Type) \
-    rc |= execute<Type>(argc, argv);
+    if (strcmp(*argv, #Type) == 0) \
+        rc |= execute<Type>(--argc, ++argv);
 
     TYPE_LIST(Execute)
 
