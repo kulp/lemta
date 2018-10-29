@@ -189,6 +189,13 @@ static int execute(int argc, char *argv[])
 
 int main(int argc, char *argv[])
 {
-    return execute<Avr8>(argc, argv);
+    int rc = 0;
+
+#define Execute(Type) \
+    rc |= execute<Type>(argc, argv);
+
+    TYPE_LIST(Execute)
+
+    return rc;
 }
 
