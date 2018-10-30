@@ -52,12 +52,9 @@ types.xi:
 supposed.%: flatten.h methods.%.xi
 	cpp -P -DTYPE=$* $< | tr ' ' '\n' > $@ || (rm $@; false)
 
-run.out: export LD_LIBRARY_PATH=lib
-run.out: call
-	$(realpath $<) $(MCU) > $@ || (rm $@; false)
-
-actual.%: run.out
-	grep $* $< | cut -d: -f4- | cut -d'(' -f1 > $@ || (rm $@; false)
+actual.%: export LD_LIBRARY_PATH=lib
+actual.%: call
+	$(realpath $<) $* $(MCU) | cut -d: -f4- | cut -d'(' -f1 > $@ || (rm $@; false)
 
 clean:
 	$(RM) $(TARGETS) *.o methods.*.txt methods.*.txt methods.*.xi model.*.xml types.xi
