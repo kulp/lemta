@@ -56,5 +56,11 @@ actual.%: export LD_LIBRARY_PATH=lib
 actual.%: call
 	$(realpath $<) $* $(MCU) | cut -d: -f4- | cut -d'(' -f1 > $@ || (rm $@; false)
 
+check.%: supposed.% actual.%
+	diff -q $^
+
+check: $(TYPES:%=check.%)
+check: ;
+
 clean:
 	$(RM) $(TARGETS) *.o methods.*.txt methods.*.txt methods.*.xi model.*.xml types.xi
