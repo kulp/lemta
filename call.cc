@@ -75,6 +75,16 @@ static void segv_handler(int /*signo*/, siginfo_t * /*info*/, void *context)
 template<typename T>
 struct BaseBehavior
 {
+    static void * load(int &argc, char **&argv)
+    {
+        return argc > 0 ? (argc--, dlopen(*argv++, RTLD_GLOBAL | RTLD_NOW)) : nullptr;
+    }
+
+    static int unload(void *handle)
+    {
+        return dlclose(handle);
+    }
+
     static int dump_results()
     {
         std::size_t buflen = 256;
@@ -159,6 +169,12 @@ struct DerivedBehavior<Avr8> : public BaseBehavior<Avr8>
 template<typename T>
 static int execute(int &argc, char **&argv)
 {
+    void *handle = DerivedBehavior<T>::load(argc, argv);
+    if (!handle) {
+        printf("dlopen: %s\n", dlerror());
+        return __LINE__;
+    }
+
     T *rec = DerivedBehavior<T>::create(argc, argv);
     if (rec == nullptr)
         return __LINE__;
@@ -190,7 +206,13 @@ static int execute(int &argc, char **&argv)
     if (mprotect(info.dli_fbase, len, PROT_READ | PROT_EXEC) != 0)
         perror("mprotect");
 
-    return DerivedBehavior<T>::destroy(rec);
+    if (DerivedBehavior<T>::destroy(rec))
+        return __LINE__;
+
+    if (DerivedBehavior<T>::unload(handle))
+        return __LINE__;
+
+    return 0;
 }
 
 int main(int argc, char **argv)
@@ -201,7 +223,7 @@ int main(int argc, char **argv)
     argc--;
     argv++;
 
-    if (argc < 2)
+    if (argc < 3)
         return __LINE__;
 
 #define Execute(Type) \
