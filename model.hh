@@ -66,6 +66,7 @@ class Model_core : public Core
 public:
     Model_core(Model_device*, int);
     ~Model_core();
+protected:
     UnknownType readVerilogSig(char const*, unsigned long*);
     UnknownType deleteBreakpointFrom(int, std::multimap<unsigned int, Breakpoint>&);
     // need definition of Breakpoint type
@@ -78,6 +79,7 @@ public:
     // order of field not known
     UnknownType m_nextBreakId;
 
+public:
     // inherited from Core
     virtual UnknownType reset(ResetType);
     virtual UnknownType step(unsigned long);
@@ -100,6 +102,7 @@ public:
     virtual UnknownType getBreakpoints(BPtype);
     virtual UnknownType test(int, Test*, int (*)(Model*));
 
+protected:
     // in Model_core only
     virtual UnknownType core_init();
     virtual UnknownType core_config(char const*);
@@ -121,6 +124,7 @@ public:
     virtual UnknownType pokeReg(int, unsigned long);
     virtual UnknownType readMemory(unsigned long, unsigned long, unsigned char*, Segment);
 
+protected:
     // inherited from Model_core
     virtual UnknownType core_init();
     virtual UnknownType core_config(char const*);
