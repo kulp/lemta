@@ -11,7 +11,7 @@ int main()
     std::printf("svDpiVersion() = %s\n", svDpiVersion());
     std::printf("model_api_ver() = %#x\n", model_api_ver());
 
-    Model_device *dev = model_ctor("ATtiny1616");
+    Model *dev = model_ctor("ATtiny1616");
     assert(("device constructed", dev != NULL));
 
     svScope scope = svGetScopeFromName("TOP.sim_top");
@@ -22,7 +22,7 @@ int main()
     Model_core *mc = dev->getCore(0);
     assert(("model core exists", mc != NULL));
 
-    Model_device *md = mc->getModel();
+    Model *md = mc->getModel();
     assert(("model device is same", md == dev));
 
     dev->cycle(1);

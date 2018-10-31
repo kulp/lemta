@@ -11,7 +11,7 @@ LINK.o = $(LINK.cc)
 TARGETS = main ctors call
 LINKED_TARGETS = main ctors
 
-TYPES = Model_device Model_core Avr8
+TYPES = Model Model_core Avr8
 
 MCU = ATtiny1616
 

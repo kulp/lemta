@@ -74,8 +74,8 @@ static void segv_handler(int /*signo*/, siginfo_t * /*info*/, void *context)
 
 struct Fundamental
 {
-    typedef Model_device *model_ctor_t(const char *);
-    typedef int model_dtor_t(Model_device *);
+    typedef Model *model_ctor_t(const char *);
+    typedef int model_dtor_t(Model *);
 
     static model_ctor_t *model_ctor;
     static model_dtor_t *model_dtor;
@@ -141,14 +141,14 @@ struct DerivedBehavior : public BaseBehavior<T>
 };
 
 template<>
-struct DerivedBehavior<Model_device> : public BaseBehavior<Model_device>
+struct DerivedBehavior<Model> : public BaseBehavior<Model>
 {
-    static Model_device *create(int &argc, char **&argv)
+    static Model *create(int &argc, char **&argv)
     {
         return argc > 0 ? (argc--, model_ctor(*argv++)) : nullptr;
     }
 
-    static int destroy(Model_device *victim)
+    static int destroy(Model *victim)
     {
         return model_dtor(victim);
     }
@@ -159,7 +159,7 @@ struct DerivedBehavior<Model_core> : public BaseBehavior<Model_core>
 {
     static Model_core *create(int &argc, char **&argv)
     {
-        Model_device *parent = DerivedBehavior<Model_device>::create(argc, argv);
+        Model *parent = DerivedBehavior<Model>::create(argc, argv);
         if (parent == nullptr)
             return nullptr;
         return parent->getCore(0);
