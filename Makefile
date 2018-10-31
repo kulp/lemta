@@ -40,7 +40,7 @@ model.%.xml: model.hh
 	castxml -o $@ --castxml-output=1 --castxml-start $* $<
 
 methods.%.txt: model.%.xml
-	xmllint --xpath '//Method[@context=string(//Class[@name="$*"]/@id)]/@name' $< | grep -o '"[^"]*"' | tr -d '"' > $(@STDOUT)
+	xmllint --xpath '//Method[@context=string(//Class[@name="$*"]/@id) and @virtual=1]/@name' $< | grep -o '"[^"]*"' | tr -d '"' > $(@STDOUT)
 
 methods.%.xi: methods.%.txt
 	(echo "#define METHODS_$*_(_) \\"; sed 's/^/    _($*,/; s/$$/) \\/' $<; echo "    // end METHODS_$*_") > $(@STDOUT)
