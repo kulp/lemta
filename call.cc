@@ -147,7 +147,7 @@ struct DerivedBehavior<Avr8> : public BaseBehavior<Avr8>
 {
     static Avr8 *create(int &argc, char **&argv)
     {
-        return dynamic_cast<Avr8*>(DerivedBehavior<Model_core>::create(argc, argv));
+        return static_cast<Avr8*>(DerivedBehavior<Model_core>::create(argc, argv));
     }
 
     static int destroy(Avr8 *victim)
