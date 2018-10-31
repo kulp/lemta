@@ -114,9 +114,9 @@ struct DerivedBehavior : public BaseBehavior<T>
 template<>
 struct DerivedBehavior<Model_device> : public BaseBehavior<Model_device>
 {
-    static Model_device *create(int argc, char *argv[])
+    static Model_device *create(int &argc, char **&argv)
     {
-        return argc > 0 ? model_ctor(*argv) : nullptr;
+        return argc > 0 ? (argc--, model_ctor(*argv++)) : nullptr;
     }
 
     static int destroy(Model_device *victim)
@@ -128,7 +128,7 @@ struct DerivedBehavior<Model_device> : public BaseBehavior<Model_device>
 template<>
 struct DerivedBehavior<Model_core> : public BaseBehavior<Model_core>
 {
-    static Model_core *create(int argc, char *argv[])
+    static Model_core *create(int &argc, char **&argv)
     {
         Model_device *parent = DerivedBehavior<Model_device>::create(argc, argv);
         if (parent == nullptr)
@@ -145,7 +145,7 @@ struct DerivedBehavior<Model_core> : public BaseBehavior<Model_core>
 template<>
 struct DerivedBehavior<Avr8> : public BaseBehavior<Avr8>
 {
-    static Avr8 *create(int argc, char *argv[])
+    static Avr8 *create(int &argc, char **&argv)
     {
         return dynamic_cast<Avr8*>(DerivedBehavior<Model_core>::create(argc, argv));
     }
@@ -157,7 +157,7 @@ struct DerivedBehavior<Avr8> : public BaseBehavior<Avr8>
 };
 
 template<typename T>
-static int execute(int argc, char *argv[])
+static int execute(int &argc, char **&argv)
 {
     T *rec = DerivedBehavior<T>::create(argc, argv);
     if (rec == nullptr)
@@ -193,7 +193,7 @@ static int execute(int argc, char *argv[])
     return DerivedBehavior<T>::destroy(rec);
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
     int rc = 0;
 
@@ -205,7 +205,7 @@ int main(int argc, char *argv[])
         return __LINE__;
 
 #define Execute(Type) \
-    if (strcmp(*argv, #Type) == 0) \
+    if (argv && *argv && strcmp(*argv, #Type) == 0) \
         rc |= execute<Type>(--argc, ++argv);
 
     TYPE_LIST(Execute)
