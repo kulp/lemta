@@ -61,7 +61,7 @@ supposed.%: flatten.h methods.%.xi
 
 actual.%: export LD_LIBRARY_PATH=$(LIB_DIR)
 actual.%: call
-	$(realpath $<) $* $(MCU) | cut -d: -f4- | cut -d'(' -f1 > $(@STDOUT)
+	$(realpath $<) $* $(LIB) $(MCU) | cut -d: -f4- | cut -d'(' -f1 > $(@STDOUT)
 
 check.%: supposed.% actual.%
 	diff -q $^
