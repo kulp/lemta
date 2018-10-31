@@ -15,12 +15,16 @@ TYPES = Model_device Model_core Avr8
 
 MCU = ATtiny1616
 
+LIB_DIR = lib
+LIB_STEM = attinyxc
+LIB = $(LIB_DIR)/lib$(LIB_STEM).so
+
 @STDOUT = $@ || (rm $@; false)
 
 all: $(TARGETS)
 
-$(LINKED_TARGETS): LDFLAGS += -Llib
-$(LINKED_TARGETS): LDLIBS += -lattinyxc
+$(LINKED_TARGETS): LDFLAGS += -L$(LIB_DIR)
+$(LINKED_TARGETS): LDLIBS += -l$(LIB_STEM)
 
 ctors: CXXFLAGS += -O
 call: CXXFLAGS += -O3
@@ -32,7 +36,7 @@ main.o: CXXFLAGS += -Wno-unused-value # for asserts
 
 call.o: CXXFLAGS += -Wno-cast-function-type # this is the whole point of `call`
 
-run debug: export LD_LIBRARY_PATH=lib
+run debug: export LD_LIBRARY_PATH=$(LIB_DIR)
 debug: prefix = $(DEBUGGER)
 run debug: main
 	$(prefix) $(realpath $<)
@@ -55,7 +59,7 @@ types.xi:
 supposed.%: flatten.h methods.%.xi
 	cpp -P -DTYPE=$* $< | tr ' ' '\n' > $(@STDOUT)
 
-actual.%: export LD_LIBRARY_PATH=lib
+actual.%: export LD_LIBRARY_PATH=$(LIB_DIR)
 actual.%: call
 	$(realpath $<) $* $(MCU) | cut -d: -f4- | cut -d'(' -f1 > $(@STDOUT)
 
