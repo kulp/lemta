@@ -8,8 +8,8 @@ CXXFLAGS += -Wall -Wextra -Wold-style-cast
 
 LINK.o = $(LINK.cc)
 
-TARGETS = main ctors call
-LINKED_TARGETS = main ctors
+TARGETS = main call
+LINKED_TARGETS = main
 
 TYPES = Model Model_core Avr8
 
@@ -26,7 +26,6 @@ all: $(TARGETS)
 $(LINKED_TARGETS): LDFLAGS += -L$(LIB_DIR)
 $(LINKED_TARGETS): LDLIBS += -l$(LIB_STEM)
 
-ctors: CXXFLAGS += -O
 call: CXXFLAGS += -O3
 
 call: LDLIBS += -ldl
