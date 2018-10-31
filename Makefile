@@ -9,6 +9,7 @@ CXXFLAGS += -Wall -Wextra -Wold-style-cast
 LINK.o = $(LINK.cc)
 
 TARGETS = main ctors call
+LINKED_TARGETS = main ctors
 
 TYPES = Model_device Model_core Avr8
 
@@ -18,8 +19,8 @@ MCU = ATtiny1616
 
 all: $(TARGETS)
 
-$(TARGETS): LDFLAGS += -Llib
-$(TARGETS): LDLIBS += -lattinyxc
+$(LINKED_TARGETS): LDFLAGS += -Llib
+$(LINKED_TARGETS): LDLIBS += -lattinyxc
 
 ctors: CXXFLAGS += -O
 call: CXXFLAGS += -O3
