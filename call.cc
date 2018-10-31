@@ -246,13 +246,16 @@ int main(int argc, char **argv)
     argv++;
 
     if (argc < 3)
-        return __LINE__;
+        rc = __LINE__;
 
 #define Execute(Type) \
-    if (argv && *argv && strcmp(*argv, #Type) == 0) \
-        rc |= execute<Type>(--argc, ++argv);
+    if (rc == 0 && argv && *argv && strcmp(*argv, #Type) == 0) \
+        rc = execute<Type>(--argc, ++argv);
 
     TYPE_LIST(Execute)
+
+    if (rc)
+        printf("Error on %s line %d\n", __FILE__, rc);
 
     return rc;
 }
