@@ -72,12 +72,31 @@ static void segv_handler(int /*signo*/, siginfo_t * /*info*/, void *context)
     siglongjmp(bounce, 1);
 }
 
+struct Fundamental
+{
+    typedef Model_device *model_ctor_t(const char *);
+    typedef int model_dtor_t(Model_device *);
+
+    static model_ctor_t *model_ctor;
+    static model_dtor_t *model_dtor;
+};
+
 template<typename T>
-struct BaseBehavior
+struct BaseBehavior : public Fundamental
 {
     static void * load(int &argc, char **&argv)
     {
-        return argc > 0 ? (argc--, dlopen(*argv++, RTLD_GLOBAL | RTLD_NOW)) : nullptr;
+        if (argc > 0) {
+            argc--;
+            void *handle = dlopen(*argv++, RTLD_GLOBAL | RTLD_NOW);
+            if (handle != nullptr) {
+                model_ctor = reinterpret_cast<model_ctor_t*>(dlsym(handle, "model_ctor"));
+                model_dtor = reinterpret_cast<model_dtor_t*>(dlsym(handle, "model_dtor"));
+            }
+            return handle;
+        } else {
+            return nullptr;
+        }
     }
 
     static int unload(void *handle)
@@ -165,6 +184,9 @@ struct DerivedBehavior<Avr8> : public BaseBehavior<Avr8>
         return DerivedBehavior<Model_core>::destroy(victim);
     }
 };
+
+Fundamental::model_ctor_t *Fundamental::model_ctor = nullptr;
+Fundamental::model_dtor_t *Fundamental::model_dtor = nullptr;
 
 template<typename T>
 static int execute(int &argc, char **&argv)
