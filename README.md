@@ -1,8 +1,8 @@
 # Goal
-This project seeks to derive, by good-faith clean-room engineering, sufficient
-interface definitions to support the development of F/OSS simulation tools that
-use downloadable [pack files](http://packs.download.atmel.com) from Atmel /
-Microchip.
+This project seeks to derive, by good-faith clean-room reverse-engineering,
+sufficient interface definitions to support the development of F/OSS simulation
+tools that use downloadable [pack files](http://packs.download.atmel.com) from
+Atmel / Microchip.
 
 ## Non-goal
 While these pack files include compiled GNU/Linux-compatible shared libraries
