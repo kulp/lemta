@@ -29,9 +29,10 @@ call: CXXFLAGS += -O3
 
 call: LDLIBS += -ldl
 
-main.o: model.hh
+main.o: model.hh interface.hh
 main.o: CXXFLAGS += -Wno-unused-value # for asserts
 
+call.o: interface.hh
 call.o: CXXFLAGS += -Wno-cast-function-type # this is the whole point of `call`
 
 model.%.xml: model.hh

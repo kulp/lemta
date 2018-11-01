@@ -9,10 +9,12 @@
 #include <setjmp.h>
 #include <ucontext.h>
 #include <cstring>
+#include <cstdlib>
+#include <cstdio>
 
 #include <sys/mman.h> /* for mprotect */
 
-#include "model.hh"
+#include "interface.hh"
 
 template<class T>
 struct CallSite
