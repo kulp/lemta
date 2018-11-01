@@ -18,6 +18,9 @@ LIB_DIR = lib
 LIB_STEM = attinyxc
 LIB = $(LIB_DIR)/lib$(LIB_STEM).so
 
+vpath %.hh ../include ../include/internals
+CPPFLAGS += -I../include
+
 @STDOUT = $@ || (rm $@; false)
 
 all: $(TARGETS)
@@ -29,13 +32,14 @@ call: CXXFLAGS += -O3
 
 call: LDLIBS += -ldl
 
+main.o: CPPFLAGS += -I../include/internals
 main.o: model.hh interface.hh
 main.o: CXXFLAGS += -Wno-unused-value # for asserts
 
 call.o: interface.hh
 call.o: CXXFLAGS += -Wno-cast-function-type # this is the whole point of `call`
 
-model.%.xml: model.hh
+model.%.xml: interface.hh
 	castxml -o $@ --castxml-output=1 --castxml-start $* $<
 
 methods.%.txt: model.%.xml
