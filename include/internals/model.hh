@@ -53,7 +53,7 @@ public:
     virtual UnknownType removeStepCallback(int);
     virtual UnknownType peekReg(int, unsigned long*);
     virtual UnknownType pokeReg(int, unsigned long);
-    virtual UnknownType getMemoryMap();
+    virtual UnknownType getMemoryMap(); // implemented trivially : "getMemoryMap should be implemented in children core class"
     virtual UnknownType readMemory(unsigned long, unsigned long, unsigned char*, Segment);
     virtual UnknownType writeMemory(unsigned long, unsigned long, unsigned char const*, Segment);
     virtual UnknownType getIntProperty(int, unsigned long*, char const*);
