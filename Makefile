@@ -1,7 +1,6 @@
 CXXFLAGS += -g
 CPPFLAGS += -I/usr/share/verilator/include
 CPPFLAGS += -I/usr/share/verilator/include/vltstd
-DEBUGGER = gdb
 
 CXXFLAGS += -std=c++11
 CXXFLAGS += -Wall -Wextra -Wold-style-cast
@@ -34,11 +33,6 @@ main.o: model.hh
 main.o: CXXFLAGS += -Wno-unused-value # for asserts
 
 call.o: CXXFLAGS += -Wno-cast-function-type # this is the whole point of `call`
-
-run debug: export LD_LIBRARY_PATH=$(LIB_DIR)
-debug: prefix = $(DEBUGGER)
-run debug: main
-	$(prefix) $(realpath $<)
 
 model.%.xml: model.hh
 	castxml -o $@ --castxml-output=1 --castxml-start $* $<
