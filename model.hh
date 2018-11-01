@@ -137,7 +137,7 @@ protected:
 class Model
 {
 public:
-    virtual Model_core *getCore(unsigned int);
+    virtual Core *getCore(unsigned int);
     virtual UnknownType reset(ResetType);
     virtual UnknownType cycle(unsigned int);
     virtual UnknownType stop();
@@ -170,7 +170,7 @@ public:
     UnknownType m_timeStamp;
 
     // inherited from Model
-    virtual Model_core *getCore(unsigned int);
+    virtual Core *getCore(unsigned int);
     virtual UnknownType reset(ResetType);
     virtual UnknownType cycle(unsigned int);
     virtual UnknownType stop();

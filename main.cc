@@ -19,7 +19,7 @@ int main()
 
     static_cast<VerilatedScope*>(scope)->scopeDump();
 
-    Model_core *mc = dev->getCore(0);
+    Core *mc = dev->getCore(0);
     assert(("model core exists", mc != NULL));
 
     Model *md = mc->getModel();

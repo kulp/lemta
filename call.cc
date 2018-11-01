@@ -155,9 +155,9 @@ struct DerivedBehavior<Model> : public BaseBehavior<Model>
 };
 
 template<>
-struct DerivedBehavior<Model_core> : public BaseBehavior<Model_core>
+struct DerivedBehavior<Core> : public BaseBehavior<Core>
 {
-    static Model_core *create(int &argc, char **&argv)
+    static Core *create(int &argc, char **&argv)
     {
         Model *parent = DerivedBehavior<Model>::create(argc, argv);
         if (parent == nullptr)
@@ -165,7 +165,7 @@ struct DerivedBehavior<Model_core> : public BaseBehavior<Model_core>
         return parent->getCore(0);
     }
 
-    static int destroy(Model_core *victim)
+    static int destroy(Core *victim)
     {
         return model_dtor(victim->getModel());
     }
@@ -176,12 +176,12 @@ struct DerivedBehavior<Avr8> : public BaseBehavior<Avr8>
 {
     static Avr8 *create(int &argc, char **&argv)
     {
-        return static_cast<Avr8*>(DerivedBehavior<Model_core>::create(argc, argv));
+        return static_cast<Avr8*>(DerivedBehavior<Core>::create(argc, argv));
     }
 
     static int destroy(Avr8 *victim)
     {
-        return DerivedBehavior<Model_core>::destroy(victim);
+        return DerivedBehavior<Core>::destroy(victim);
     }
 };
 
