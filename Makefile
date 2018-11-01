@@ -12,7 +12,7 @@ LINKED_TARGETS = main
 
 TYPES = Model Core
 
-MCU = ATtiny1616
+MCU =# blank means default, can be set specifically
 
 LIB_DIR = lib
 LIB_STEM = attinyxc
