@@ -171,20 +171,6 @@ struct DerivedBehavior<Core> : public BaseBehavior<Core>
     }
 };
 
-template<>
-struct DerivedBehavior<Avr8> : public BaseBehavior<Avr8>
-{
-    static Avr8 *create(int &argc, char **&argv)
-    {
-        return static_cast<Avr8*>(DerivedBehavior<Core>::create(argc, argv));
-    }
-
-    static int destroy(Avr8 *victim)
-    {
-        return DerivedBehavior<Core>::destroy(victim);
-    }
-};
-
 Fundamental::model_ctor_t *Fundamental::model_ctor = nullptr;
 Fundamental::model_dtor_t *Fundamental::model_dtor = nullptr;
 
