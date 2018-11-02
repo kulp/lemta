@@ -1,3 +1,5 @@
+SHELL = /bin/bash # we use bash-isms
+
 CXXFLAGS += -g
 CPPFLAGS += -I/usr/share/verilator/include
 CPPFLAGS += -I/usr/share/verilator/include/vltstd
@@ -55,24 +57,17 @@ call.o: $(TYPES:%=methods.%.xi)
 types.xi:
 	($(foreach f,$(TYPES),echo '#include "methods.$f.xi"';) echo '#define TYPE_LIST(_) '\\; $(foreach f,$(TYPES),echo '    _($f) '\\;) echo '    // end TYPE_LIST') > $(@STDOUT)
 
-supposed.%: flatten.h methods.%.xi
-	cpp -P -DTYPE=$* $< | tr ' ' '\n' > $(@STDOUT)
-
-actual.%: export LD_LIBRARY_PATH=$(LIB_DIR)
-actual.%: call
-	$(realpath $<) "$*" "$(LIB)" "$(MCU)" | cut -d: -f4- | cut -s -d'(' -f1 | grep -v '^$$' > $(@STDOUT)
-
-check.%: supposed.% actual.%
-	diff -q $^
-
-check: $(TYPES:%=check.%)
-check: ;
+check.%: export LD_LIBRARY_PATH=$(LIB_DIR)
+check.%: flatten.h call methods.%.xi
+	diff -q \
+	    <(cpp -P -DTYPE=$* $< | tr ' ' '\n') \
+	    <($(realpath $(word 2,$^)) "$*" "$(LIB)" "$(MCU)" | cut -d: -f4- | cut -s -d'(' -f1 | grep -v '^$$')
 
 $(LIB_LIST:%=check-%): check-%:
 	$(MAKE) LIB_STEM=$* $(TYPES:%=check.%)
 
-.NOTPARALLEL: # check-all has file collisions
-check-all: $(LIB_LIST:%=check-%)
+check: $(LIB_LIST:%=check-%)
+check: ;
 
 PACKS_URL_BASE = http://packs.download.atmel.com/
 packs:
