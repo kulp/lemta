@@ -67,5 +67,23 @@ check.%: supposed.% actual.%
 check: $(TYPES:%=check.%)
 check: ;
 
+PACKS_URL_BASE = http://packs.download.atmel.com/
+packs:
+	mkdir -p $@
+get-latest-packs: | packs
+	cd $| && \
+	    curl --silent '$(PACKS_URL_BASE)' | \
+	    xmllint --html --xpath //button/@data-link - | \
+	    grep -o '"[^"]*"' | tr -d '"' | \
+	    grep -e XMEGA -e ATautomotive -e ATmega -e ATtiny | \
+	    sort --reverse --field-separator=. --key=1,2 --unique | \
+	    sed 's#^#$(PACKS_URL_BASE)#' | \
+	    xargs -n1 curl --remote-name --continue-at -
+
+unpacked:
+	mkdir -p $@
+unpack: | unpacked
+	for f in packs/*.atpack ; do unzip -qq -n -d "$|" "$$f" '*/linux64/*.so' ; done
+
 clean:
 	$(RM) $(TARGETS) *.o methods.*.txt methods.*.txt methods.*.xi model.*.xml types.xi
