@@ -57,16 +57,19 @@ call.o: $(TYPES:%=methods.%.xi)
 types.xi:
 	($(foreach f,$(TYPES),echo '#include "methods.$f.xi"';) echo '#define TYPE_LIST(_) '\\; $(foreach f,$(TYPES),echo '    _($f) '\\;) echo '    // end TYPE_LIST') > $(@STDOUT)
 
-check.%: export LD_LIBRARY_PATH=$(LIB_DIR)
-check.%: flatten.h call methods.%.xi
+define check_lib
+check-$1-$2: LIB_STEM = $1
+check-$1-$2: export LD_LIBRARY_PATH=$(LIB_DIR)
+check-$1-$2: flatten.h call methods.$2.xi
 	diff -q \
-	    <(cpp -P -DTYPE=$* $< | tr ' ' '\n') \
-	    <($(realpath $(word 2,$^)) "$*" "$(LIB)" "$(MCU)" | cut -d: -f4- | cut -s -d'(' -f1 | grep -v '^$$')
+	    <(cpp -P -DTYPE=$2 $$< | tr ' ' '\n') \
+	    <($$(realpath $$(word 2,$$^)) "$2" "$$(LIB)" "$$(MCU)" | cut -d: -f4- | cut -s -d'(' -f1 | grep -v '^$$$$')
+endef
 
-$(LIB_LIST:%=check-%): check-%:
-	$(MAKE) LIB_STEM=$* $(TYPES:%=check.%)
+$(foreach l,$(LIB_LIST),$(foreach t,$(TYPES),$(eval $(call check_lib,$l,$t))))
+CHECK_TARGETS = $(foreach l,$(LIB_LIST),$(foreach t,$(TYPES),check-$l-$t))
 
-check: $(LIB_LIST:%=check-%)
+check: $(CHECK_TARGETS)
 check: ;
 
 PACKS_URL_BASE = http://packs.download.atmel.com/
