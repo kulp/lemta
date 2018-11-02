@@ -72,12 +72,13 @@ check: ;
 PACKS_URL_BASE = http://packs.download.atmel.com/
 packs:
 	mkdir -p $@
+PACK_TYPES = ATautomotive ATmega ATtiny XMEGA
 get-latest-packs: | packs
 	cd $| && \
 	    curl --silent '$(PACKS_URL_BASE)' | \
 	    xmllint --html --xpath //button/@data-link - | \
 	    grep -o '"[^"]*"' | tr -d '"' | \
-	    grep -e XMEGA -e ATautomotive -e ATmega -e ATtiny | \
+	    grep $(PACK_TYPES:%=-e %) | \
 	    sort --reverse --field-separator=. --key=1,2 --unique | \
 	    sed 's#^#$(PACKS_URL_BASE)#' | \
 	    xargs -n1 curl --remote-name --continue-at -
