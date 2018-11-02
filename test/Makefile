@@ -17,7 +17,7 @@ TYPES = Model Core
 MCU =# blank means default, can be set specifically
 
 LIB_DIR = unpacked/simulator/linux64
-LIB_STEM = attinyxc
+LIB_STEM = $(error LIB_STEM must be set)
 LIB_LIST = $(shell find unpacked/ -type f -name 'lib*.so' -printf '%f\n' | cut -b4- | cut -d. -f1 | sort | grep ^at)
 LIB = $(LIB_DIR)/lib$(LIB_STEM).so
 
