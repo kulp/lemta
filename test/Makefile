@@ -68,8 +68,11 @@ check.%: supposed.% actual.%
 check: $(TYPES:%=check.%)
 check: ;
 
-check-all:
-	for f in $(LIB_LIST) ; do $(MAKE) LIB_STEM=$$f check || break 0 ; done
+$(LIB_LIST:%=check-%): check-%:
+	$(MAKE) LIB_STEM=$* $(TYPES:%=check.%)
+
+.NOTPARALLEL: # check-all has file collisions
+check-all: $(LIB_LIST:%=check-%)
 
 PACKS_URL_BASE = http://packs.download.atmel.com/
 packs:
