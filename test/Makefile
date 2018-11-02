@@ -31,16 +31,16 @@ all: $(TARGETS)
 $(LINKED_TARGETS): LDFLAGS += -L$(LIB_DIR)
 $(LINKED_TARGETS): LDLIBS += -l$(LIB_STEM)
 
-call: CXXFLAGS += -O3
-
-call: LDLIBS += -ldl
-
 main.o: CPPFLAGS += -I../include/internals
 main.o: model.hh interface.hh
 main.o: CXXFLAGS += -Wno-unused-value # for asserts
 
+call: CXXFLAGS += -O3
+call: LDLIBS += -ldl
 call.o: interface.hh
 call.o: CXXFLAGS += -Wno-cast-function-type # this is the whole point of `call`
+call.o: types.xi
+call.o: $(TYPES:%=methods.%.xi)
 
 model.%.xml: interface.hh
 	castxml -o $@ --castxml-output=1 --castxml-start $* $<
@@ -50,9 +50,6 @@ methods.%.txt: model.%.xml
 
 methods.%.xi: methods.%.txt
 	(echo "#define METHODS_$*_(_) \\"; sed 's/^/    _($*,/; s/$$/) \\/' $<; echo "    // end METHODS_$*_") > $(@STDOUT)
-
-call.o: types.xi
-call.o: $(TYPES:%=methods.%.xi)
 
 types.xi:
 	($(foreach f,$(TYPES),echo '#include "methods.$f.xi"';) echo '#define TYPE_LIST(_) '\\; $(foreach f,$(TYPES),echo '    _($f) '\\;) echo '    // end TYPE_LIST') > $(@STDOUT)
