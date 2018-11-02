@@ -16,6 +16,7 @@ MCU =# blank means default, can be set specifically
 
 LIB_DIR = unpacked/simulator/linux64
 LIB_STEM = attinyxc
+LIB_LIST = $(shell find unpacked/ -type f -name 'lib*.so' -printf '%f\n' | cut -b4- | cut -d. -f1 | sort | grep ^at)
 LIB = $(LIB_DIR)/lib$(LIB_STEM).so
 
 vpath %.hh ../include ../include/internals
@@ -66,6 +67,9 @@ check.%: supposed.% actual.%
 
 check: $(TYPES:%=check.%)
 check: ;
+
+check-all:
+	for f in $(LIB_LIST) ; do $(MAKE) LIB_STEM=$$f check || break 0 ; done
 
 PACKS_URL_BASE = http://packs.download.atmel.com/
 packs:
