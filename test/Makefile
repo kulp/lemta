@@ -14,7 +14,7 @@ TYPES = Model Core
 
 MCU =# blank means default, can be set specifically
 
-LIB_DIR = lib
+LIB_DIR = unpacked/simulator/linux64
 LIB_STEM = attinyxc
 LIB = $(LIB_DIR)/lib$(LIB_STEM).so
 
