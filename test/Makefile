@@ -86,7 +86,7 @@ get-latest-packs: | packs
 unpacked:
 	mkdir -p $@
 unpack: | unpacked
-	for f in packs/*.atpack ; do unzip -qq -n -d "$|" "$$f" '*/linux64/*.so' ; done
+	for f in packs/*.atpack ; do unzip -qq -n -d "$|" "$$f" '*/linux64/*.so' '*.pdsc' ; done
 
 clean:
 	$(RM) $(TARGETS) *.o methods.*.txt methods.*.txt methods.*.xi model.*.xml types.xi
