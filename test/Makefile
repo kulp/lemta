@@ -16,10 +16,10 @@ TYPES = Model Core
 
 MCU =# blank means default, can be set specifically
 
-LIB_DIR = unpacked/simulator/linux64
+LIB_DIR = simulator/linux64
 LIB_STEM = $(error LIB_STEM must be set)
-LIB_LIST = $(patsubst lib%.so,%,$(notdir $(wildcard unpacked/simulator/linux64/libat*.so)))
-LIB = $(LIB_DIR)/lib$(LIB_STEM).so
+LIB_LIST = $(patsubst lib%.so,%,$(notdir $(wildcard unpacked/$(LIB_DIR)/libat*.so)))
+LIB = unpacked/$(LIB_DIR)/lib$(LIB_STEM).so
 
 vpath %.hh ../include ../include/internals
 CPPFLAGS += -I../include
@@ -28,7 +28,7 @@ CPPFLAGS += -I../include
 
 all: $(TARGETS)
 
-$(LINKED_TARGETS): LDFLAGS += -L$(LIB_DIR)
+$(LINKED_TARGETS): LDFLAGS += -Lunpacked/$(LIB_DIR)
 $(LINKED_TARGETS): LDLIBS += -l$(LIB_STEM)
 
 main.o: CPPFLAGS += -I../include/internals
@@ -56,7 +56,7 @@ types.xi:
 
 define check_lib
 check-$1-$2: LIB_STEM = $1
-check-$1-$2: export LD_LIBRARY_PATH=$(LIB_DIR)
+check-$1-$2: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
 check-$1-$2: flatten.h call methods.$2.xi
 	diff -q \
 	    <(cpp -P -DTYPE=$2 $$< | tr ' ' '\n') \
