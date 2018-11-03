@@ -42,15 +42,19 @@ call.o: CXXFLAGS += -Wno-cast-function-type # this is the whole point of `call`
 call.o: types.xi
 call.o: $(TYPES:%=methods.%.xi)
 
+FILES_clean += model.*.xml
 model.%.xml: interface.hh
 	castxml -o $@ --castxml-output=1 --castxml-start $* $<
 
+FILES_clean += model.*.txt
 methods.%.txt: model.%.xml
 	xmllint --xpath '//Method[@context=string(//Class[@name="$*"]/@id) and @access="public"]/@name' $< | grep -o '"[^"]*"' | tr -d '"' > $(@STDOUT)
 
+FILES_clean += model.*.xi
 methods.%.xi: methods.%.txt
 	(echo "#define METHODS_$*_(_) \\"; sed 's/^/    _($*,/; s/$$/) \\/' $<; echo "    // end METHODS_$*_") > $(@STDOUT)
 
+FILES_clean += types.xi
 types.xi:
 	($(foreach f,$(TYPES),echo '#include "methods.$f.xi"';) echo '#define TYPE_LIST(_) '\\; $(foreach f,$(TYPES),echo '    _($f) '\\;) echo '    // end TYPE_LIST') > $(@STDOUT)
 
@@ -68,6 +72,7 @@ check-$1-$2-$3: flatten.h call methods.$3.xi
 
 endef
 
+FILES_clean += check-lib-*.mk
 ifneq ($(MAKECMDGOALS),clean)
 include $(LIB_LIST:%=check-lib-%.mk)
 endif
@@ -103,4 +108,4 @@ unpack: | unpacked
 	for f in packs/*.atpack ; do unzip -qq -n -d "$|" "$$f" '$(LIB_DIR)/*.so' '*.pdsc' ; done
 
 clean:
-	$(RM) $(TARGETS) *.o methods.*.txt methods.*.xi model.*.xml types.xi check-lib-*.mk
+	$(RM) $(TARGETS) *.o $(FILES_clean)
