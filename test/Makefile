@@ -14,8 +14,6 @@ LINKED_TARGETS = main
 
 TYPES = Model Core
 
-MCU =# blank means default, can be set specifically
-
 LIB_DIR = simulator/linux64
 LIB_STEM = $(error LIB_STEM must be set)
 LIB_LIST = $(patsubst lib%.so,%,$(notdir $(wildcard unpacked/$(LIB_DIR)/libat*.so)))
