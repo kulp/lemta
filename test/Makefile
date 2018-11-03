@@ -66,7 +66,7 @@ check-$1-$2-$3: TYPE = $3
 check-$1-$2-$3: flatten.h call methods.$3.xi
 	diff -q \
 	    <(cpp -P -DTYPE=$$(TYPE) $$< | tr ' ' '\n') \
-	    <($$(realpath $$(word 2,$$^)) "$$(TYPE)" "$$(LIB)" "$$(MCU)" | cut -d: -f4- | cut -s -d'(' -f1 | grep -v '^$$$$')
+	    <($$(realpath $$(word 2,$$^)) "$$(TYPE)" "$$(LIB)" "$$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}')
 
 endef
 
