@@ -10,7 +10,6 @@ CXXFLAGS += -Wall -Wextra -Wold-style-cast
 LINK.o = $(LINK.cc)
 
 TARGETS = main call
-LINKED_TARGETS = main
 
 TYPES = Model Core
 
@@ -28,9 +27,7 @@ CPPFLAGS += -I../include
 
 all: $(TARGETS)
 
-$(LINKED_TARGETS): LDFLAGS += -Lunpacked/$(LIB_DIR)
-$(LINKED_TARGETS): LDLIBS += -l$(LIB_STEM)
-
+main: LDLIBS += -ldl
 main.o: CPPFLAGS += -I../include/internals
 main.o: model.hh interface.hh
 main.o: CXXFLAGS += -Wno-unused-value # for asserts
