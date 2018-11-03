@@ -21,6 +21,8 @@ LIB_STEM = $(error LIB_STEM must be set)
 LIB_LIST = $(patsubst lib%.so,%,$(notdir $(wildcard unpacked/$(LIB_DIR)/libat*.so)))
 LIB = unpacked/$(LIB_DIR)/lib$(LIB_STEM).so
 
+MCU_NAMES = $(shell xmllint unpacked/*.pdsc --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.linux64"][@value="$(LIB_DIR)/lib$1.so"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | grep -o '"[^"]*"' | tr -d '"')
+
 vpath %.hh ../include ../include/internals
 CPPFLAGS += -I../include
 
