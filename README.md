@@ -1,21 +1,18 @@
 # Goal
-This project seeks to derive, by good-faith clean-room reverse-engineering,
-sufficient interface definitions to support the development of F/OSS simulation
-tools that use downloadable [pack files](http://packs.download.atmel.com) from
-Atmel / Microchip.
+This project seeks to derive, by good-faith clean-room reverse-engineering
+techniques, sufficient interface definitions and library code to support the
+development of [FOSS](http://freeopensourcesoftware.org) simulation tools that
+use [packs](https://www.keil.com/pack/doc/CMSIS/Pack/html/packFormat.html) from
+[Atmel / Microchip](http://packs.download.atmel.com).
 
 ## Non-goal
 While these pack files include compiled GNU/Linux-compatible shared libraries
 which in some cases contain Verilog models converted to C++ using
 [Verilator](https://www.veripool.org/wiki/verilator), no attempt is made to
 reverse-engineer the underlying hardware description. Instead, the intent is
-merely to provide header files sufficient to `dlopen()` the library and
+to provide header and library files sufficient to `dlopen()` the library and
 usefully call its public interfaces (i.e. whatever interfaces the Atmel
 simulator needs to use in order to provide its simulation functionality).
-
-It would be truly regrettable if this project were to cause Atmel / Microchip
-to change their packs format, but given the implied desire for backward
-compatibility, this is not expected to happen.
 
 # Status
 As of this writing, the project consists essentially of the partially-inferred
