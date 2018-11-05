@@ -16,9 +16,16 @@ public:
     public:
         Calls(Library &lib, const char *name) : lib(lib), name(name) { }
         template<typename ...Params>
-        auto operator()(Params... p) -> decltype(static_cast<FunctionPtr>(0)(p...))
+        auto invoke(Params... p) -> decltype(static_cast<FunctionPtr>(0)(p...))
         {
             return reinterpret_cast<FunctionPtr>(dlsym(lib.handle, name))(p...);
+        }
+
+        // syntax sugar
+        template<typename ...Params>
+        auto operator()(Params... p) -> decltype(invoke(p...))
+        {
+            return invoke(p...);
         }
     };
 
