@@ -10,8 +10,9 @@ class Test;
 
 // placeholder types
 typedef void *UnknownType;
-enum ResetType { };
-enum BPtype { };
+// forward declare C++11 enumerations for which actual values are not yet known
+enum class ResetType : int;
+enum class BPtype : int;
 
 // inferred from Model_core::writeMemory
 typedef unsigned int Segment;
