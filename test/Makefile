@@ -29,7 +29,7 @@ all: $(TARGETS)
 
 main: LDLIBS += -ldl
 main.o: CPPFLAGS += -I../include/internals
-main.o: model.hh interface.hh
+main.o: model.hh interface.hh dynamic.hh
 main.o: CXXFLAGS += -Wno-unused-value # for asserts
 
 call: CXXFLAGS += -O3

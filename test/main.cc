@@ -4,47 +4,8 @@
 #include <cassert>
 #include <cstdio>
 
-#include <dlfcn.h>
-
 #include "model.hh"
-
-class Library
-{
-public:
-    void *handle;
-
-    template<typename FunctionPtr>
-    class Calls
-    {
-        Library &lib;
-        const char *name;
-    public:
-        Calls(Library &lib, const char *name) : lib(lib), name(name) { }
-        template<typename ...Params>
-        auto operator()(Params... p) -> decltype(static_cast<FunctionPtr>(0)(p...))
-        {
-            return reinterpret_cast<FunctionPtr>(dlsym(lib.handle, name))(p...);
-        }
-    };
-
-    Library(const char *path)
-        : handle(dlopen(path, RTLD_LAZY | RTLD_LOCAL))
-    {
-        // no body
-    }
-
-    ~Library()
-    {
-        dlclose(handle);
-    }
-
-    #define get_function(Func) get_function_(static_cast<decltype(Func)*>(0),#Func)
-    template<typename F>
-    auto get_function_(F *, const char *name) -> Calls<F*>
-    {
-        return Calls<F*>(*this, name);
-    }
-};
+#include "dynamic.hh"
 
 int main(int argc, char **argv)
 {
