@@ -11,14 +11,15 @@ public:
     template<typename FunctionPtr>
     class Calls
     {
-        Library &lib;
+        Library *lib;
         const char *name;
     public:
-        Calls(Library &lib, const char *name) : lib(lib), name(name) { }
+        Calls() : lib(nullptr), name("") { }
+        Calls(Library &lib, const char *name) : lib(&lib), name(name) { }
         template<typename ...Params>
         auto invoke(Params... p) -> decltype(static_cast<FunctionPtr>(0)(p...))
         {
-            return reinterpret_cast<FunctionPtr>(dlsym(lib.handle, name))(p...);
+            return reinterpret_cast<FunctionPtr>(dlsym(lib->handle, name))(p...);
         }
 
         // syntax sugar
