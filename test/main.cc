@@ -9,7 +9,7 @@
 
 int main(int argc, char **argv)
 {
-    if (argc < 2)
+    if (argc < 3)
         return __LINE__;
 
     Library lib(argv[1]);
@@ -17,7 +17,7 @@ int main(int argc, char **argv)
     std::printf("svDpiVersion() = %s\n", lib.get_function(svDpiVersion).invoke());
     std::printf("model_api_ver() = %#x\n", lib.get_function(model_api_ver).invoke());
 
-    Model *dev = lib.get_function(model_ctor).invoke("attiny1616");
+    Model *dev = lib.get_function(model_ctor).invoke(argv[2]);
     assert(("device constructed", dev != NULL));
 
     svScope scope = lib.get_function(svGetScopeFromName).invoke("TOP.sim_top");
