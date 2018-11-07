@@ -14,6 +14,7 @@
 #include <ucontext.h>
 
 #include "interface.hh"
+#include "dynamic.hh"
 
 template<class T>
 struct CallSite
@@ -75,34 +76,38 @@ static void segv_handler(int /*signo*/, siginfo_t * /*info*/, void *context)
 
 struct Fundamental
 {
-    typedef Model *model_ctor_t(const char *);
-    typedef int model_dtor_t(Model *);
+    static Library *lib;
+    static Library::Calls<model_ctor_func*> model_ctor_p;
+    static Library::Calls<model_dtor_func*> model_dtor_p;
 
-    static model_ctor_t *model_ctor;
-    static model_dtor_t *model_dtor;
+    static ptrdiff_t get_text_len()  { return lib->get_text_len(); }
+    static void *    get_load_base() { return lib->get_load_base(); }
 };
 
 template<typename T>
 struct BaseBehavior : public Fundamental
 {
-    static void * load(int &argc, char **&argv)
+    static bool load(int &argc, char **&argv)
     {
         if (argc > 0) {
             argc--;
-            void *handle = dlopen(*argv++, RTLD_GLOBAL | RTLD_NOW);
-            if (handle != nullptr) {
-                model_ctor = reinterpret_cast<model_ctor_t*>(dlsym(handle, "model_ctor"));
-                model_dtor = reinterpret_cast<model_dtor_t*>(dlsym(handle, "model_dtor"));
+			lib = new Library(*argv++);
+
+            if (lib->handle) {
+                model_ctor_p = lib->get_function(model_ctor);
+                model_dtor_p = lib->get_function(model_dtor);
             }
-            return handle;
+
+            return lib->handle != nullptr;
         } else {
-            return nullptr;
+            return false;
         }
     }
 
-    static int unload(void *handle)
+    static void unload()
     {
-        return dlclose(handle);
+        delete lib;
+        lib = nullptr;
     }
 
     static int dump_results()
@@ -146,12 +151,12 @@ struct DerivedBehavior<Model> : public BaseBehavior<Model>
 {
     static Model *create(int &argc, char **&argv)
     {
-        return argc > 0 ? (argc--, model_ctor(*argv++)) : nullptr;
+        return argc > 0 ? (argc--, model_ctor_p(*argv++)) : nullptr;
     }
 
     static int destroy(Model *victim)
     {
-        return model_dtor(victim);
+        return model_dtor_p(victim);
     }
 };
 
@@ -168,18 +173,19 @@ struct DerivedBehavior<Core> : public BaseBehavior<Core>
 
     static int destroy(Core *victim)
     {
-        return model_dtor(victim->getModel());
+        return model_dtor_p(victim->getModel());
     }
 };
 
-Fundamental::model_ctor_t *Fundamental::model_ctor = nullptr;
-Fundamental::model_dtor_t *Fundamental::model_dtor = nullptr;
+Library *Fundamental::lib;
+Library::Calls<model_ctor_func*> Fundamental::model_ctor_p;
+Library::Calls<model_dtor_func*> Fundamental::model_dtor_p;
 
 template<typename T>
 static int execute(int &argc, char **&argv)
 {
-    void *handle = DerivedBehavior<T>::load(argc, argv);
-    if (!handle) {
+    bool success = DerivedBehavior<T>::load(argc, argv);
+    if (!success) {
         printf("dlopen: %s\n", dlerror());
         return __LINE__;
     }
@@ -188,15 +194,10 @@ static int execute(int &argc, char **&argv)
     if (rec == nullptr)
         return __LINE__;
 
-    Dl_info info;
+    ptrdiff_t len = DerivedBehavior<T>::get_text_len();
+    void *base = DerivedBehavior<T>::get_load_base();
 
-    if (dladdr(dlsym(RTLD_DEFAULT, "model_ctor"), &info) == 0)
-        return __LINE__;
-
-    void *end = dlsym(RTLD_NEXT, "_fini");
-    ptrdiff_t len = static_cast<char*>(end) - static_cast<char*>(info.dli_fbase);
-
-    if (mprotect(info.dli_fbase, len, PROT_READ) != 0)
+    if (mprotect(base, len, PROT_READ) != 0)
         perror("mprotect");
 
     struct sigaction action = {};
@@ -212,14 +213,13 @@ static int execute(int &argc, char **&argv)
 
     DerivedBehavior<T>::dump_results();
 
-    if (mprotect(info.dli_fbase, len, PROT_READ | PROT_EXEC) != 0)
+    if (mprotect(base, len, PROT_READ | PROT_EXEC) != 0)
         perror("mprotect");
 
     if (DerivedBehavior<T>::destroy(rec))
         return __LINE__;
 
-    if (DerivedBehavior<T>::unload(handle))
-        return __LINE__;
+    DerivedBehavior<T>::unload();
 
     return 0;
 }
