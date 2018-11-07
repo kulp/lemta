@@ -47,6 +47,25 @@ public:
     {
         return Calls<F*>(*this, name);
     }
+
+    void *get_load_base()
+    {
+        Dl_info info;
+        if (dladdr(dlsym(handle, "_init"), &info) == 0)
+            return nullptr; // TODO return MAP_FAILED perhaps ?
+
+        return info.dli_fbase;
+    }
+
+    ptrdiff_t get_text_len()
+    {
+        Dl_info info;
+        if (dladdr(dlsym(handle, "_init"), &info) == 0)
+            return __LINE__;
+
+        void *end = dlsym(handle, "_fini");
+        return static_cast<char*>(end) - static_cast<char*>(info.dli_fbase);
+    }
 };
 
 #endif
