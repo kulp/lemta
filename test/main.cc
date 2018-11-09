@@ -3,9 +3,17 @@
 
 #include <cassert>
 #include <cstdio>
+#include <setjmp.h>
+#include <signal.h>
 
 #include "model.hh"
 #include "dynamic.hh"
+
+static jmp_buf jmp;
+static void segv_handler(int /*signo*/, siginfo_t * /*info*/, void *)
+{
+    siglongjmp(jmp, 1); // this `1` increments the counter in the crashing loop
+}
 
 int main(int argc, char **argv)
 {
@@ -42,7 +50,19 @@ int main(int argc, char **argv)
     // ; 0x405 -> 0x0
     // ; 0x406 -> 0x1
     // ; else  -> failure
-    for (int i = 0; i < 0x500; ++i) {
+
+    struct sigaction action = {};
+    action.sa_sigaction = segv_handler;
+    action.sa_flags = SA_SIGINFO;
+
+    if (sigaction(SIGSEGV, &action, NULL) != 0)
+        perror("sigaction");
+
+    for (volatile int i = 0; i < 0x500; ++i) {
+        if (sigsetjmp(jmp, 1/*nonzero*/)) {
+            std::printf("index = %d caused SIGSEGV, skipping\n", i);
+            i++;
+        }
         result = mc->getIntProperty(i, &ul, "");
         std::printf("index = %d, result = %p, ul = %lu\n", i, result, ul);
     }
