@@ -1,6 +1,7 @@
 *.o
 model.*.*
 methods.*.xi
+methods.*.txt
 supposed.*
 actual.*
 types.xi
