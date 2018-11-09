@@ -204,10 +204,10 @@ static int execute(int &argc, char **&argv)
     action.sa_sigaction = segv_handler;
     action.sa_flags = SA_SIGINFO;
 
-    sigsetjmp(bounce, 1/*anything nonzero*/);
-
     if (sigaction(SIGSEGV, &action, NULL) != 0)
         perror("sigaction");
+
+    sigsetjmp(bounce, 1/*anything nonzero*/);
 
     DerivedBehavior<T>::run_tests(rec);
 
