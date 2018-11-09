@@ -42,8 +42,10 @@ int main(int argc, char **argv)
     // ; 0x405 -> 0x0
     // ; 0x406 -> 0x1
     // ; else  -> failure
-    result = mc->getIntProperty(0x404, &ul, "testy");
-    std::printf("result = %p, ul = %lu\n", result, ul);
+    for (int i = 0; i < 0x500; ++i) {
+        result = mc->getIntProperty(i, &ul, "");
+        std::printf("index = %d, result = %p, ul = %lu\n", i, result, ul);
+    }
 
     int rc = lib.get_function(model_dtor).invoke(dev);
     assert(("destructor succeeded", rc == 0));
