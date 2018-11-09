@@ -20,11 +20,13 @@ typedef unsigned int Segment;
 class Core
 {
 public:
+    typedef void StepCb(Core*, void*);
+
     virtual UnknownType reset(ResetType) = 0;
     virtual UnknownType step(unsigned long) = 0;
     virtual UnknownType run(unsigned long) = 0;
     virtual UnknownType stop() = 0;
-    virtual UnknownType addStepCallback(void (*)(Core*, void*), void*) = 0;
+    virtual UnknownType addStepCallback(StepCb*, void*) = 0;
     virtual UnknownType removeStepCallback(int) = 0;
     virtual UnknownType peekReg(int, unsigned long*) = 0;
     virtual UnknownType pokeReg(int, unsigned long) = 0;
@@ -45,11 +47,13 @@ public:
 class Model
 {
 public:
+    typedef void CycleCb(Model*, void*);
+
     virtual Core *getCore(unsigned int) = 0;
     virtual UnknownType reset(ResetType) = 0;
     virtual UnknownType cycle(unsigned int) = 0;
     virtual UnknownType stop() = 0;
-    virtual UnknownType addCycleCallback(void (*)(Model*, void*), void*) = 0;
+    virtual UnknownType addCycleCallback(CycleCb*, void*) = 0;
     virtual UnknownType removeCycleCallback(int) = 0;
     virtual int getIntProperty(int, unsigned long*, char const*) = 0;
     virtual UnknownType setIntProperty(int, unsigned long, char const*) = 0;
