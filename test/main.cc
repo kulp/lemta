@@ -76,6 +76,7 @@ int main(int argc, char **argv)
             std::printf("index = %d = %#x caused SIGSEGV, skipping\n", i, i);
             i++;
         }
+        ul = -1;
         int result = mc->getIntProperty(i, &ul, "");
         if (result != -1) {
             std::printf("index = %d = %#x, result = %d, ul = %lu\n", i, i, result, ul);
