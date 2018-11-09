@@ -63,7 +63,9 @@ int main(int argc, char **argv)
             i++;
         }
         int result = mc->getIntProperty(i, &ul, "");
-        std::printf("index = %d = %#x, result = %d, ul = %lu\n", i, i, result, ul);
+        if (result != -1) {
+            std::printf("index = %d = %#x, result = %d, ul = %lu\n", i, i, result, ul);
+        }
     }
 
     int rc = lib.get_function(model_dtor).invoke(dev);
