@@ -56,7 +56,7 @@ public:
     virtual UnknownType getMemoryMap(); // implemented trivially : "getMemoryMap should be implemented in children core class"
     virtual UnknownType readMemory(unsigned long, unsigned long, unsigned char*, Segment);
     virtual UnknownType writeMemory(unsigned long, unsigned long, unsigned char const*, Segment);
-    virtual UnknownType getIntProperty(int, unsigned long*, char const*);
+    virtual int getIntProperty(int, unsigned long*, char const*);
     virtual UnknownType setIntProperty(int, unsigned long, char const*);
     virtual UnknownType getStringProperty(int, unsigned long, char*, unsigned long const*);
     virtual UnknownType setStringProperty(int, char*, unsigned long const*);
@@ -121,7 +121,7 @@ public:
     virtual UnknownType stop();
     virtual UnknownType addCycleCallback(void (*)(Model*, void*), void*);
     virtual UnknownType removeCycleCallback(int);
-    virtual UnknownType getIntProperty(int, unsigned long*, char const*);
+    virtual int getIntProperty(int, unsigned long*, char const*);
     virtual UnknownType setIntProperty(int, unsigned long, char const*);
     virtual UnknownType getStringProperty(int, unsigned long, char*, unsigned long const*);
     virtual UnknownType setStringProperty(int, char*, unsigned long const*);

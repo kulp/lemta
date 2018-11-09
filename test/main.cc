@@ -43,7 +43,6 @@ int main(int argc, char **argv)
     dev->cycle(1);
 
     unsigned long ul = -1;
-    void *result;
     // Avr8:
     // ; 0x400 -> 0x0
     // ; 0x404 -> 0x20
@@ -63,8 +62,8 @@ int main(int argc, char **argv)
             std::printf("index = %d = %#x caused SIGSEGV, skipping\n", i, i);
             i++;
         }
-        result = mc->getIntProperty(i, &ul, "");
-        std::printf("index = %d = %#x, result = %p, ul = %lu\n", i, i, result, ul);
+        int result = mc->getIntProperty(i, &ul, "");
+        std::printf("index = %d = %#x, result = %d, ul = %lu\n", i, i, result, ul);
     }
 
     int rc = lib.get_function(model_dtor).invoke(dev);

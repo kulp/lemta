@@ -31,7 +31,7 @@ public:
     virtual UnknownType getMemoryMap() = 0;
     virtual UnknownType readMemory(unsigned long, unsigned long, unsigned char*, Segment) = 0;
     virtual UnknownType writeMemory(unsigned long, unsigned long, unsigned char const*, Segment) = 0;
-    virtual UnknownType getIntProperty(int, unsigned long*, char const*) = 0;
+    virtual int getIntProperty(int, unsigned long*, char const*) = 0;
     virtual UnknownType setIntProperty(int, unsigned long, char const*) = 0;
     virtual UnknownType getStringProperty(int, unsigned long, char*, unsigned long const*) = 0;
     virtual UnknownType setStringProperty(int, char*, unsigned long const*) = 0;
@@ -51,7 +51,7 @@ public:
     virtual UnknownType stop();
     virtual UnknownType addCycleCallback(void (*)(Model*, void*), void*);
     virtual UnknownType removeCycleCallback(int);
-    virtual UnknownType getIntProperty(int, unsigned long*, char const*);
+    virtual int getIntProperty(int, unsigned long*, char const*);
     virtual UnknownType setIntProperty(int, unsigned long, char const*);
     virtual UnknownType getStringProperty(int, unsigned long, char*, unsigned long const*);
     virtual UnknownType setStringProperty(int, char*, unsigned long const*);
