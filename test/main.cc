@@ -15,6 +15,11 @@ static void segv_handler(int /*signo*/, siginfo_t * /*info*/, void *)
     siglongjmp(jmp, 1); // this `1` increments the counter in the crashing loop
 }
 
+static void cycle_cb(Model *m, void *userdata)
+{
+    printf("%s(%p, %p)\n", __func__, m, userdata);
+}
+
 int main(int argc, char **argv)
 {
     if (argc < 3)
@@ -39,6 +44,8 @@ int main(int argc, char **argv)
 
     Model *md = mc->getModel();
     assert(("model device is same", md == dev));
+
+    md->addCycleCallback(cycle_cb, mc);
 
     dev->cycle(1);
 
