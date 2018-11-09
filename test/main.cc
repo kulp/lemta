@@ -60,11 +60,11 @@ int main(int argc, char **argv)
 
     for (volatile int i = 0; i < 0x500; ++i) {
         if (sigsetjmp(jmp, 1/*nonzero*/)) {
-            std::printf("index = %d caused SIGSEGV, skipping\n", i);
+            std::printf("index = %d = %#x caused SIGSEGV, skipping\n", i, i);
             i++;
         }
         result = mc->getIntProperty(i, &ul, "");
-        std::printf("index = %d, result = %p, ul = %lu\n", i, result, ul);
+        std::printf("index = %d = %#x, result = %p, ul = %lu\n", i, i, result, ul);
     }
 
     int rc = lib.get_function(model_dtor).invoke(dev);
