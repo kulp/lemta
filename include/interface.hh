@@ -45,20 +45,20 @@ public:
 class Model
 {
 public:
-    virtual Core *getCore(unsigned int);
-    virtual UnknownType reset(ResetType);
-    virtual UnknownType cycle(unsigned int);
-    virtual UnknownType stop();
-    virtual UnknownType addCycleCallback(void (*)(Model*, void*), void*);
-    virtual UnknownType removeCycleCallback(int);
-    virtual int getIntProperty(int, unsigned long*, char const*);
-    virtual UnknownType setIntProperty(int, unsigned long, char const*);
-    virtual UnknownType getStringProperty(int, unsigned long, char*, unsigned long const*);
-    virtual UnknownType setStringProperty(int, char*, unsigned long const*);
-    virtual UnknownType saveSim(SimState*);
-    virtual UnknownType loadSim(SimState*);
-    virtual UnknownType debug(char const*, int (*)(char const*, ...));
-    virtual UnknownType test(int, Test*, int (*)(Model*));
+    virtual Core *getCore(unsigned int) = 0;
+    virtual UnknownType reset(ResetType) = 0;
+    virtual UnknownType cycle(unsigned int) = 0;
+    virtual UnknownType stop() = 0;
+    virtual UnknownType addCycleCallback(void (*)(Model*, void*), void*) = 0;
+    virtual UnknownType removeCycleCallback(int) = 0;
+    virtual int getIntProperty(int, unsigned long*, char const*) = 0;
+    virtual UnknownType setIntProperty(int, unsigned long, char const*) = 0;
+    virtual UnknownType getStringProperty(int, unsigned long, char*, unsigned long const*) = 0;
+    virtual UnknownType setStringProperty(int, char*, unsigned long const*) = 0;
+    virtual UnknownType saveSim(SimState*) = 0;
+    virtual UnknownType loadSim(SimState*) = 0;
+    virtual UnknownType debug(char const*, int (*)(char const*, ...)) = 0;
+    virtual UnknownType test(int, Test*, int (*)(Model*)) = 0;
 };
 
 class model_verilated
