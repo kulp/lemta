@@ -40,8 +40,11 @@ protected:
     UnknownType checkTrace(std::deque<Breakpoint*>&, Breakpoint*&);
     UnknownType checkWatch(std::deque<Breakpoint*>&, Breakpoint*&);
 
-    // order of field not known
+    // order of field m_nextBreakId not known
     UnknownType m_nextBreakId;
+
+    // byte offset of facade is 0x1b0 on Linux
+    // MemFacade facade;
 
 public:
     // inherited from Core
