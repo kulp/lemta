@@ -41,7 +41,7 @@ public:
     virtual UnknownType addBreakpoint(Breakpoint*) = 0;
     virtual UnknownType removeBreakpoint(int) = 0;
     virtual UnknownType getBreakpoints(BPtype) = 0;
-    virtual UnknownType test(int, Test*, int (*)(Model*)) = 0;
+    virtual int test(int, Test*, int (*)(Model*)) = 0;
 };
 
 class Model
@@ -63,7 +63,7 @@ public:
     virtual UnknownType saveSim(SimState*) = 0;
     virtual UnknownType loadSim(SimState*) = 0;
     virtual int debug(char const*, DebugFunc*) = 0;
-    virtual UnknownType test(int, Test*, int (*)(Model*)) = 0;
+    virtual int test(int, Test*, int (*)(Model*)) = 0;
 };
 
 class model_verilated

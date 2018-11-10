@@ -64,7 +64,7 @@ public:
     virtual UnknownType addBreakpoint(Breakpoint*);
     virtual UnknownType removeBreakpoint(int);
     virtual UnknownType getBreakpoints(BPtype);
-    virtual UnknownType test(int, Test*, int (*)(Model*));
+    virtual int test(int, Test*, int (*)(Model*)); // implemented trivially : `return -1`
 
 protected:
     // in Model_core only
@@ -128,7 +128,7 @@ public:
     virtual UnknownType saveSim(SimState*);
     virtual UnknownType loadSim(SimState*);
     virtual int debug(char const*, int (*)(char const*, ...)); // implemented trivially : `return 0`
-    virtual UnknownType test(int, Test*, int (*)(Model*));
+    virtual int test(int, Test*, int (*)(Model*)); // implemented trivially : `return -1`
 };
 
 class MemUnit
