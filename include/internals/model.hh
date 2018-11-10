@@ -46,6 +46,9 @@ protected:
     // byte offset of facade is 0x1b0 on Linux
     // MemFacade facade;
 
+    // byte offset of Model * is 0x1c0 on Linux
+    // Model *model;
+
 public:
     // inherited from Core
     virtual UnknownType reset(ResetType);
@@ -116,6 +119,9 @@ public:
 
     // order of field not known
     UnknownType m_timeStamp;
+
+    // byte offset of Core * array is 0x28 on Linux
+    // Core **cores;
 
     // inherited from Model
     virtual Core *getCore(unsigned int);
