@@ -72,11 +72,11 @@ public:
 protected:
     // in Model_core only
     virtual UnknownType core_init();
-    virtual UnknownType core_config(char const*);
-    virtual UnknownType core_reset(ResetType);
+    virtual void core_config(char const*);
+    virtual int core_reset(ResetType);
     virtual UnknownType core_isBreakInstr(unsigned int);
-    virtual UnknownType core_getIntProperty(int, unsigned long*);
-    virtual UnknownType core_setIntProperty(int, unsigned long);
+    virtual int core_getIntProperty(int, unsigned long*);
+    virtual int core_setIntProperty(int, unsigned long);
 };
 
 class Avr8 : public Model_core
@@ -94,11 +94,11 @@ public:
 protected:
     // inherited from Model_core
     virtual UnknownType core_init();
-    virtual UnknownType core_config(char const*);
-    virtual UnknownType core_reset(ResetType);
+    virtual void core_config(char const*); // implemented trivially : `return`
+    virtual int core_reset(ResetType); // implemented trivially : `return 0`
     virtual UnknownType core_isBreakInstr(unsigned int);
-    virtual UnknownType core_getIntProperty(int, unsigned long*);
-    virtual UnknownType core_setIntProperty(int, unsigned long);
+    virtual int core_getIntProperty(int, unsigned long*);
+    virtual int core_setIntProperty(int, unsigned long); // implemented trivially : `return -1`
 };
 
 class Model_device : public Model
