@@ -50,9 +50,20 @@ int main(int argc, char **argv)
     Model *md = mc->getModel();
     assert(("model device is same", md == dev));
 
-    mc->addStepCallback(step_cb, md);
-    md->addCycleCallback(cycle_cb, mc);
+    int sc = mc->addStepCallback(step_cb, md);
+    int cc = md->addCycleCallback(cycle_cb, mc);
 
+    puts("cycle and step");
+    dev->cycle(1);
+    mc->step(1);
+
+    mc->removeStepCallback(sc);
+    puts("cycle only");
+    dev->cycle(1);
+    mc->step(1);
+
+    md->removeCycleCallback(cc);
+    puts("neither");
     dev->cycle(1);
     mc->step(1);
 

@@ -52,7 +52,7 @@ public:
     virtual UnknownType step(unsigned long);
     virtual UnknownType run(unsigned long);
     virtual UnknownType stop();
-    virtual UnknownType addStepCallback(void (*)(Core*, void*), void*);
+    virtual int addStepCallback(void (*)(Core*, void*), void*);
     virtual UnknownType removeStepCallback(int);
     virtual UnknownType peekReg(int, unsigned long*);
     virtual UnknownType pokeReg(int, unsigned long);
@@ -71,10 +71,10 @@ public:
 
 protected:
     // in Model_core only
-    virtual UnknownType core_init();
+    virtual void core_init();
     virtual void core_config(char const*);
     virtual int core_reset(ResetType);
-    virtual UnknownType core_isBreakInstr(unsigned int);
+    virtual bool core_isBreakInstr(unsigned int);
     virtual int core_getIntProperty(int, unsigned long*);
     virtual int core_setIntProperty(int, unsigned long);
 };
@@ -93,10 +93,10 @@ public:
 
 protected:
     // inherited from Model_core
-    virtual UnknownType core_init();
+    virtual void core_init();
     virtual void core_config(char const*); // implemented trivially : `return`
     virtual int core_reset(ResetType); // implemented trivially : `return 0`
-    virtual UnknownType core_isBreakInstr(unsigned int);
+    virtual bool core_isBreakInstr(unsigned int);
     virtual int core_getIntProperty(int, unsigned long*);
     virtual int core_setIntProperty(int, unsigned long); // implemented trivially : `return -1`
 };
@@ -122,7 +122,7 @@ public:
     virtual UnknownType reset(ResetType);
     virtual UnknownType cycle(unsigned int);
     virtual UnknownType stop();
-    virtual UnknownType addCycleCallback(void (*)(Model*, void*), void*);
+    virtual int addCycleCallback(void (*)(Model*, void*), void*);
     virtual UnknownType removeCycleCallback(int);
     virtual int getIntProperty(int, unsigned long*, char const*);
     virtual UnknownType setIntProperty(int, unsigned long, char const*);
