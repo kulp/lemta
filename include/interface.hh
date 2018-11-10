@@ -48,6 +48,7 @@ class Model
 {
 public:
     typedef void CycleCb(Model*, void*);
+    typedef int DebugFunc(char const*, ...);
 
     virtual Core *getCore(unsigned int) = 0;
     virtual UnknownType reset(ResetType) = 0;
@@ -61,7 +62,7 @@ public:
     virtual UnknownType setStringProperty(int, char*, unsigned long const*) = 0;
     virtual UnknownType saveSim(SimState*) = 0;
     virtual UnknownType loadSim(SimState*) = 0;
-    virtual UnknownType debug(char const*, int (*)(char const*, ...)) = 0;
+    virtual int debug(char const*, DebugFunc*) = 0;
     virtual UnknownType test(int, Test*, int (*)(Model*)) = 0;
 };
 

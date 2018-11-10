@@ -127,7 +127,7 @@ public:
     virtual UnknownType setStringProperty(int, char*, unsigned long const*);
     virtual UnknownType saveSim(SimState*);
     virtual UnknownType loadSim(SimState*);
-    virtual UnknownType debug(char const*, int (*)(char const*, ...));
+    virtual int debug(char const*, int (*)(char const*, ...)); // implemented trivially : `return 0`
     virtual UnknownType test(int, Test*, int (*)(Model*));
 };
 
