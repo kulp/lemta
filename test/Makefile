@@ -1,10 +1,11 @@
 VERILATOR_CFLAGS := $(shell pkg-config --cflags verilator)
 
 CXXFLAGS += -g
-CPPFLAGS += $(VERILATOR_CFLAGS)
-
+CXXFLAGS += -O3
 CXXFLAGS += -std=c++11
 CXXFLAGS += -Wall -Wextra -Wold-style-cast
+
+CPPFLAGS += $(VERILATOR_CFLAGS)
 
 LINK.o = $(LINK.cc)
 
@@ -28,16 +29,13 @@ all: $(TARGETS)
 
 main: LDLIBS += -ldl
 main.o: CPPFLAGS += -I../include/internals
-main.o: model.hh interface.hh dynamic.hh
 main.o: CXXFLAGS += -Wno-unused-value # for asserts
+main.o: model.hh interface.hh dynamic.hh
 
-call: CXXFLAGS += -O3
 call: LDLIBS += -ldl
 call.o: CXXFLAGS += -Wno-cast-function-type # this is the whole point of `call`
-call.o: interface.hh
-call.o: dynamic.hh
-call.o: types.xi
-call.o: $(TYPES:%=methods.%.xi)
+call.o: interface.hh dynamic.hh
+call.o: types.xi $(TYPES:%=methods.%.xi)
 
 FILES_clean += model.*.xml
 model.%.xml: interface.hh
