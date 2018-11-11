@@ -57,9 +57,7 @@ types.xi:
 
 check-%: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
 check-%:
-	diff -q \
-	    $(word 2,$^) \
-	    <($(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}')
+	diff -q $< <($(realpath $(word 2,$^)) "$(TYPE)" "$(LIB)" "$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}')
 
 define check_lib
 
@@ -67,7 +65,7 @@ CHECK_TARGETS += check-$1-$2-$3
 check-$1-$2-$3: LIB_STEM = $1
 check-$1-$2-$3: MCU = $2
 check-$1-$2-$3: TYPE = $3
-check-$1-$2-$3: call methods.$3.txt
+check-$1-$2-$3: methods.$3.txt call
 
 endef
 
