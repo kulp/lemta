@@ -41,11 +41,11 @@ FILES_clean += model.*.xml
 model.%.xml: interface.hh
 	castxml -o $@ --castxml-output=1 --castxml-start $* $<
 
-FILES_clean += model.*.txt
+FILES_clean += methods.*.txt
 methods.%.txt: model.%.xml
 	xmllint --xpath '//Method[@context=string(//Class[@name="$*"]/@id) and @access="public"]/@name' $< | grep -o '"[^"]*"' | tr -d '"' > $(@STDOUT)
 
-FILES_clean += model.*.xi
+FILES_clean += methods.*.xi
 methods.%.xi: methods.%.txt
 	(echo "#define METHODS_$*_(_) \\"; sed 's/^/    _($*,/; s/$$/) \\/' $<; echo "    // end METHODS_$*_") > $(@STDOUT)
 
