@@ -33,8 +33,9 @@ main.o: CXXFLAGS += -Wno-unused-value # for asserts
 
 call: CXXFLAGS += -O3
 call: LDLIBS += -ldl
-call.o: interface.hh
 call.o: CXXFLAGS += -Wno-cast-function-type # this is the whole point of `call`
+call.o: interface.hh
+call.o: dynamic.hh
 call.o: types.xi
 call.o: $(TYPES:%=methods.%.xi)
 
