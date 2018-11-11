@@ -1,5 +1,7 @@
+VERILATOR_CFLAGS := $(shell pkg-config --cflags verilator)
+
 CXXFLAGS += -g
-CPPFLAGS += -I/usr/share/verilator/include/vltstd
+CPPFLAGS += $(VERILATOR_CFLAGS)
 
 CXXFLAGS += -std=c++11
 CXXFLAGS += -Wall -Wextra -Wold-style-cast
