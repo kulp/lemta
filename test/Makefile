@@ -1,5 +1,4 @@
 CXXFLAGS += -g
-CPPFLAGS += -I/usr/share/verilator/include
 CPPFLAGS += -I/usr/share/verilator/include/vltstd
 
 CXXFLAGS += -std=c++11

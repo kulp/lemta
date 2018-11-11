@@ -1,4 +1,3 @@
-#include <verilated.h>
 #include <svdpi.h>
 
 #include <cassert>
@@ -40,9 +39,6 @@ int main(int argc, char **argv)
 
     svScope scope = lib.get_function(svGetScopeFromName).invoke("TOP.sim_top");
     assert(("found scope", scope != NULL));
-
-    // cannot call C++ methods if we do not know their manglings
-    //static_cast<VerilatedScope*>(scope)->scopeDump();
 
     Core *mc = dev->getCore(0);
     assert(("model core exists", mc != NULL));
