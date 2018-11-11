@@ -101,10 +101,12 @@ get-latest-packs: | packs
 	    sed 's#^#$(PACKS_URL_BASE)#' | \
 	    xargs -n1 curl --remote-name --continue-at -
 
+PACKS = $(notdir $(wildcard packs/*.atpack))
 unpacked:
 	mkdir -p $@
-unpack: | unpacked
-	for f in packs/*.atpack ; do unzip -qq -n -d "$|" "$$f" '$(LIB_DIR)/*.so' '*.pdsc' ; done
+unpack: $(PACKS:%=unpack-%) | unpacked
+unpack-%: packs/% | unpacked
+	unzip -qq -n -d $| $< '$(LIB_DIR)/*.so' '*.pdsc'
 
 clean:
 	$(RM) $(TARGETS) *.o $(FILES_clean)
