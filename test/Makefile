@@ -1,5 +1,3 @@
-SHELL = /bin/bash # we use bash-isms
-
 CXXFLAGS += -g
 CPPFLAGS += -I/usr/share/verilator/include
 CPPFLAGS += -I/usr/share/verilator/include/vltstd
@@ -56,8 +54,12 @@ types.xi:
 	($(foreach f,$(TYPES),echo '#include "methods.$f.xi"';) echo '#define TYPE_LIST(_) '\\; $(foreach f,$(TYPES),echo '    _($f) '\\;) echo '    // end TYPE_LIST') > $(@STDOUT)
 
 check-%: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
-check-%:
-	diff -q $< <($(realpath $(word 2,$^)) "$(TYPE)" "$(LIB)" "$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}')
+check-%: check-%-rhs.txt
+	diff -q $^
+
+FILES_clean += check-*-rhs.txt
+check-%-rhs.txt: call
+	$(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}' > $(@STDOUT)
 
 define check_lib
 
@@ -65,7 +67,7 @@ CHECK_TARGETS += check-$1-$2-$3
 check-$1-$2-$3: LIB_STEM = $1
 check-$1-$2-$3: MCU = $2
 check-$1-$2-$3: TYPE = $3
-check-$1-$2-$3: methods.$3.txt call
+check-$1-$2-$3: methods.$3.txt
 
 endef
 
