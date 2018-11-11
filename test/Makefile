@@ -118,3 +118,6 @@ unpack-%: packs/%.atpack | unpacked
 
 clean:
 	$(RM) $(TARGETS) *.o $(FILES_clean)
+
+distclean: clean
+	$(RM) -r packs unpacked
