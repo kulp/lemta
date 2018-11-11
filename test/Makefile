@@ -88,24 +88,32 @@ else
 endif
 
 PACKS_URL_BASE = http://packs.download.atmel.com/
-packs:
-	mkdir -p $@
 PACK_TYPES = ATautomotive ATmega ATtiny XMEGA
-get-latest-packs: | packs
-	cd $| && \
-	    curl --silent '$(PACKS_URL_BASE)' | \
-	    xmllint --html --xpath //button/@data-link - | \
+FILES_clean += packs.mk
+packs.mk: packs/index.html
+	(echo define PACKS ; \
+	    xmllint --html --xpath //button/@data-link $< | \
 	    grep -o '"[^"]*"' | tr -d '"' | \
 	    grep $(PACK_TYPES:%=-e %) | \
-	    sort --reverse --field-separator=. --key=1,2 --unique | \
-	    sed 's#^#$(PACKS_URL_BASE)#' | \
-	    xargs -n1 curl --remote-name --continue-at -
+	    sort --reverse --field-separator=. --key=1,2 --unique ; \
+	echo endef) > $(@STDOUT)
 
-PACKS = $(notdir $(wildcard packs/*.atpack))
+include packs.mk
+
+get-latest-packs: $(PACKS:%=packs/%)
+
+packs:
+	mkdir -p $@
+FILES_clean += packs/index.html
+packs/index.html: | packs
+	curl -o $@ '$(PACKS_URL_BASE)'
+packs/%.atpack: | packs
+	cd $| && curl --remote-name --continue-at - $(PACKS_URL_BASE)$(@F)
+
 unpacked:
 	mkdir -p $@
-unpack: $(PACKS:%=unpack-%) | unpacked
-unpack-%: packs/% | unpacked
+unpack: $(PACKS:%.atpack=unpack-%) | unpacked
+unpack-%: packs/%.atpack | unpacked
 	unzip -qq -n -d $| $< '$(LIB_DIR)/*.so' '*.pdsc'
 
 clean:

@@ -10,3 +10,4 @@ main
 packs/
 unpacked/
 check-lib-*.mk
+packs.mk
