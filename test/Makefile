@@ -56,6 +56,11 @@ types.xi:
 	($(foreach f,$(TYPES),echo '#include "methods.$f.xi"';) echo '#define TYPE_LIST(_) '\\; $(foreach f,$(TYPES),echo '    _($f) '\\;) echo '    // end TYPE_LIST') > $(@STDOUT)
 
 check-%: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
+check-%:
+	diff -q \
+	    <(cpp -P -DTYPE=$(TYPE) $< | tr ' ' '\n') \
+	    <($(realpath $(word 2,$^)) "$(TYPE)" "$(LIB)" "$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}')
+
 define check_lib
 
 CHECK_TARGETS += check-$1-$2-$3
@@ -63,9 +68,6 @@ check-$1-$2-$3: LIB_STEM = $1
 check-$1-$2-$3: MCU = $2
 check-$1-$2-$3: TYPE = $3
 check-$1-$2-$3: flatten.h call methods.$3.xi
-	diff -q \
-	    <(cpp -P -DTYPE=$$(TYPE) $$< | tr ' ' '\n') \
-	    <($$(realpath $$(word 2,$$^)) "$$(TYPE)" "$$(LIB)" "$$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}')
 
 endef
 
