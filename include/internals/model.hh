@@ -195,8 +195,8 @@ public:
 
     UnknownType write(unsigned int, unsigned int, unsigned char const*, unsigned int);
     UnknownType exists(unsigned int) const;
-    UnknownType getMemUnit(unsigned int);
-    UnknownType getMemUnit(std::string const&);
+    MemUnit* getMemUnit(unsigned int);
+    MemUnit* getMemUnit(std::string const&);
     UnknownType read(unsigned int, unsigned int, unsigned char*, unsigned int);
     UnknownType addMemUnit(unsigned int, MemUnit*);
     UnknownType addMemUnits(std::map<unsigned int, MemUnit*, std::less<unsigned int>, std::allocator<std::pair<unsigned int const, MemUnit*> > > const&);
