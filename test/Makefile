@@ -108,7 +108,7 @@ FILES_clean += packs/index.html
 packs/index.html: | packs
 	curl -o $@ '$(PACKS_URL_BASE)'
 packs/%.atpack: | packs
-	cd $| && curl --remote-name --continue-at - $(PACKS_URL_BASE)$(@F)
+	curl --continue-at - --output $@ $(PACKS_URL_BASE)$(@F)
 
 unpacked:
 	mkdir -p $@
