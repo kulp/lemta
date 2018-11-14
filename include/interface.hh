@@ -22,8 +22,8 @@ class Core
 public:
     typedef void StepCb(Core*, void*);
 
-    virtual UnknownType reset(ResetType) = 0;
-    virtual UnknownType step(unsigned long) = 0;
+    virtual int reset(ResetType) = 0;
+    virtual int step(unsigned long) = 0;
     virtual UnknownType run(unsigned long) = 0;
     virtual UnknownType stop() = 0;
     virtual int addStepCallback(StepCb*, void*) = 0;
@@ -51,7 +51,7 @@ public:
     typedef int DebugFunc(char const*, ...);
 
     virtual Core *getCore(unsigned int) = 0;
-    virtual UnknownType reset(ResetType) = 0;
+    virtual int reset(ResetType) = 0;
     virtual UnknownType cycle(unsigned int) = 0;
     virtual UnknownType stop() = 0;
     virtual int addCycleCallback(CycleCb*, void*) = 0;

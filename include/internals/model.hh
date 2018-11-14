@@ -54,8 +54,8 @@ protected:
 
 public:
     // inherited from Core
-    virtual UnknownType reset(ResetType);
-    virtual UnknownType step(unsigned long);
+    virtual int reset(ResetType);
+    virtual int step(unsigned long);
     virtual UnknownType run(unsigned long);
     virtual UnknownType stop();
     virtual int addStepCallback(void (*)(Core*, void*), void*);
@@ -128,7 +128,7 @@ public:
 
     // inherited from Model
     virtual Core *getCore(unsigned int);
-    virtual UnknownType reset(ResetType);
+    virtual int reset(ResetType);
     virtual UnknownType cycle(unsigned int);
     virtual UnknownType stop();
     virtual int addCycleCallback(void (*)(Model*, void*), void*);
