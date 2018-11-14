@@ -56,16 +56,16 @@ public:
     virtual UnknownType run(unsigned long);
     virtual UnknownType stop();
     virtual int addStepCallback(void (*)(Core*, void*), void*);
-    virtual UnknownType removeStepCallback(int);
+    virtual int removeStepCallback(int);
     virtual UnknownType peekReg(int, unsigned long*);
     virtual UnknownType pokeReg(int, unsigned long);
     virtual UnknownType getMemoryMap(); // implemented trivially : "getMemoryMap should be implemented in children core class"
     virtual UnknownType readMemory(unsigned long, unsigned long, unsigned char*, Segment);
     virtual UnknownType writeMemory(unsigned long, unsigned long, unsigned char const*, Segment);
     virtual int getIntProperty(int, unsigned long*, char const*);
-    virtual UnknownType setIntProperty(int, unsigned long, char const*);
-    virtual UnknownType getStringProperty(int, unsigned long, char*, unsigned long const*);
-    virtual UnknownType setStringProperty(int, char*, unsigned long const*);
+    virtual int setIntProperty(int, unsigned long, char const*);
+    virtual int getStringProperty(int, unsigned long, char*, unsigned long const*);
+    virtual int setStringProperty(int, char*, unsigned long const*); // implemented trivially : `return -1`
     virtual Model *getModel();
     virtual UnknownType addBreakpoint(Breakpoint*);
     virtual UnknownType removeBreakpoint(int);
@@ -129,13 +129,13 @@ public:
     virtual UnknownType cycle(unsigned int);
     virtual UnknownType stop();
     virtual int addCycleCallback(void (*)(Model*, void*), void*);
-    virtual UnknownType removeCycleCallback(int);
+    virtual int removeCycleCallback(int);
     virtual int getIntProperty(int, unsigned long*, char const*);
-    virtual UnknownType setIntProperty(int, unsigned long, char const*);
-    virtual UnknownType getStringProperty(int, unsigned long, char*, unsigned long const*);
-    virtual UnknownType setStringProperty(int, char*, unsigned long const*);
-    virtual UnknownType saveSim(SimState*);
-    virtual UnknownType loadSim(SimState*);
+    virtual int setIntProperty(int, unsigned long, char const*); // implemented trivially : `return -1`
+    virtual int getStringProperty(int, unsigned long, char*, unsigned long const*); // implemented trivially : `return -1`
+    virtual int setStringProperty(int, char*, unsigned long const*); // implemented trivially : `return -1`
+    virtual int saveSim(SimState*); // implemented trivially : `return -1`
+    virtual int loadSim(SimState*); // implemented trivially : `return -1`
     virtual int debug(char const*, int (*)(char const*, ...)); // implemented trivially : `return 0`
     virtual int test(int, Test*, int (*)(Model*)); // implemented trivially : `return -1`
 };
