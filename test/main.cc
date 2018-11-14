@@ -63,6 +63,20 @@ int main(int argc, char **argv)
     dev->cycle(1);
     mc->step(1);
 
+    for (int j = 0; j < 3; ++j) {
+        for (int i = 0; i < 4; ++i) {
+            sc = mc->addStepCallback(step_cb, md);
+            printf("step callback = %d\n", sc);
+            cc = md->addCycleCallback(cycle_cb, mc);
+            printf("cycle callback = %d\n", cc);
+        }
+
+        for (int i = 0; i < 4; ++i) {
+            mc->removeStepCallback(sc);
+            md->removeCycleCallback(cc);
+        }
+    }
+
     unsigned long ul = -1;
     // Avr8:
     // ; 0x400 -> 0x0

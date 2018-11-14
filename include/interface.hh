@@ -38,9 +38,9 @@ public:
     virtual int getStringProperty(int, unsigned long, char*, unsigned long const*) = 0;
     virtual int setStringProperty(int, char*, unsigned long const*) = 0;
     virtual Model *getModel() = 0;
-    virtual UnknownType addBreakpoint(Breakpoint*) = 0;
-    virtual UnknownType removeBreakpoint(int) = 0;
-    virtual UnknownType getBreakpoints(BPtype) = 0;
+    virtual int addBreakpoint(Breakpoint*) = 0;
+    virtual int removeBreakpoint(int) = 0;
+    virtual Breakpoint** getBreakpoints(BPtype) = 0; // returns a nullptr-terminated array member of Core
     virtual int test(int, Test*, int (*)(Model*)) = 0;
 };
 

@@ -43,6 +43,9 @@ protected:
     // order of field m_nextBreakId not known
     UnknownType m_nextBreakId;
 
+    // byte offset of breakpoints is 0xe8 on Linux
+    // Breakpoint **breakpoints;
+
     // byte offset of facade is 0x1b0 on Linux
     // MemFacade facade;
 
@@ -67,9 +70,9 @@ public:
     virtual int getStringProperty(int, unsigned long, char*, unsigned long const*);
     virtual int setStringProperty(int, char*, unsigned long const*); // implemented trivially : `return -1`
     virtual Model *getModel();
-    virtual UnknownType addBreakpoint(Breakpoint*);
-    virtual UnknownType removeBreakpoint(int);
-    virtual UnknownType getBreakpoints(BPtype);
+    virtual int addBreakpoint(Breakpoint*);
+    virtual int removeBreakpoint(int);
+    virtual Breakpoint** getBreakpoints(BPtype); // returned pointer points into class instance
     virtual int test(int, Test*, int (*)(Model*)); // implemented trivially : `return -1`
 
 protected:
