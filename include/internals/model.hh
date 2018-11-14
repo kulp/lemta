@@ -46,8 +46,8 @@ protected:
     // byte offset of breakpoints is 0xe8 on Linux
     // Breakpoint **breakpoints;
 
-    // byte offset of step_000 is 0x170 on Linux
-    // bool step_000;
+    // byte offset of running is 0x170 on Linux
+    // bool running;
 
     // byte offset of facade is 0x1b0 on Linux
     // MemFacade facade;
@@ -60,7 +60,7 @@ public:
     virtual int reset(ResetType);
     virtual int step(unsigned long);
     virtual unsigned long run(unsigned long pc);
-    virtual UnknownType stop();
+    virtual void stop();
     virtual int addStepCallback(void (*)(Core*, void*), void*);
     virtual int removeStepCallback(int);
     virtual UnknownType peekReg(int, unsigned long*);

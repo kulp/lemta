@@ -25,7 +25,7 @@ public:
     virtual int reset(ResetType) = 0;
     virtual int step(unsigned long) = 0;
     virtual unsigned long run(unsigned long pc) = 0; // run to a given program counter value
-    virtual UnknownType stop() = 0;
+    virtual void stop() = 0; // could be called by a StepCb
     virtual int addStepCallback(StepCb*, void*) = 0;
     virtual int removeStepCallback(int) = 0;
     virtual UnknownType peekReg(int, unsigned long*) = 0;
