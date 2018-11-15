@@ -12,7 +12,19 @@ class Test;
 typedef void *UnknownType;
 // forward declare C++11 enumerations for which actual values are not yet known
 enum class ResetType : int;
-enum class BPtype : int;
+enum BPtype {
+    BP_NO_TYPE = 0,
+
+    // Breakpoints of this type exist in their own list
+    BP_TYPE_0 = (1 << 0),
+
+    // Breakpoints of the following two types are commingled in one list
+    BP_TYPE_1 = (1 << 1),
+    BP_TYPE_2 = (1 << 2),
+
+    // Breakpoints of the following type exist in their own list
+    BP_TYPE_3 = (1 << 3),
+};
 
 // inferred from Model_core::writeMemory
 typedef unsigned int Segment;
