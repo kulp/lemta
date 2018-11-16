@@ -46,6 +46,9 @@ protected:
     // byte offset of breakpoints is 0xe8 on Linux
     // Breakpoint **breakpoints;
 
+    // byte offset of top is 0x158 on Linux
+    // Vsim_top *top;
+
     // byte offset of running is 0x170 on Linux
     // bool running;
 
