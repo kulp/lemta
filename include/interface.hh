@@ -43,8 +43,8 @@ public:
     virtual int peekReg(int, unsigned long*) = 0; // return type may be an enumeration
     virtual int pokeReg(int, unsigned long) = 0; // return type may be an enumeration
     virtual void* getMemoryMap() = 0;
-    virtual UnknownType readMemory(unsigned long, unsigned long, unsigned char*, Segment) = 0;
-    virtual UnknownType writeMemory(unsigned long, unsigned long, unsigned char const*, Segment) = 0;
+    virtual int readMemory(unsigned long, unsigned long, unsigned char*, Segment) = 0;
+    virtual int writeMemory(unsigned long, unsigned long, unsigned char const*, Segment) = 0;
     virtual int getIntProperty(int, unsigned long*, char const*) = 0;
     virtual int setIntProperty(int, unsigned long, char const*) = 0;
     virtual int getStringProperty(int, unsigned long, char*, unsigned long const*) = 0;

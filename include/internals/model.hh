@@ -69,8 +69,8 @@ public:
     virtual int peekReg(int, unsigned long*);
     virtual int pokeReg(int, unsigned long);
     virtual void* getMemoryMap(); // implemented trivially : "getMemoryMap should be implemented in children core class"
-    virtual UnknownType readMemory(unsigned long, unsigned long, unsigned char*, Segment);
-    virtual UnknownType writeMemory(unsigned long, unsigned long, unsigned char const*, Segment);
+    virtual int readMemory(unsigned long, unsigned long, unsigned char*, Segment);
+    virtual int writeMemory(unsigned long, unsigned long, unsigned char const*, Segment);
     virtual int getIntProperty(int, unsigned long*, char const*);
     virtual int setIntProperty(int, unsigned long, char const*);
     virtual int getStringProperty(int, unsigned long, char*, unsigned long const*);
@@ -98,10 +98,10 @@ public:
     ~Avr8();
 
     // inherited from Core
-    virtual UnknownType writeMemory(unsigned long, unsigned long, unsigned char const*, Segment);
+    virtual int writeMemory(unsigned long, unsigned long, unsigned char const*, Segment);
     virtual int peekReg(int, unsigned long*);
     virtual int pokeReg(int, unsigned long);
-    virtual UnknownType readMemory(unsigned long, unsigned long, unsigned char*, Segment);
+    virtual int readMemory(unsigned long, unsigned long, unsigned char*, Segment);
 
 protected:
     // inherited from Model_core
@@ -243,11 +243,11 @@ public:
     MemFacade(model_verilated*, bool, int);
     virtual ~MemFacade();
 
-    UnknownType write(unsigned int, unsigned int, unsigned char const*, unsigned int); // implements Model_core::writeMemory
+    int write(unsigned int, unsigned int, unsigned char const*, unsigned int); // implements Model_core::writeMemory
     UnknownType exists(unsigned int) const;
     MemUnit* getMemUnit(unsigned int);
     MemUnit* getMemUnit(std::string const&);
-    UnknownType read(unsigned int, unsigned int, unsigned char*, unsigned int); // implements Model_core::readMemory
+    int read(unsigned int, unsigned int, unsigned char*, unsigned int); // implements Model_core::readMemory
     UnknownType addMemUnit(unsigned int, MemUnit*);
     UnknownType addMemUnits(std::map<unsigned int, MemUnit*, std::less<unsigned int>, std::allocator<std::pair<unsigned int const, MemUnit*> > > const&);
 };
