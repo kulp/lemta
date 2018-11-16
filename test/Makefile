@@ -59,7 +59,7 @@ check-%: check-%-rhs.txt
 
 FILES_clean += check-*-rhs.txt
 check-%-rhs.txt: call
-	$(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed 's/.*:://;s/(.*//' > $(@STDOUT)
+	$(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}' > $(@STDOUT)
 
 define check_lib
 
