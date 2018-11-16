@@ -32,6 +32,14 @@ static void stopper_cb(Core *c, void *userdata)
         c->stop();
 }
 
+static void mstopper_cb(Model *m, void *userdata)
+{
+    static int count;
+    printf("%s(%p, %p) : count = %d\n", __func__, m, userdata, count);
+    if (count++ >= reinterpret_cast<long>(userdata))
+        m->stop();
+}
+
 int main(int argc, char **argv)
 {
     if (argc < 3)
@@ -71,9 +79,16 @@ int main(int argc, char **argv)
     dev->cycle(1);
     mc->step(1);
 
-    puts("testing stop");
-    mc->addStepCallback(stopper_cb, reinterpret_cast<void*>(5));
-    mc->run(0);
+    {
+        puts("testing Core stop");
+        int r = mc->addStepCallback(stopper_cb, reinterpret_cast<void*>(5));
+        mc->run(0);
+        mc->removeStepCallback(r);
+
+        puts("testing Model stop");
+        md->addCycleCallback(mstopper_cb, reinterpret_cast<void*>(5));
+        mc->run(0);
+    }
 
     puts("testing callback registration");
     for (int j = 0; j < 3; ++j) {
