@@ -15,14 +15,14 @@ enum class ResetType : int;
 enum BPtype {
     BP_NO_TYPE = 0,
 
-    // Breakpoints of this type exist in their own list
+    // Breakpoints of this type exist in their own list (breaks ?)
     BP_TYPE_0 = (1 << 0),
 
-    // Breakpoints of the following two types are commingled in one list
+    // Breakpoints of the following two types are commingled in one list (watches ?)
     BP_TYPE_1 = (1 << 1),
     BP_TYPE_2 = (1 << 2),
 
-    // Breakpoints of the following type exist in their own list
+    // Breakpoints of the following type exist in their own list (traces ?)
     BP_TYPE_3 = (1 << 3),
 };
 
