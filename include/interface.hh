@@ -3,13 +3,11 @@
 
 class Model;
 
-// inferred from mangled signatures only
-class Breakpoint;
-class SimState;
-class Test;
+struct Breakpoint; // no methods
+typedef void SimState; // apparently unused
+struct Test; // no methods
 
 // placeholder types
-typedef void *UnknownType;
 // forward declare C++11 enumerations for which actual values are not yet known
 enum class ResetType : int;
 enum BPtype {
@@ -25,9 +23,7 @@ enum BPtype {
     // Breakpoints of the following type exist in their own list (traces ?)
     BP_TYPE_3 = (1 << 3),
 };
-
-// inferred from Model_core::writeMemory
-typedef unsigned int Segment;
+enum class Segment : int;
 
 class Core
 {

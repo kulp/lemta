@@ -25,6 +25,8 @@ class VerilogMemUnit;
 class Vsim_top;
 class model_verilated;
 
+typedef void *UnknownType;
+
 class Model_core : public Core
 {
 public:
