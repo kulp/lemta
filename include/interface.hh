@@ -40,9 +40,9 @@ public:
     virtual void stop() = 0; // could be called by a StepCb
     virtual int addStepCallback(StepCb*, void*) = 0;
     virtual int removeStepCallback(int) = 0;
-    virtual UnknownType peekReg(int, unsigned long*) = 0;
-    virtual UnknownType pokeReg(int, unsigned long) = 0;
-    virtual UnknownType getMemoryMap() = 0;
+    virtual int peekReg(int, unsigned long*) = 0; // return type may be an enumeration
+    virtual int pokeReg(int, unsigned long) = 0; // return type may be an enumeration
+    virtual void* getMemoryMap() = 0;
     virtual UnknownType readMemory(unsigned long, unsigned long, unsigned char*, Segment) = 0;
     virtual UnknownType writeMemory(unsigned long, unsigned long, unsigned char const*, Segment) = 0;
     virtual int getIntProperty(int, unsigned long*, char const*) = 0;
@@ -64,8 +64,8 @@ public:
 
     virtual Core *getCore(unsigned int) = 0;
     virtual int reset(ResetType) = 0;
-    virtual UnknownType cycle(unsigned int) = 0;
-    virtual UnknownType stop() = 0;
+    virtual void cycle(unsigned int) = 0;
+    virtual void stop() = 0;
     virtual int addCycleCallback(CycleCb*, void*) = 0;
     virtual int removeCycleCallback(int) = 0;
     virtual int getIntProperty(int, unsigned long*, char const*) = 0;

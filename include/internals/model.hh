@@ -66,9 +66,9 @@ public:
     virtual void stop();
     virtual int addStepCallback(void (*)(Core*, void*), void*);
     virtual int removeStepCallback(int);
-    virtual UnknownType peekReg(int, unsigned long*);
-    virtual UnknownType pokeReg(int, unsigned long);
-    virtual UnknownType getMemoryMap(); // implemented trivially : "getMemoryMap should be implemented in children core class"
+    virtual int peekReg(int, unsigned long*);
+    virtual int pokeReg(int, unsigned long);
+    virtual void* getMemoryMap(); // implemented trivially : "getMemoryMap should be implemented in children core class"
     virtual UnknownType readMemory(unsigned long, unsigned long, unsigned char*, Segment);
     virtual UnknownType writeMemory(unsigned long, unsigned long, unsigned char const*, Segment);
     virtual int getIntProperty(int, unsigned long*, char const*);
@@ -99,8 +99,8 @@ public:
 
     // inherited from Core
     virtual UnknownType writeMemory(unsigned long, unsigned long, unsigned char const*, Segment);
-    virtual UnknownType peekReg(int, unsigned long*);
-    virtual UnknownType pokeReg(int, unsigned long);
+    virtual int peekReg(int, unsigned long*);
+    virtual int pokeReg(int, unsigned long);
     virtual UnknownType readMemory(unsigned long, unsigned long, unsigned char*, Segment);
 
 protected:
@@ -135,8 +135,8 @@ public:
     // inherited from Model
     virtual Core *getCore(unsigned int);
     virtual int reset(ResetType);
-    virtual UnknownType cycle(unsigned int);
-    virtual UnknownType stop();
+    virtual void cycle(unsigned int);
+    virtual void stop();
     virtual int addCycleCallback(void (*)(Model*, void*), void*);
     virtual int removeCycleCallback(int);
     virtual int getIntProperty(int, unsigned long*, char const*);
