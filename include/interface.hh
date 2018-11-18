@@ -24,6 +24,21 @@ enum BPtype {
 };
 enum class Segment : int;
 
+struct Breakpoint
+{
+    char padding0[8];
+    unsigned long addr; // @ 0x8
+    char padding1[8];
+    unsigned long size; // @ 0x18
+    Segment segment; // @ 0x20
+    BPtype type; // @ 0x24
+    char padding2[28];
+    bool b000; // @ 0x44
+
+    // somewhere there is a breakpoint callback too ?
+    char buf[128]; // unknown extent
+};
+
 class Core
 {
 public:
