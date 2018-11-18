@@ -20,8 +20,7 @@ enum BPtype {
     BP_TYPE_1 = (1 << 1),
     BP_TYPE_2 = (1 << 2),
 
-    // Breakpoints of the following type exist in their own list (traces ?)
-    BP_TYPE_3 = (1 << 3),
+    BP_TRACEPOINT = (1 << 3),
 };
 enum class Segment : int;
 
