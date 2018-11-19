@@ -23,7 +23,7 @@ MCU_NAMES = $(shell xmllint unpacked/*.pdsc --xpath '//*[local-name()="property"
 vpath %.hh ../include ../include/internals
 CPPFLAGS += -I../include
 
-@STDOUT = $@ || (rm $@; false)
+.DELETE_ON_ERROR:
 
 all: $(TARGETS)
 
@@ -43,15 +43,15 @@ model.%.xml: interface.hh
 
 FILES_clean += methods.*.txt
 methods.%.txt: model.%.xml
-	xmllint --xpath '//Method[@context=string(//Class[@name="$*"]/@id) and @access="public"]/@name' $< | grep -o '"[^"]*"' | tr -d '"' > $(@STDOUT)
+	xmllint --xpath '//Method[@context=string(//Class[@name="$*"]/@id) and @access="public"]/@name' $< | grep -o '"[^"]*"' | tr -d '"' > $@
 
 FILES_clean += methods.*.xi
 methods.%.xi: methods.%.txt
-	(echo "#define METHODS_$*_(_) \\"; sed 's/^/    _($*,/; s/$$/) \\/' $<; echo "    // end METHODS_$*_") > $(@STDOUT)
+	(echo "#define METHODS_$*_(_) \\"; sed 's/^/    _($*,/; s/$$/) \\/' $<; echo "    // end METHODS_$*_") > $@
 
 FILES_clean += types.xi
 types.xi:
-	($(foreach f,$(TYPES),echo '#include "methods.$f.xi"';) echo '#define TYPE_LIST(_) '\\; $(foreach f,$(TYPES),echo '    _($f) '\\;) echo '    // end TYPE_LIST') > $(@STDOUT)
+	($(foreach f,$(TYPES),echo '#include "methods.$f.xi"';) echo '#define TYPE_LIST(_) '\\; $(foreach f,$(TYPES),echo '    _($f) '\\;) echo '    // end TYPE_LIST') > $@
 
 check-%: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
 check-%: check-%-rhs.txt
@@ -59,7 +59,7 @@ check-%: check-%-rhs.txt
 
 FILES_clean += check-*-rhs.txt
 check-%-rhs.txt: call
-	$(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}' > $(@STDOUT)
+	$(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}' > $@
 
 define check_lib
 
@@ -96,7 +96,7 @@ packs.mk: packs/index.html
 	    grep -o '"[^"]*"' | tr -d '"' | \
 	    grep $(PACK_TYPES:%=-e %) | \
 	    sort --reverse --field-separator=. --key=1,2 --unique ; \
-	echo endef) > $(@STDOUT)
+	echo endef) > $@
 
 include packs.mk
 
