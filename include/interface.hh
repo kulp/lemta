@@ -50,8 +50,21 @@ public:
     virtual void stop() = 0; // could be called by a StepCb
     virtual int addStepCallback(StepCb*, void*) = 0;
     virtual int removeStepCallback(int) = 0;
-    virtual int peekReg(int, unsigned long*) = 0; // return type may be an enumeration
-    virtual int pokeReg(int, unsigned long) = 0; // return type may be an enumeration
+    /*
+     * peekReg
+     *
+     * [0,31] -> 8-bit register
+     * 0x100 -> calls dpiGetPC, returns 4
+     * 0x101 -> calls dpiGetInstr, returns 4
+     * 0x102 -> calls dpiGetSP, returns 2
+     * 0x103 -> calls dpiGetSreg, returns 1
+     * 0x104 -> calls dpiGetCycleCounter, returns 8
+     * 0x105 -> calls dpiGetLifetimeCounter, returns 8
+     *
+     * returns size in bytes of data returned in `dst`
+     */
+    virtual int peekReg(int index, unsigned long *dst) = 0;
+    virtual int pokeReg(int index, unsigned long src) = 0;
     virtual void* getMemoryMap() = 0;
     virtual int readMemory(unsigned long, unsigned long, unsigned char*, Segment) = 0;
     virtual int writeMemory(unsigned long, unsigned long, unsigned char const*, Segment) = 0;
