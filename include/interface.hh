@@ -64,6 +64,19 @@ public:
      * returns size in bytes of data returned in `dst`
      */
     virtual int peekReg(int index, unsigned long *dst) = 0;
+    /*
+     * pokeReg
+     *
+     * [0,31] -> 8-bit register
+     * 0x100 -> calls dpiSetPC, returns 4
+     * 0x101 -> emits error on stderr, returns -1
+     * 0x102 -> calls dpiSetSP, returns 2
+     * 0x103 -> calls dpiSetSreg, returns 1
+     * 0x104 -> calls dpiSetCycleCounter, returns 8
+     * 0x105 -> calls dpiSetLifetimeCounter, returns 8
+     *
+     * returns size in bytes of data used from `src`
+     */
     virtual int pokeReg(int index, unsigned long src) = 0;
     virtual void* getMemoryMap() = 0;
     virtual int readMemory(unsigned long, unsigned long, unsigned char*, Segment) = 0;
