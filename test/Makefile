@@ -114,7 +114,7 @@ unpacked:
 	mkdir -p $@
 unpack: $(PACKS:%.atpack=unpack-%) | unpacked
 unpack-%: packs/%.atpack | unpacked
-	unzip -qq -n -d $| $< '$(LIB_DIR)/*.so' '*.pdsc'
+	unzip -qq -n -d $| $< '$(LIB_DIR)/*.so' '*.pdsc' '*.atdf'
 
 clean:
 	$(RM) $(TARGETS) *.o $(FILES_clean)
