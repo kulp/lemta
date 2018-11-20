@@ -89,14 +89,21 @@ endif
 
 PACKS_URL_BASE = http://packs.download.atmel.com/
 PACK_TYPES = ATautomotive ATmega ATtiny XMEGA
+get-pack-list: packs/index.html
+
 FILES_clean += packs.mk
+ifeq ($(wildcard packs/index.html),)
+packs.mk: $(wildcard packs/*.atpack)
+	(echo define PACKS ; ls -1 $^ ; echo endef) > $@
+else
 packs.mk: packs/index.html
 	(echo define PACKS ; \
 	    xmllint --html --xpath //button/@data-link $< | \
 	    grep -o '"[^"]*"' | tr -d '"' | \
 	    grep $(PACK_TYPES:%=-e %) | \
 	    sort --reverse --field-separator=. --key=1,2 --unique ; \
-	echo endef) > $@
+	echo endef) > packs.mk
+endif
 
 include packs.mk
 
