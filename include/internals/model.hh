@@ -197,7 +197,7 @@ class MemUnit
 public:
     virtual ~MemUnit();
 
-    virtual UnknownType getName() const = 0;
+    virtual std::string const & getName() const = 0;
     virtual UnknownType isChanged(unsigned long, unsigned long) = 0;
     virtual UnknownType update(unsigned long, unsigned long) = 0;
     virtual UnknownType read(unsigned long, unsigned long, std::vector<unsigned char>&) = 0;
@@ -212,7 +212,7 @@ public:
     virtual ~BasicMemUnit();
 
     // inherited from MemUnit
-    virtual UnknownType getName() const;
+    virtual std::string const & getName() const;
     virtual UnknownType isChanged(unsigned long, unsigned long);
     virtual UnknownType update(unsigned long, unsigned long);
     virtual UnknownType read(unsigned long, unsigned long, std::vector<unsigned char>&);
@@ -227,7 +227,7 @@ public:
     virtual ~VerilogMemUnit();
 
     // inherited from BasicMemUnit
-    virtual UnknownType getName() const;
+    virtual std::string const & getName() const;
     virtual UnknownType isChanged(unsigned long, unsigned long);
     virtual UnknownType update(unsigned long, unsigned long);
     virtual UnknownType read(unsigned long, unsigned long, std::vector<unsigned char>&);
