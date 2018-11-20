@@ -200,8 +200,8 @@ public:
     virtual UnknownType getName() const = 0;
     virtual UnknownType isChanged(unsigned long, unsigned long) = 0;
     virtual UnknownType update(unsigned long, unsigned long) = 0;
-    virtual UnknownType read(unsigned long, unsigned long, std::vector<unsigned char, std::allocator<unsigned char> >&) = 0;
-    virtual UnknownType write(unsigned long, unsigned long, std::vector<unsigned char, std::allocator<unsigned char> > const&) = 0;
+    virtual UnknownType read(unsigned long, unsigned long, std::vector<unsigned char>&) = 0;
+    virtual UnknownType write(unsigned long, unsigned long, std::vector<unsigned char> const&) = 0;
     virtual UnknownType getAddress() const = 0;
     virtual UnknownType getSize() const = 0;
 };
@@ -215,8 +215,8 @@ public:
     virtual UnknownType getName() const;
     virtual UnknownType isChanged(unsigned long, unsigned long);
     virtual UnknownType update(unsigned long, unsigned long);
-    virtual UnknownType read(unsigned long, unsigned long, std::vector<unsigned char, std::allocator<unsigned char> >&);
-    virtual UnknownType write(unsigned long, unsigned long, std::vector<unsigned char, std::allocator<unsigned char> > const&);
+    virtual UnknownType read(unsigned long, unsigned long, std::vector<unsigned char>&);
+    virtual UnknownType write(unsigned long, unsigned long, std::vector<unsigned char> const&);
     virtual UnknownType getAddress() const;
     virtual UnknownType getSize() const;
 };
@@ -230,8 +230,8 @@ public:
     virtual UnknownType getName() const;
     virtual UnknownType isChanged(unsigned long, unsigned long);
     virtual UnknownType update(unsigned long, unsigned long);
-    virtual UnknownType read(unsigned long, unsigned long, std::vector<unsigned char, std::allocator<unsigned char> >&);
-    virtual UnknownType write(unsigned long, unsigned long, std::vector<unsigned char, std::allocator<unsigned char> > const&);
+    virtual UnknownType read(unsigned long, unsigned long, std::vector<unsigned char>&);
+    virtual UnknownType write(unsigned long, unsigned long, std::vector<unsigned char> const&);
     virtual UnknownType getAddress() const;
     virtual UnknownType getSize() const;
 
@@ -251,7 +251,7 @@ public:
     MemUnit* getMemUnit(std::string const&);
     int read(unsigned int addr, unsigned int count, unsigned char *data, unsigned int segment); // implements Model_core::readMemory
     UnknownType addMemUnit(unsigned int, MemUnit*);
-    UnknownType addMemUnits(std::map<unsigned int, MemUnit*, std::less<unsigned int>, std::allocator<std::pair<unsigned int const, MemUnit*> > > const&);
+    UnknownType addMemUnits(std::map<unsigned int, MemUnit*> const&);
 };
 
 #endif
