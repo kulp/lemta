@@ -178,8 +178,8 @@ public:
     virtual UnknownType dpiSetCycleCounter(unsigned int const*, int) = 0;
     virtual UnknownType dpiStartReset(unsigned int const*, int) = 0;
     virtual UnknownType dpiStopReset(int) = 0;
-    virtual UnknownType dpiPeekMemory(unsigned int const*, unsigned int*, unsigned int const*, unsigned int*, int) = 0;
-    virtual UnknownType dpiPokeMemory(unsigned int const*, unsigned int*, unsigned int const*, unsigned int const*, int) = 0;
+    virtual UnknownType dpiPeekMemory(unsigned int const *addr, unsigned int*, unsigned int const *segment, unsigned int *data, int) = 0;
+    virtual UnknownType dpiPokeMemory(unsigned int const *addr, unsigned int*, unsigned int const *segment, unsigned int const *data, int) = 0;
     virtual UnknownType dpiPeekFuses(unsigned int const*) = 0;
     virtual UnknownType dpiPokeFuses(unsigned int const*, unsigned int const*) = 0;
     virtual UnknownType dpiGetSupportedAccessType(unsigned int const*, int) = 0;
@@ -245,11 +245,11 @@ public:
     MemFacade(model_verilated*, bool, int);
     virtual ~MemFacade();
 
-    int write(unsigned int, unsigned int, unsigned char const*, unsigned int); // implements Model_core::writeMemory
+    int write(unsigned int addr, unsigned int count, unsigned char const *data, unsigned int segment); // implements Model_core::writeMemory
     UnknownType exists(unsigned int) const;
     MemUnit* getMemUnit(unsigned int);
     MemUnit* getMemUnit(std::string const&);
-    int read(unsigned int, unsigned int, unsigned char*, unsigned int); // implements Model_core::readMemory
+    int read(unsigned int addr, unsigned int count, unsigned char *data, unsigned int segment); // implements Model_core::readMemory
     UnknownType addMemUnit(unsigned int, MemUnit*);
     UnknownType addMemUnits(std::map<unsigned int, MemUnit*, std::less<unsigned int>, std::allocator<std::pair<unsigned int const, MemUnit*> > > const&);
 };
