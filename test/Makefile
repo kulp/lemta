@@ -104,7 +104,6 @@ get-latest-packs: $(PACKS:%=packs/%)
 
 packs:
 	mkdir -p $@
-FILES_clean += packs/index.html
 packs/index.html: | packs
 	curl -o $@ '$(PACKS_URL_BASE)'
 packs/%.atpack: | packs
