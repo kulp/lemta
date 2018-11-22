@@ -8,30 +8,30 @@ local document = xmlua.XML.parse(xml)
 
 local classes = document:search("//Class");
 
-function elaborate_type(doc,id,ptr)
+function elaborate_type(doc,id,inner)
     local t = doc:search("//*[@id='" .. id .. "']") -- must succeed
-    ptr = ptr or ""
+    inner = inner or ""
 
     for i,t in ipairs(t) do
         local name = t:name()
         local typ = t:get_attribute("type")
 
         if name == "FundamentalType" then
-            return t:get_attribute("name") .. " " .. ptr
+            return t:get_attribute("name") .. " " .. inner
         elseif name == "Class" or name == "Struct" then
-            return t:get_attribute("name") .. " " .. ptr
+            return t:get_attribute("name") .. " " .. inner
         elseif name == "CvQualifiedType" then
-            return elaborate_type(doc,typ,"const" .. ptr)
+            return elaborate_type(doc,typ,"const" .. inner)
         elseif name == "PointerType" then
-            return elaborate_type(doc,typ,"*" .. ptr)
+            return elaborate_type(doc,typ,"*" .. inner)
         elseif name == "ReferenceType" then
-            return elaborate_type(doc,typ,"&" .. ptr)
+            return elaborate_type(doc,typ,"&" .. inner)
         elseif name == "Typedef" then
-            return elaborate_type(doc,typ,ptr)
+            return elaborate_type(doc,typ,inner)
         elseif name == "Enumeration" then
             return "enum " .. t:get_attribute("name")
         elseif name == "FunctionType" then
-            local start = elaborate_type(doc,t:get_attribute("returns")) .. "(" .. ptr .. ") ("
+            local start = elaborate_type(doc,t:get_attribute("returns")) .. "(" .. inner .. ") ("
             local first = true
             for i, arg in ipairs(t:children()) do
                 if not first then
