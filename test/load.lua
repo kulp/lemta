@@ -17,8 +17,7 @@ model._ud  = blackbox.model_ctor("")
 model._ver = blackbox.model_api_ver()
 ffi.gc(model._ud, blackbox.model_dtor)
 
-local list = { "reset", "cycle", "stop" }
-for f in io.open("methods." .. stem .. ".txt"):lines() do
+for f in string.gmatch(ffi.string(impl.get_methods_Model_txt_()), "%S+") do
     model[f] = function(self, ...)
         return impl["Model__" .. f](self._ud, ...)
     end
