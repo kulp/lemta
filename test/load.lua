@@ -55,5 +55,8 @@ Proto.Model.getCore = function(...)
 end
 
 local model = Proto.Model:create()
+local core = model:getCore(0)
 
+core:stop()
 model:stop()
+
