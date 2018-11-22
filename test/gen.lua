@@ -1,10 +1,17 @@
 local xmlua = require("xmlua")
 
-local xml_file = io.open("model.Model.xml")
+local xml_in = arg[1]
+local header_out = arg[2]
+local impl_out = arg[3]
+
+local xml_file = io.open(xml_in)
 local xml = xml_file:read("*all")
 xml_file:close()
 
 local document = xmlua.XML.parse(xml)
+
+local header = io.open(header_out, "w")
+local impl = io.open(impl_out, "w")
 
 local classes = document:search("//Class");
 
@@ -88,8 +95,6 @@ function make_cpp_defn(fh,class,meth)
 end
 
 
-local header = io.open("header.h", "w")
-local impl = io.open("impl.cc", "w")
 for i,class in ipairs(classes) do
     if class.members then
         for v in string.gmatch(class.members, "%S+") do

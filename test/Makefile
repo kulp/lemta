@@ -53,6 +53,9 @@ FILES_clean += types.xi
 types.xi:
 	($(foreach f,$(TYPES),echo '#include "methods.$f.xi"';) echo '#define TYPE_LIST(_) '\\; $(foreach f,$(TYPES),echo '    _($f) '\\;) echo '    // end TYPE_LIST') > $@
 
+header.%.h impl.%.cc: gen.lua model.%.xml
+	luajit $^ header.$*.h impl.$*.cc
+
 check-%: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
 check-%: check-%-rhs.txt
 	diff -q $^
