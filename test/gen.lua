@@ -63,14 +63,10 @@ function make_c_decl(fh,class,meth)
     fh:write(elaborate_type(document,meth:get_attribute("returns")))
     fh:write(class_name .. "__" .. meth:get_attribute("name"))
     fh:write("(")
-    local first = true;
+    fh:write(class_name .. "*")
     for k,arg in ipairs(meth:children()) do
-        if not first then
-            fh:write(", ")
-        end
         local typ = arg:get_attribute("type")
-        fh:write(elaborate_type(document,typ))
-        first = false
+        fh:write(", " .. elaborate_type(document,typ))
     end
     fh:write(");\n")
 end
