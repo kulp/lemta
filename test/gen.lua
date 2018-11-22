@@ -57,19 +57,23 @@ for i,class in ipairs(classes) do
         for v in string.gmatch(class.members, "%S+") do
             local methods = document:search("//Method[@id='" .. v .. "']")
             for j,meth in ipairs(methods) do
+                local method_name = meth:get_attribute("name")
+                io.write('extern "C" ')
                 io.write(elaborate_type(document,meth:get_attribute("returns")))
-                io.write(class_name .. "__" .. meth:get_attribute("name"))
+                io.write(class_name .. "__" .. method_name)
                 io.write("(")
-                local first = true;
+                io.write(class_name .. "* _this")
+                local args = {}
                 for k,arg in ipairs(meth:children()) do
-                    if not first then
-                        io.write(", ")
-                    end
                     local typ = arg:get_attribute("type")
-                    io.write(elaborate_type(document,typ))
-                    first = false
+                    local nonce = "_" .. k
+                    io.write(", " .. elaborate_type(document,typ,nonce))
+                    args[k] = nonce
                 end
-                print(");")
+                print ")"
+                print "{"
+                print("    return _this->" .. method_name .. "(" .. table.concat(args,", ") .. ");")
+                print "}"
             end
         end
     end
