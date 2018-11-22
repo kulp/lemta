@@ -1,7 +1,7 @@
 local ffi = require("ffi")
 local stem = "Model"
 
-local model = ffi.load("impl-" .. stem)
+local impl = ffi.load("impl-" .. stem)
 local blackbox = ffi.load("attinyxc")
 
 io.input("header." .. stem .. ".h")
@@ -13,7 +13,15 @@ Model *model_ctor(const char *);
 int model_dtor(Model *);
 ]]
 
-local ver = blackbox.model_api_ver()
-print("ver = "..ver)
-local m = blackbox.model_ctor("")
-model.Model__stop(m)
+local model = {}
+model._ud  = blackbox.model_ctor("")
+model._ver = blackbox.model_api_ver()
+
+local list = { "reset", "cycle", "stop" }
+for f in io.open("methods." .. stem .. ".txt"):lines() do
+    model[f] = function(self, ...)
+        return impl["Model__" .. f](self._ud, ...)
+    end
+end
+
+model:stop()
