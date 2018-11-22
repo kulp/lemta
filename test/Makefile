@@ -25,7 +25,7 @@ CPPFLAGS += -I../include
 
 .DELETE_ON_ERROR:
 
-all: $(TARGETS)
+all: $(TARGETS) libimpl-Model.so libimpl-Core.so
 
 main: LDLIBS += -ldl
 main.o: CPPFLAGS += -I../include/internals
