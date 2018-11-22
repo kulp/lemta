@@ -22,7 +22,7 @@ function elaborate_type(doc,id,ptr)
         elseif name == "Class" or name == "Struct" then
             return t:get_attribute("name") .. ptr
         elseif name == "CvQualifiedType" then
-            return "const " .. elaborate_type(doc,typ,ptr)
+            return elaborate_type(doc,typ,"const" .. ptr)
         elseif name == "PointerType" then
             return elaborate_type(doc,typ,"*" .. ptr)
         elseif name == "ReferenceType" then
