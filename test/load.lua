@@ -3,10 +3,8 @@ local stem = "Model"
 
 local impl = ffi.load("impl-" .. stem)
 local blackbox = ffi.load("attinyxc")
-
-io.input("header." .. stem .. ".h")
-
-ffi.cdef(io.read("*a"))
+ffi.cdef("const char * get_header_" .. stem .. "();");
+ffi.cdef(ffi.string(impl.get_header_Model()))
 ffi.cdef[[
 int model_api_ver();
 Model *model_ctor(const char *);
