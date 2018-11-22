@@ -51,13 +51,14 @@ function elaborate_type(doc,id,ptr)
     end
 end
 
-for i,val in ipairs(classes) do
-    if val.members then
-        for v in string.gmatch(val.members, "%S+") do
+for i,class in ipairs(classes) do
+    local class_name = class:get_attribute("name")
+    if class.members then
+        for v in string.gmatch(class.members, "%S+") do
             local methods = document:search("//Method[@id='" .. v .. "']")
             for j,meth in ipairs(methods) do
                 io.write(elaborate_type(document,meth:get_attribute("returns")))
-                io.write(meth:get_attribute("name"))
+                io.write(class_name .. "__" .. meth:get_attribute("name"))
                 io.write("(")
                 local first = true;
                 for k,arg in ipairs(meth:children()) do
