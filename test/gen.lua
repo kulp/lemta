@@ -14,6 +14,8 @@ local header = io.open(header_out, "w")
 local impl = io.open(impl_out, "w")
 
 local classes = document:search("//Class");
+local incomplete = document:search('//*[@incomplete="1"]');
+local enums = document:search('//Enumeration');
 
 function elaborate_type(doc,id,inner)
     local t = doc:search("//*[@id='" .. id .. "']") -- must succeed
@@ -90,6 +92,18 @@ function make_cpp_defn(fh,class,meth)
     fh:write("    { return _this->" .. method_name .. "(" .. table.concat(args,", ") .. "); }\n")
 end
 
+for i,class in ipairs(classes) do
+    header:write("typedef void " .. class:get_attribute("name") .. ";\n")
+end
+
+for i,class in ipairs(incomplete) do
+    header:write("typedef void " .. class:get_attribute("name") .. ";\n")
+end
+
+for i,class in ipairs(enums) do
+    local name = class:get_attribute("name")
+    header:write("typedef enum " .. name .. " " .. name .. ";\n")
+end
 
 for i,class in ipairs(classes) do
     if class.members then
