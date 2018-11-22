@@ -56,6 +56,7 @@ for i,val in ipairs(classes) do
         for v in string.gmatch(val.members, "%S+") do
             local methods = document:search("//Method[@id='" .. v .. "']")
             for j,meth in ipairs(methods) do
+                print(elaborate_type(document,meth:get_attribute("returns")))
                 print(meth:get_attribute("name"))
                 for k,arg in ipairs(meth:children()) do
                     local typ = arg:get_attribute("type")
