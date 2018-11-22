@@ -56,12 +56,19 @@ for i,val in ipairs(classes) do
         for v in string.gmatch(val.members, "%S+") do
             local methods = document:search("//Method[@id='" .. v .. "']")
             for j,meth in ipairs(methods) do
-                print(elaborate_type(document,meth:get_attribute("returns")))
-                print(meth:get_attribute("name"))
+                io.write(elaborate_type(document,meth:get_attribute("returns")))
+                io.write(meth:get_attribute("name"))
+                io.write("(")
+                local first = true;
                 for k,arg in ipairs(meth:children()) do
+                    if not first then
+                        io.write(", ")
+                    end
                     local typ = arg:get_attribute("type")
-                    print(elaborate_type(document,typ))
+                    io.write(elaborate_type(document,typ))
+                    first = false
                 end
+                io.write(");")
             end
             print ""
         end
