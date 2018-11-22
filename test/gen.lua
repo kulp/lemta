@@ -14,7 +14,7 @@ local header = io.open(header_out, "w")
 local impl = io.open(impl_out, "w")
 
 local classes = document:search("//Class");
-local incomplete = document:search('//*[@incomplete="1"]');
+local structs = document:search('//Struct');
 local enums = document:search('//Enumeration');
 
 function elaborate_type(doc,id,inner)
@@ -96,7 +96,7 @@ for i,class in ipairs(classes) do
     header:write("typedef void " .. class:get_attribute("name") .. ";\n")
 end
 
-for i,class in ipairs(incomplete) do
+for i,class in ipairs(structs) do
     header:write("typedef void " .. class:get_attribute("name") .. ";\n")
 end
 
