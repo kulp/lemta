@@ -10,7 +10,6 @@ local classes = document:search("//Class");
 
 function elaborate_type(doc,id,ptr)
     local t = doc:search("//*[@id='" .. id .. "']") -- must succeed
-    --print("look up id " .. id .. " in doc " .. tostring(doc) .. " = " .. tostring(t))
     ptr = ptr or ""
 
     for i,t in ipairs(t) do
@@ -60,10 +59,10 @@ for i,val in ipairs(classes) do
                 print(meth:get_attribute("name"))
                 for k,arg in ipairs(meth:children()) do
                     local typ = arg:get_attribute("type")
-                    --print("trying for " .. tostring(arg) .. ", type = " .. typ)
                     print(elaborate_type(document,typ))
                 end
             end
+            print ""
         end
     end
 end
