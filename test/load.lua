@@ -41,8 +41,7 @@ int model_dtor(Model *);
 ]]
 
 Proto.Model.create = function(proto,name)
-    local self = proto
-    self._ud  = blackbox.model_ctor("")
+    local self = proto:_wrap(blackbox.model_ctor(name))
     self._ver = blackbox.model_api_ver()
     ffi.gc(self._ud, blackbox.model_dtor)
     return self
