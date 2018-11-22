@@ -12,5 +12,5 @@ unpacked/
 check-lib-*.mk
 packs.mk
 header.*.h
-header.*.cc
+*.strings.cc
 libimpl-*.so

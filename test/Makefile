@@ -56,13 +56,13 @@ types.xi:
 header.%.h impl.%.cc: gen.lua model.%.xml
 	luajit $^ header.$*.h impl.$*.cc
 
-header.%.cc: header.%.h
-	(echo 'extern "C" const char * get_header_$*(){ return' ; sed 's/^/"/;s/$$/\\n"/' $< ; echo ';}') > $@
+%.strings.cc: %
+	(echo "extern "'"C"'" const char * get_`echo "$*" | tr -c [:alnum:]_ _`(){ return" ; sed 's/^/"/;s/$$/\\n"/' $< ; echo ';}') > $@
 
 FILES_clean += libimpl-*.so
 libimpl-%.so: CXXFLAGS += -pedantic -Wall -O3
 libimpl-%.so: LDFLAGS += -shared
-libimpl-%.so: impl.%.cc header.%.cc | interface.hh
+libimpl-%.so: impl.%.cc header.%.h.strings.cc methods.%.txt.strings.cc | interface.hh
 	$(LINK.cc) -include $| -o $@ $^
 
 check-%: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
