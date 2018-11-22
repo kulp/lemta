@@ -51,51 +51,52 @@ function elaborate_type(doc,id,inner)
     end
 end
 
-function make_c_decl(class,meth)
+function make_c_decl(fh,class,meth)
     local class_name = class:get_attribute("name")
-    io.write(elaborate_type(document,meth:get_attribute("returns")))
-    io.write(class_name .. "__" .. meth:get_attribute("name"))
-    io.write("(")
+    fh:write(elaborate_type(document,meth:get_attribute("returns")))
+    fh:write(class_name .. "__" .. meth:get_attribute("name"))
+    fh:write("(")
     local first = true;
     for k,arg in ipairs(meth:children()) do
         if not first then
-            io.write(", ")
+            fh:write(", ")
         end
         local typ = arg:get_attribute("type")
-        io.write(elaborate_type(document,typ))
+        fh:write(elaborate_type(document,typ))
         first = false
     end
-    print(");")
+    fh:write(");\n")
 end
 
-function make_cpp_defn(class,meth)
+function make_cpp_defn(fh,class,meth)
     local class_name = class:get_attribute("name")
     local method_name = meth:get_attribute("name")
-    io.write('extern "C" ')
-    io.write(elaborate_type(document,meth:get_attribute("returns")))
-    io.write(class_name .. "__" .. method_name)
-    io.write("(")
-    io.write(class_name .. "* _this")
+    fh:write('extern "C" ')
+    fh:write(elaborate_type(document,meth:get_attribute("returns")))
+    fh:write(class_name .. "__" .. method_name)
+    fh:write("(")
+    fh:write(class_name .. "* _this")
     local args = {}
     for k,arg in ipairs(meth:children()) do
         local typ = arg:get_attribute("type")
         local nonce = "_" .. k
-        io.write(", " .. elaborate_type(document,typ,nonce))
+        fh:write(", " .. elaborate_type(document,typ,nonce))
         args[k] = nonce
     end
-    print ")"
-    print "{"
-    print("    return _this->" .. method_name .. "(" .. table.concat(args,", ") .. ");")
-    print "}"
+    fh:write(")\n")
+    fh:write("    { return _this->" .. method_name .. "(" .. table.concat(args,", ") .. "); }\n")
 end
 
+
+local header = io.open("header.h", "w")
+local impl = io.open("impl.cc", "w")
 for i,class in ipairs(classes) do
     if class.members then
         for v in string.gmatch(class.members, "%S+") do
             local methods = document:search("//Method[@id='" .. v .. "']")
             for j,meth in ipairs(methods) do
-                make_c_decl(class,meth)
-                make_cpp_defn(class,meth)
+                make_c_decl(header,class,meth)
+                make_cpp_defn(impl,class,meth)
             end
         end
     end
