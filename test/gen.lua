@@ -69,9 +69,8 @@ for i,class in ipairs(classes) do
                     io.write(elaborate_type(document,typ))
                     first = false
                 end
-                io.write(");")
+                print(");")
             end
-            print ""
         end
     end
 end
