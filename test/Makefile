@@ -56,10 +56,10 @@ types.xi:
 header.%.h impl.%.cc: gen.lua model.%.xml
 	luajit $^ header.$*.h impl.$*.cc
 
-FILES_clean += libimpl.*.so
-libimpl.%.so: CXXFLAGS += -pedantic -Wall -O3
-libimpl.%.so: LDFLAGS += -shared
-libimpl.%.so: impl.%.cc interface.hh
+FILES_clean += libimpl-*.so
+libimpl-%.so: CXXFLAGS += -pedantic -Wall -O3
+libimpl-%.so: LDFLAGS += -shared
+libimpl-%.so: impl.%.cc interface.hh
 	$(LINK.cc) -include $(word 2,$^) -o $@ $<
 
 check-%: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)

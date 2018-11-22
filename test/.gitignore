@@ -12,4 +12,4 @@ unpacked/
 check-lib-*.mk
 packs.mk
 header.*.h
-libimpl.*.so
+libimpl-*.so
