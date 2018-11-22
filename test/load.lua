@@ -16,6 +16,7 @@ int model_dtor(Model *);
 local model = {}
 model._ud  = blackbox.model_ctor("")
 model._ver = blackbox.model_api_ver()
+ffi.gc(model._ud, blackbox.model_dtor)
 
 local list = { "reset", "cycle", "stop" }
 for f in io.open("methods." .. stem .. ".txt"):lines() do
