@@ -33,17 +33,17 @@ for _,stem in ipairs({ "Model", "Core" }) do
     end
 end
 
-local blackbox = ffi.load("attinyxc")
 ffi.cdef[[
 int model_api_ver();
 Model *model_ctor(const char *);
 int model_dtor(Model *);
 ]]
 
-Proto.Model.create = function(proto,name)
-    local self = proto:_wrap(blackbox.model_ctor(name))
-    self._ver = blackbox.model_api_ver()
-    ffi.gc(self._ud, blackbox.model_dtor)
+Proto.Model.create = function(proto,libstem,name)
+    local lib = ffi.load(libstem)
+    local self = proto:_wrap(lib.model_ctor(name))
+    self._ver = lib.model_api_ver()
+    ffi.gc(self._ud, lib.model_dtor)
     return self
 end
 
