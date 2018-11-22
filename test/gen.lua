@@ -18,9 +18,9 @@ function elaborate_type(doc,id,ptr)
         local typ = t:get_attribute("type")
 
         if name == "FundamentalType" then
-            return t:get_attribute("name") .. ptr
+            return t:get_attribute("name") .. " " .. ptr
         elseif name == "Class" or name == "Struct" then
-            return t:get_attribute("name") .. ptr
+            return t:get_attribute("name") .. " " .. ptr
         elseif name == "CvQualifiedType" then
             return elaborate_type(doc,typ,"const" .. ptr)
         elseif name == "PointerType" then
