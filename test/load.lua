@@ -26,9 +26,14 @@ Model *model_ctor(const char *);
 int model_dtor(Model *);
 ]]
 
-local model = Proto.Model
-model._ud  = blackbox.model_ctor("")
-model._ver = blackbox.model_api_ver()
-ffi.gc(model._ud, blackbox.model_dtor)
+Proto.Model.create = function(proto,name)
+    local self = proto
+    self._ud  = blackbox.model_ctor("")
+    self._ver = blackbox.model_api_ver()
+    ffi.gc(self._ud, blackbox.model_dtor)
+    return self
+end
+
+local model = Proto.Model:create()
 
 model:stop()
