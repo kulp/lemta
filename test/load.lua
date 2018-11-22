@@ -17,6 +17,20 @@ for _,stem in ipairs({ "Model", "Core" }) do
             return impl[stem .. "__" .. f](self._ud, ...)
         end
     end
+
+    proto._clone = function(self)
+        local copy = {}
+        for k,v in pairs(self) do
+            copy[k] = v
+        end
+        return copy
+    end
+
+    proto._wrap = function(self,cdata)
+        local self = self:_clone()
+        self._ud = cdata
+        return self
+    end
 end
 
 local blackbox = ffi.load("attinyxc")
