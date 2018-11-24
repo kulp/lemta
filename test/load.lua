@@ -8,3 +8,4 @@ core:stop()
 model:stop()
 m:stop()
 
+model:destroy()
