@@ -102,7 +102,8 @@ end
 
 for i,class in ipairs(enums) do
     local name = class:get_attribute("name")
-    header:write("typedef enum " .. name .. " " .. name .. ";\n")
+    -- for now, enums are simply ints
+    header:write("typedef int " .. name .. ";\n")
 end
 
 for i,class in ipairs(classes) do
