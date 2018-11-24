@@ -1,12 +1,12 @@
 local ffi = require("ffi")
 local Model = require("model")
 
-local model = Model:create("attinyxc")
+local model = Model:create("attinyxc", "ATtiny1617")
 local core = model:getCore(0)
 
 local input = 0x12
 core:pokeReg(3, input)
-local output = ffi.new("unsigned long[1]", 0)
+local output = ffi.new("unsigned long[1]")
 local result = core:peekReg(3, output)
 
 local handle = error
