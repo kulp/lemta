@@ -38,7 +38,7 @@ function elaborate_type(doc,id,inner)
         elseif name == "Typedef" then
             return elaborate_type(doc,typ,inner)
         elseif name == "Enumeration" then
-            return "enum " .. t:get_attribute("name") .. " " .. inner
+            return t:get_attribute("name") .. " " .. inner
         elseif name == "FunctionType" then
             local start = elaborate_type(doc,t:get_attribute("returns")) .. "(" .. inner .. ") ("
             local first = true
