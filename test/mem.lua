@@ -1,7 +1,7 @@
 local ffi = require("ffi")
 local Model = require("model")
 
-local model = Model:create("attinyxc", "ATtiny1617")
+local model = Model:create(unpack(arg))
 local core = model:getCore(0)
 
 -- raw read/write interface
