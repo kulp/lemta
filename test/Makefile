@@ -75,7 +75,7 @@ check-%-rhs.txt: call
 
 define check_lib
 
-CHECK_TARGETS += check-$1-$2-$3
+check: check-$1-$2-$3
 check-$1-$2-$3: LIB_STEM = $1
 check-$1-$2-$3: MCU = $2
 check-$1-$2-$3: TYPE = $3
@@ -90,14 +90,6 @@ endif
 
 $(LIB_LIST:%=check-lib-%.mk): check-lib-%.mk:
 	$(file >$@,$(foreach m,$(call MCU_NAMES,$*),$(foreach t,$(TYPES),$(call check_lib,$*,$m,$t))))
-
-check: $(CHECK_TARGETS)
-ifeq ($(CHECK_TARGETS),) # hackily recursively make ourselves to bring in includes
-	@$(MAKE) $@
-else
-# empty target to suppress inferred rules
-	@true
-endif
 
 PACKS_URL_BASE = http://packs.download.atmel.com/
 PACK_TYPES = ATautomotive ATmega ATtiny XMEGA
