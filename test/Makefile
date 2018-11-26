@@ -65,21 +65,36 @@ libimpl-%.so: LDFLAGS += -shared
 libimpl-%.so: impl.%.cc header.%.h.strings.cc methods.%.txt.strings.cc | interface.hh
 	$(LINK.cc) -include $| -o $@ $^
 
-check-%: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
-check-%: check-%-rhs.txt
+check-%-z: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
+check-%-z: check-%-z-rhs.txt
 	diff -q $^
 
-FILES_clean += check-*-rhs.txt
-check-%-rhs.txt: call
+FILES_clean += check-*-z-rhs.txt
+check-%-z-rhs.txt: call
 	$(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}' > $@
 
-define check_lib
+define check_lib_1
 
-check: check-$1-$2-$3
-check-$1-$2-$3: LIB_STEM = $1
-check-$1-$2-$3: MCU = $2
-check-$1-$2-$3: TYPE = $3
-check-$1-$2-$3: methods.$3.txt
+check: check-$1
+check-$1: LIB_STEM = $1
+
+endef
+
+define check_lib_2
+
+check-$1: check-$1-$2
+check-$1-$2: LIB_STEM = $1
+check-$1-$2: MCU = $2
+
+endef
+
+define check_lib_3
+
+check-$1-$2: check-$1-$2-$3-z
+check-$1-$2-$3-z: LIB_STEM = $1
+check-$1-$2-$3-z: MCU = $2
+check-$1-$2-$3-z: TYPE = $3
+check-$1-$2-$3-z: methods.$3.txt
 
 endef
 
@@ -89,7 +104,7 @@ include $(LIB_LIST:%=check-lib-%.mk)
 endif
 
 $(LIB_LIST:%=check-lib-%.mk): check-lib-%.mk:
-	$(file >$@,$(foreach m,$(call MCU_NAMES,$*),$(foreach t,$(TYPES),$(call check_lib,$*,$m,$t))))
+	$(file >$@,$(call check_lib_1,$*) $(foreach m,$(call MCU_NAMES,$*),$(call check_lib_2,$*,$m) $(foreach t,$(TYPES),$(call check_lib_3,$*,$m,$t))))
 
 PACKS_URL_BASE = http://packs.download.atmel.com/
 PACK_TYPES = ATautomotive ATmega ATtiny XMEGA
