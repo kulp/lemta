@@ -73,6 +73,14 @@ FILES_clean += check-*-z-rhs.txt
 check-%-z-rhs.txt: call
 	$(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}' > $@
 
+LUA = luajit
+LUA_TESTS = mem.lua regs.lua
+
+define newline
+
+
+endef
+
 define check_lib_1
 
 check: check-$1
@@ -85,6 +93,19 @@ define check_lib_2
 check-$1: check-$1-$2
 check-$1-$2: LIB_STEM = $1
 check-$1-$2: MCU = $2
+
+$(foreach L,$(LUA_TESTS),$(call check_lib_lua,$1,$2,$L))
+
+endef
+
+define check_lib_lua
+
+check-$1-$2: $(LUA_TESTS:%=check-$1-$2-%)
+check-$1-$2-$3: export LD_LIBRARY_PATH=.:unpacked/$(LIB_DIR)
+check-$1-$2-$3: export LUA_PATH=;;../lua/?.lua
+check-$1-$2-$3: libimpl-Model.so libimpl-Core.so
+check-$1-$2-$3: $3
+	$(LUA) $3 $1 $2
 
 endef
 
