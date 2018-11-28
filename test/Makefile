@@ -112,6 +112,7 @@ endef
 define check_lib_3
 
 check-$1-$2: check-$1-$2-$3-z
+check-$1-$2-$3: check-$1-$2-$3-z
 check-$1-$2-$3-z: LIB_STEM = $1
 check-$1-$2-$3-z: MCU = $2
 check-$1-$2-$3-z: TYPE = $3
