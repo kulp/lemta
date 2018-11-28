@@ -74,7 +74,7 @@ check-%-z-rhs.txt: call
 	$(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}' > $@
 
 LUA = luajit
-LUA_TESTS = mem.lua regs.lua
+LUA_TESTS = mem.lua regs.lua cycle.lua
 
 define newline
 
