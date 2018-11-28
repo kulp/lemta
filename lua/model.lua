@@ -1,6 +1,20 @@
 local ffi = require("ffi")
 local Proto = {}
 
+local function clone(self)
+    local copy = {}
+    for k,v in pairs(self) do
+        copy[k] = v
+    end
+    return copy
+end
+
+local function wrap(self,cdata)
+    local self = self:_clone()
+    self._ud = cdata
+    return self
+end
+
 for _,stem in ipairs({ "Model", "Core" }) do
     Proto[stem] = {}
     local proto = Proto[stem]
@@ -18,19 +32,8 @@ for _,stem in ipairs({ "Model", "Core" }) do
         end
     end
 
-    proto._clone = function(self)
-        local copy = {}
-        for k,v in pairs(self) do
-            copy[k] = v
-        end
-        return copy
-    end
-
-    proto._wrap = function(self,cdata)
-        local self = self:_clone()
-        self._ud = cdata
-        return self
-    end
+    proto._clone = clone
+    proto._wrap = wrap
 end
 
 ffi.cdef[[
