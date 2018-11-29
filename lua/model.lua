@@ -103,5 +103,11 @@ Proto.Core.getModel = function(self)
     return Proto.Model:_wrap(orig)
 end
 
+-- wrap addStepCallback in the same way as Model:addCycleCallback
+Proto.Core._addStepCallback = Proto.Core.addStepCallback
+Proto.Core.addStepCallback = function(self,cb)
+    return self:_addStepCallback(cb, nil)
+end
+
 return Proto.Model
 
