@@ -53,6 +53,7 @@ FILES_clean += types.xi
 types.xi:
 	($(foreach f,$(TYPES),echo '#include "methods.$f.xi"';) echo '#define TYPE_LIST(_) '\\; $(foreach f,$(TYPES),echo '    _($f) '\\;) echo '    // end TYPE_LIST') > $@
 
+FILES_clean += header.*.h impl.*.cc
 header.%.h impl.%.cc: gen.lua model.%.xml
 	luajit $^ header.$*.h impl.$*.cc
 
