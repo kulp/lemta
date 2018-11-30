@@ -93,11 +93,13 @@ function make_cpp_defn(fh,class,meth)
 end
 
 for i,class in ipairs(classes) do
-    header:write("typedef void " .. class:get_attribute("name") .. ";\n")
+    local name = class:get_attribute("name")
+    header:write("typedef struct " .. name .. " " .. name .. ";\n")
 end
 
 for i,class in ipairs(structs) do
-    header:write("typedef void " .. class:get_attribute("name") .. ";\n")
+    local name = class:get_attribute("name")
+    header:write("typedef struct " .. name .. " " .. name .. ";\n")
 end
 
 for i,class in ipairs(enums) do
