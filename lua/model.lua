@@ -26,6 +26,7 @@ Proto.Core.__meta.__index =
             }
 
             setmetatable(regs, regs_meta)
+            rawset(ct.__proto, "regs", regs)
             return regs
         end
         return nil
@@ -48,10 +49,12 @@ for _,stem in ipairs({ "Model", "Core" }) do
         end
     end
 
+    proto.__proto = proto
+
     local handlers = {
         ["__index"] = function(ct,key)
             if proto.__meta and proto.__meta.__index then
-               return proto.__meta.__index(ct,key) or proto[key]
+               return proto[key] or proto.__meta.__index(ct,key)
             end
             return proto[key]
         end,
