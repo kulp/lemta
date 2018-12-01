@@ -5,9 +5,9 @@ local core = model:getCore(0)
 local m2 = core:getModel()
 
 local handle = error
-if model._ud == m2._ud then
+if model == m2 then
     handle = print
 end
 
-handle("expected = " .. tostring(model._ud) .. ", actual = " .. tostring(m2._ud))
+handle("expected = " .. tostring(model) .. ", actual = " .. tostring(m2))
 
