@@ -91,7 +91,7 @@ struct BaseBehavior : public Fundamental
     {
         if (argc > 0) {
             argc--;
-			lib = new Library(*argv++);
+            lib = new Library(*argv++);
 
             if (lib->handle) {
                 model_ctor_p = lib->get_function(model_ctor);
