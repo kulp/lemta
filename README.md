@@ -20,9 +20,8 @@ interface heaers in `include/` and a few testbench programs in `test/`. Run
 `make -C test check` from the top level to run self-tests.
 
 A primordial [LuaJIT](http://luajit.org)-based interface is present in `lua/`.
-LuaJIT (as opposed to [Lua](http://www.lua.org)) is currently specifically
-required because [LuaJIT's FFI library](http://luajit.org/ext_ffi.html) is used
-for convenience of implementation, but not by permanent necessity.
+LuaJIT (as opposed to [Lua](http://www.lua.org)) is specifically required
+because [LuaJIT's FFI library](http://luajit.org/ext_ffi.html) is used heavily.
 
 # Requirements
 The interface header files in `include/` were derived on a GNU/Linux-compatible
