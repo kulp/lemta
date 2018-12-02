@@ -1,35 +1,22 @@
 local ffi = require("ffi")
 local Proto = {}
 
-Proto.Core = { ["__meta"] = {} }
-Proto.Core.__meta.__index =
-    function(ct,key)
-        if key == "regs" then
-            local regs = { ["_parent"] = ct }
-            local function reg_lookup(regs,...)
-                local self = regs._parent
-                local arg = {...}
-                local index = arg[1]
-                if #arg == 1 then
-                    local output = ffi.new("unsigned long[1]")
-                    self:peekReg(index, output)
-                    return output[0]
-                else
-                    local value = arg[2]
-                    self:pokeReg(index, value)
-                end
-            end
-
-            local regs_meta = {
-                ["__index"] = reg_lookup,
-                ["__newindex"] = reg_lookup,
-            }
-
-            setmetatable(regs, regs_meta)
-            rawset(ct.__proto, "regs", regs)
-            return regs
+Proto.Core = { ["__meta"] = { ["__overrides"] = {} } }
+Proto.Core.__meta.__overrides.regs =
+    function(self)
+        local regs = {}
+        regs.__index = function(_,index)
+            local output = ffi.new("unsigned long[1]")
+            self:peekReg(index, output)
+            return output[0]
         end
-        return nil
+        regs.__newindex = function(_,index,value)
+            self:pokeReg(index, value)
+        end
+
+        setmetatable(regs, regs)
+        rawset(self.__proto, "regs", regs)
+        return regs
     end
 
 for _,stem in ipairs({ "Model", "Core" }) do
@@ -53,7 +40,7 @@ for _,stem in ipairs({ "Model", "Core" }) do
 
     local handlers = {
         ["__index"] = function(ct,key)
-            return proto[key] or proto.__meta.__index(ct,key)
+            return proto[key] or proto.__meta.__overrides[key](ct)
         end,
         ["__newindex"] = proto,
     }
