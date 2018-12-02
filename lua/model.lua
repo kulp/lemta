@@ -1,8 +1,8 @@
 local ffi = require("ffi")
 local Proto = {}
 
-Proto.Core = { ["__meta"] = { ["__overrides"] = {} } }
-Proto.Core.__meta.__overrides.regs =
+Proto.Core = { ["__overrides"] = {} }
+Proto.Core.__overrides.regs =
     function(self)
         local regs = {}
         self.__proto.regs = regs
@@ -40,7 +40,7 @@ for _,stem in ipairs({ "Model", "Core" }) do
 
     local handlers = {
         ["__index"] = function(ct,key)
-            return proto[key] or proto.__meta.__overrides[key](ct)
+            return proto[key] or proto.__overrides[key](ct)
         end,
         ["__newindex"] = proto,
     }
