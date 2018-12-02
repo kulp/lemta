@@ -19,8 +19,8 @@ Proto.Core.__overrides.regs =
         return regs
     end
 
-local function define_c(ret,name,args)
-    return ffi.cdef(ret .. " " .. name .. "(" .. table.concat(args, ",") .. ");")
+local function define_c(ret,name,...)
+    return ffi.cdef(ret .. " " .. name .. "(" .. table.concat({...}, ",") .. ");")
 end
 
 for _,stem in ipairs({ "Model", "Core" }) do
@@ -29,8 +29,8 @@ for _,stem in ipairs({ "Model", "Core" }) do
     local impl = ffi.load("impl-" .. stem)
     local get_h = "get_header_" .. stem .. "_h_"
     local get_m = "get_methods_" .. stem .. "_txt_"
-    define_c("const char *", get_h, {})
-    define_c("const char *", get_m, {})
+    define_c("const char *", get_h)
+    define_c("const char *", get_m)
     ffi.cdef(ffi.string(impl[get_h]()))
 
     -- create Lua entry points for C wrappers for C++ virtual calls
@@ -51,9 +51,9 @@ for _,stem in ipairs({ "Model", "Core" }) do
     ffi.metatype(stem, handlers)
 end
 
-define_c("int", "model_api_ver", {})
-define_c("Model *", "model_ctor", {"const char *"})
-define_c("int", "model_dtor", {"Model *"})
+define_c("int"    , "model_api_ver")
+define_c("Model *", "model_ctor"   , "const char *")
+define_c("int"    , "model_dtor"   , "Model *")
 
 Proto.Model.create = function(proto,libstem,name)
     local lib = ffi.load(libstem)
