@@ -53,10 +53,7 @@ for _,stem in ipairs({ "Model", "Core" }) do
 
     local handlers = {
         ["__index"] = function(ct,key)
-            if proto.__meta and proto.__meta.__index then
-               return proto[key] or proto.__meta.__index(ct,key)
-            end
-            return proto[key]
+            return proto[key] or proto.__meta.__index(ct,key)
         end,
         ["__newindex"] = proto,
     }
