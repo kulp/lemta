@@ -5,6 +5,7 @@ Proto.Core = { ["__meta"] = { ["__overrides"] = {} } }
 Proto.Core.__meta.__overrides.regs =
     function(self)
         local regs = {}
+        self.__proto.regs = regs
         regs.__index = function(_,index)
             local output = ffi.new("unsigned long[1]")
             self:peekReg(index, output)
@@ -15,7 +16,6 @@ Proto.Core.__meta.__overrides.regs =
         end
 
         setmetatable(regs, regs)
-        rawset(self.__proto, "regs", regs)
         return regs
     end
 
