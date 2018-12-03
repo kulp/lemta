@@ -37,3 +37,30 @@ do
     handle("input = " .. tostring(input) .. ", output = " .. tostring(output))
 end
 
+addr = addr - 10
+core.segments[segment].write(addr, size, input)
+
+do
+    local output = ffi.new("unsigned char[?]", size, { 0, 0, 0 })
+    core:readMemory( addr, size, output, segment)
+
+    local handle = error
+    if ffi.C.memcmp(input,output,size) == 0 then
+        handle = print
+    end
+
+    handle("input = " .. tostring(input) .. ", output = " .. tostring(output))
+end
+
+do
+    local output = ffi.new("unsigned char[?]", size, { 0, 0, 0 })
+    core.segments[segment].read(addr, size, output)
+
+    local handle = error
+    if ffi.C.memcmp(input,output,size) == 0 then
+        handle = print
+    end
+
+    handle("input = " .. tostring(input) .. ", output = " .. tostring(output))
+end
+
