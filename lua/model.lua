@@ -19,6 +19,25 @@ Proto.Core.__overrides.regs =
         return regs
     end
 
+Proto.Core.__overrides.segments =
+    function(self)
+        local segments = {}
+        self.__proto.segments = segments
+        segments.__index = function(_,index)
+            local obj = {}
+            obj.read = function(addr, size, output)
+                return self:readMemory(addr, size, output, index)
+            end
+            obj.write = function(addr, size, input)
+                return self:writeMemory(addr, size, input, index)
+            end
+            return obj
+        end
+
+        setmetatable(segments, segments)
+        return segments
+    end
+
 local function define_c(ret,name,...)
     return ffi.cdef(ret .. " " .. name .. "(" .. table.concat({...}, ",") .. ");")
 end

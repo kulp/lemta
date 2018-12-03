@@ -4,21 +4,36 @@ local Model = require("model")
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
 
+ffi.cdef[[int memcmp(const void *s1, const void *s2, size_t n);]]
+
 -- raw read/write interface
 local size = 3
 local addr = 0x102
-local input  = ffi.new("unsigned char[?]", size, { 9, 8, 7 })
-local output = ffi.new("unsigned char[?]", size, { 0, 0, 0 })
 local segment = 0
+local input = ffi.new("unsigned char[?]", size, { 9, 8, 7 })
 core:writeMemory(addr, size, input, segment)
-core:readMemory( addr, size, output, segment)
 
-ffi.cdef[[int memcmp(const void *s1, const void *s2, size_t n);]]
+do
+    local output = ffi.new("unsigned char[?]", size, { 0, 0, 0 })
+    core:readMemory( addr, size, output, segment)
 
-local handle = error
-if ffi.C.memcmp(input,output,size) == 0 then
-    handle = print
+    local handle = error
+    if ffi.C.memcmp(input,output,size) == 0 then
+        handle = print
+    end
+
+    handle("input = " .. tostring(input) .. ", output = " .. tostring(output))
 end
 
-handle("input = " .. tostring(input) .. ", output = " .. tostring(output))
+do
+    local output = ffi.new("unsigned char[?]", size, { 0, 0, 0 })
+    core.segments[segment].read(addr, size, output)
+
+    local handle = error
+    if ffi.C.memcmp(input,output,size) == 0 then
+        handle = print
+    end
+
+    handle("input = " .. tostring(input) .. ", output = " .. tostring(output))
+end
 
