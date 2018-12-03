@@ -31,6 +31,23 @@ Proto.Core.__overrides.segments =
             obj.write = function(addr, size, input)
                 return self:writeMemory(addr, size, input, index)
             end
+
+            local mem = {}
+            mem.__index = function(table, addr)
+                -- TODO handle different word sizes between program and data memories ?
+                local size = 1
+                local temp = ffi.new("unsigned char[?]", size, { 0 })
+                obj.read(addr, size, temp)
+                return temp[0]
+            end
+            mem.__newindex = function(table, addr, value)
+                -- TODO handle different word sizes between program and data memories ?
+                local size = 1
+                obj.write(addr, size, ffi.new("unsigned char[?]", size, { value }))
+            end
+            setmetatable(mem, mem)
+            obj.mem = mem
+
             return obj
         end
 
