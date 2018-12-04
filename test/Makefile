@@ -21,7 +21,11 @@ LIB = unpacked/$(LIB_DIR)/lib$(LIB_STEM).so
 MCU_NAMES = $(shell xmllint unpacked/*.pdsc --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.linux64"][@value="$(LIB_DIR)/lib$1.so"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | grep -o '"[^"]*"' | tr -d '"')
 
 vpath %.hh ../include ../include/internals
+vpath %.hh cxx
+vpath %.cc cxx
+
 CPPFLAGS += -I../include
+CPPFLAGS += -I$(CURDIR)
 
 LUA = lua
 LUAJIT = luajit
