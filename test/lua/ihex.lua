@@ -8,7 +8,6 @@ end
 
 function read_ihex(lines,actor)
     for line in lines do
-        print(line)
         local _, _, n, addr, kind, data, ck =
             string.find(line, "^:(%x%x)(%x%x%x%x)(%x%x)(%x*)(%x%x)%s*$")
         n    = tonumber(n   , 16)
@@ -20,4 +19,4 @@ function read_ihex(lines,actor)
     end
 end
 
---read_ihex(io.lines(arg[1]),print)
+return { ["read"] = read_ihex }

@@ -24,6 +24,8 @@ vpath %.hh ../include ../include/internals
 vpath %.hh cxx
 vpath %.cc cxx
 
+vpath %.lua lua
+
 CPPFLAGS += -I../include
 CPPFLAGS += -I$(CURDIR)
 
