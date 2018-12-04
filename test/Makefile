@@ -23,6 +23,9 @@ MCU_NAMES = $(shell xmllint unpacked/*.pdsc --xpath '//*[local-name()="property"
 vpath %.hh ../include ../include/internals
 CPPFLAGS += -I../include
 
+LUA = lua
+LUAJIT = luajit
+
 .DELETE_ON_ERROR:
 
 all: $(TARGETS) libimpl-Model.so libimpl-Core.so
@@ -54,8 +57,10 @@ types.xi:
 	($(foreach f,$(TYPES),echo '#include "methods.$f.xi"';) echo '#define TYPE_LIST(_) '\\; $(foreach f,$(TYPES),echo '    _($f) '\\;) echo '    // end TYPE_LIST') > $@
 
 FILES_clean += header.*.h impl.*.cc
+# If xmlua can be installed for plain Lua, then the following rule should call
+# $(LUA) instead of $(LUAJIT)
 header.%.h impl.%.cc: gen.lua model.%.xml
-	luajit $^ header.$*.h impl.$*.cc
+	$(LUAJIT) $^ header.$*.h impl.$*.cc
 
 %.strings.cc: %
 	(echo "extern "'"C"'" const char * get_`echo "$*" | tr -c [:alnum:]_ _`(){ return" ; sed 's/^/"/;s/$$/\\n"/' $< ; echo ';}') > $@
@@ -74,7 +79,6 @@ FILES_clean += check-*-z-rhs.txt
 check-%-z-rhs.txt: call
 	$(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}' > $@
 
-LUA = luajit
 LUA_TESTS = mem.lua regs.lua cycle.lua step.lua getters.lua
 
 define newline
@@ -106,7 +110,7 @@ check-$1-$2-$3: export LD_LIBRARY_PATH=.:unpacked/$(LIB_DIR)
 check-$1-$2-$3: export LUA_PATH=;;../lua/?.lua
 check-$1-$2-$3: libimpl-Model.so libimpl-Core.so
 check-$1-$2-$3: $3
-	$(LUA) $3 $1 $2
+	$(LUAJIT) $3 $1 $2
 
 endef
 
