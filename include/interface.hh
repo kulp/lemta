@@ -22,7 +22,17 @@ enum BPtype {
 
     BP_TRACEPOINT = (1 << 3),
 };
-enum class Segment : int;
+
+// not much is known yet about segments, except that
+// - segment 0 seems to be consistently the program memory
+// - segment 3 is often but not always a bank of 32 registers
+// - segments 5 and 6 are called out specially in some compiled models
+enum Segment {
+    SEG_PROG = 0,
+
+    SEG_TYPE_5 = 5,
+    SEG_TYPE_6 = 6,
+};
 
 struct Breakpoint
 {
