@@ -99,6 +99,7 @@ define check_lib_1
 check: check-$1
 check-$1 check-$1-%: LIB_STEM = $1
 
+$(foreach m,$(call MCU_NAMES,$1),$(call check_lib_2,$1,$m))
 endef
 
 define check_lib_2
@@ -110,6 +111,7 @@ check-$1-$2: $(LUA_TESTS:%=check-$1-$2-%)
 $(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % libimpl-Model.so libimpl-Core.so
 	$$(LUAJIT) $$< $1 $2
 
+$(foreach t,$(TYPES),$(call check_lib_3,$1,$2,$t))
 endef
 
 define check_lib_3
@@ -127,7 +129,7 @@ include $(LIB_LIST:%=check-lib-%.mk)
 endif
 
 $(LIB_LIST:%=check-lib-%.mk): check-lib-%.mk:
-	$(file >$@,$(call check_lib_1,$*) $(foreach m,$(call MCU_NAMES,$*),$(call check_lib_2,$*,$m) $(foreach t,$(TYPES),$(call check_lib_3,$*,$m,$t))))
+	$(file >$@,$(call check_lib_1,$*))
 
 PACKS_URL_BASE = http://packs.download.atmel.com/
 PACK_TYPES = ATautomotive ATmega ATtiny XMEGA
