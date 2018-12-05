@@ -112,16 +112,9 @@ check-$1: check-$1-$2
 check-$1-$2: LIB_STEM = $1
 check-$1-$2: MCU = $2
 
-$(foreach L,$(LUA_TESTS),$(call check_lib_lua,$1,$2,$L))
-
-endef
-
-define check_lib_lua
-
 check-$1-$2: $(LUA_TESTS:%=check-$1-$2-%)
-check-$1-$2-$3: libimpl-Model.so libimpl-Core.so
-check-$1-$2-$3: $3
-	$$(LUAJIT) $3 $1 $2
+$(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % libimpl-Model.so libimpl-Core.so
+	$$(LUAJIT) $$< $1 $2
 
 endef
 
