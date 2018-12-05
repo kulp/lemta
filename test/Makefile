@@ -128,6 +128,7 @@ ifneq ($(MAKECMDGOALS),clean)
 include $(LIB_LIST:%=check-lib-%.mk)
 endif
 
+# The use of $(file ...) here requires Make version 4+
 $(LIB_LIST:%=check-lib-%.mk): check-lib-%.mk:
 	$(file >$@,$(call check_lib_1,$*))
 
