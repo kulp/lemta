@@ -94,11 +94,6 @@ LUA_TESTS = $(wildcard cases/*.lua)
 check-%.lua: export LD_LIBRARY_PATH=.:unpacked/$(LIB_DIR)
 check-%.lua: export LUA_PATH=;;../lua/?.lua
 
-define newline
-
-
-endef
-
 define check_lib_1
 
 check: check-$1
