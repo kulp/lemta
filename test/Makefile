@@ -85,7 +85,7 @@ FILES_clean += check-*-z-rhs.txt
 check-%-z-rhs.txt: call
 	$(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}' > $@
 
-LUA_TESTS = mem.lua regs.lua cycle.lua step.lua getters.lua
+LUA_TESTS = $(wildcard cases/*.lua)
 
 define newline
 
