@@ -97,15 +97,14 @@ check-%.lua: export LUA_PATH=;;../lua/?.lua
 define check_lib_1
 
 check: check-$1
-check-$1: LIB_STEM = $1
+check-$1 check-$1-%: LIB_STEM = $1
 
 endef
 
 define check_lib_2
 
 check-$1: check-$1-$2
-check-$1-$2: LIB_STEM = $1
-check-$1-$2: MCU = $2
+check-$1-$2 check-$1-$2-%: MCU = $2
 
 check-$1-$2: $(LUA_TESTS:%=check-$1-$2-%)
 $(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % libimpl-Model.so libimpl-Core.so
@@ -117,8 +116,6 @@ define check_lib_3
 
 check-$1-$2: check-$1-$2-$3-z
 check-$1-$2-$3: check-$1-$2-$3-z
-check-$1-$2-$3-z: LIB_STEM = $1
-check-$1-$2-$3-z: MCU = $2
 check-$1-$2-$3-z: TYPE = $3
 check-$1-$2-$3-z: methods.$3.txt
 
