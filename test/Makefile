@@ -91,6 +91,9 @@ check-%-z-rhs.txt: call
 
 LUA_TESTS = $(wildcard cases/*.lua)
 
+check-%.lua: export LD_LIBRARY_PATH=.:unpacked/$(LIB_DIR)
+check-%.lua: export LUA_PATH=;;../lua/?.lua
+
 define newline
 
 
@@ -116,8 +119,6 @@ endef
 define check_lib_lua
 
 check-$1-$2: $(LUA_TESTS:%=check-$1-$2-%)
-check-$1-$2-$3: export LD_LIBRARY_PATH=.:unpacked/$(LIB_DIR)
-check-$1-$2-$3: export LUA_PATH=;;../lua/?.lua
 check-$1-$2-$3: libimpl-Model.so libimpl-Core.so
 check-$1-$2-$3: $3
 	$(LUAJIT) $3 $1 $2
