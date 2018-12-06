@@ -23,14 +23,19 @@ enum BPtype {
     BP_TRACEPOINT = (1 << 3),
 };
 
-// not much is known yet about segments, except that
-// - segment 0 seems to be consistently the program memory
-// - segment 3 is often but not always a bank of 32 registers
-// - segments 5 and 6 are called out specially in some compiled models
+// segment 0 seems to be consistently the program memory
+// segment 1 seems to be consistently the data address space
+// segment 2 seems to be the EEPROM
+// segment 3 seems to be the bank of 32 registers, but not for all models
+// segments 5 and 6 are called out specially in some compiled models
+// segment 5 seems to be fuses
 enum Segment {
     SEG_PROG = 0,
+    SEG_DATA = 1,
+    SEG_EEPROM = 2,
+    SEG_REGS = 3,
 
-    SEG_TYPE_5 = 5,
+    SEG_FUSES = 5,
     SEG_TYPE_6 = 6,
 };
 
