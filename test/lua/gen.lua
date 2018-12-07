@@ -102,10 +102,15 @@ for i,class in ipairs(structs) do
     header:write("typedef struct " .. name .. " " .. name .. ";\n")
 end
 
-for i,class in ipairs(enums) do
-    local name = class:get_attribute("name")
-    -- for now, enums are simply ints
-    header:write("typedef int " .. name .. ";\n")
+for _,enum in ipairs(enums) do
+    local name = enum:get_attribute("name")
+    local children = enum:children()
+    header:write("typedef enum " .. name .. (#children > 0 and " { " or " "))
+    for _,val in ipairs(children) do
+        local init = val:get_attribute("init")
+        header:write(val:get_attribute("name") .. (init and " = " .. init or "") .. ", ")
+    end
+    header:write((#children > 0 and "} " or "") .. name .. ";\n")
 end
 
 for i,class in ipairs(classes) do
