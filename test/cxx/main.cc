@@ -128,7 +128,7 @@ int main(int argc, char **argv)
         ul = -1;
         int result = mc->getIntProperty(i, &ul, "");
         if (result != -1) {
-            std::printf("index = %d = %#x, result = %d, ul = %lu\n", i, i, result, ul);
+            std::printf("index = %d = %#x, result = %d, ul = %lu = %#lx\n", i, i, result, ul, ul);
         }
     }
 
