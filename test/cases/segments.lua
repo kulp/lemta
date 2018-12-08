@@ -3,7 +3,7 @@ local Model = require("model")
 
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
-local segment_names = { "SEG_EEPROM" }
+local segment_names = { "SEG_EEPROM", "SEG_DATA" }
 
 ffi.cdef[[int memcmp(const void *s1, const void *s2, size_t n);]]
 
