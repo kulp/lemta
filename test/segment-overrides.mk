@@ -25,3 +25,20 @@ DATA_TARGETS += check-attinyxe-ATmega4808-cases/segments.lua
 DATA_TARGETS += check-atmegaapb-ATMEGA48PB-cases/segments.lua
 
 $(DATA_TARGETS): export SKIP_UPPER_BOUND_CHECK_SEGMENT_SEG_DATA = 1
+
+PROG_TARGETS += check-attinyxb-ATtiny202-cases/segments.lua
+PROG_TARGETS += check-attinyxb-ATtiny204-cases/segments.lua
+PROG_TARGETS += check-attinyxb-ATtiny214-cases/segments.lua
+PROG_TARGETS += check-attinyxb-ATtiny212-cases/segments.lua
+PROG_TARGETS += check-attinyxe-ATmega3208-cases/segments.lua
+PROG_TARGETS += check-attinyxe-ATmega3209-cases/segments.lua
+PROG_TARGETS += check-attinyxg-ATmega808-cases/segments.lua
+PROG_TARGETS += check-attinyxg-ATmega809-cases/segments.lua
+PROG_TARGETS += check-atmegaapb-ATMEGA88PB-cases/segments.lua
+PROG_TARGETS += check-atmegaapb-ATMEGA48PB-cases/segments.lua
+PROG_TARGETS += check-attinyxa-ATtiny417-cases/segments.lua
+PROG_TARGETS += check-attinyxf-ATtiny807-cases/segments.lua
+PROG_TARGETS += check-attinyxf-ATtiny806-cases/segments.lua
+PROG_TARGETS += check-attinyxf-ATtiny804-cases/segments.lua
+
+$(PROG_TARGETS): export SKIP_UPPER_BOUND_CHECK_SEGMENT_SEG_PROG = 1
