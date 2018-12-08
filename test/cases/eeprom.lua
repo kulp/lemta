@@ -53,19 +53,29 @@ local read_kinds = {
         function(a,s,m,p) for i = 0,s-1 do m[i] = core.segments[p].mem[a + i] end end,
     }
 
--- ensure segment is not larger than advertised
-for i,put in ipairs(write_kinds) do
-    put(addr, size + 1, input, segment)
-    for _,get in ipairs(read_kinds) do
-        check_read(addr, size + 1, input, get, true)
+do
+    local env = os.getenv("SKIP_UPPER_BOUND_CHECK_SEGMENT_" .. segment)
+    if tonumber(env) ~= 1 then
+        -- ensure segment is not larger than advertised
+        for i,put in ipairs(write_kinds) do
+            put(addr, size + 1, input, segment)
+            for _,get in ipairs(read_kinds) do
+                check_read(addr, size + 1, input, get, true)
+            end
+        end
     end
 end
 
--- ensure segment is at least as large as advertised
-for i,put in ipairs(write_kinds) do
-    put(addr, size, input, segment)
-    for _,get in ipairs(read_kinds) do
-        check_read(addr, size, input, get)
+do
+    local env = os.getenv("SKIP_LOWER_BOUND_CHECK_SEGMENT_" .. segment)
+    if tonumber(env) ~= 1 then
+        -- ensure segment is at least as large as advertised
+        for i,put in ipairs(write_kinds) do
+            put(addr, size, input, segment)
+            for _,get in ipairs(read_kinds) do
+                check_read(addr, size, input, get)
+            end
+        end
     end
 end
 
