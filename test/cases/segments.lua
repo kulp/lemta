@@ -44,38 +44,40 @@ for _,segment_name in ipairs(segment_names) do
     -- integer property index N*2+5 appears to be the size of segment N
     local width = model:getIntProperty(segment * 2 + 5, temp, nil)
     local size = tonumber(temp[0])
-    local input = ffi.new("unsigned char[?]", size * 2)
+    if size > 0 then
+        local input = ffi.new("unsigned char[?]", size * 2)
 
-    temp[0] = 0
-    -- integer property index N*2+6 appears to be the base address of segment N
-    model:getIntProperty(segment * 2 + 6, temp, nil)
-    local addr = tonumber(temp[0])
+        temp[0] = 0
+        -- integer property index N*2+6 appears to be the base address of segment N
+        model:getIntProperty(segment * 2 + 6, temp, nil)
+        local addr = tonumber(temp[0])
 
-    for i = 0,size*2-1 do
-        input[i] = 0xff - i
-    end
+        for i = 0,size*2-1 do
+            input[i] = 0xff - i
+        end
 
-    do
-        local env = os.getenv("SKIP_UPPER_BOUND_CHECK_SEGMENT_" .. segment_name)
-        if tonumber(env) ~= 1 then
-            -- ensure segment is not larger than advertised
-            for i,put in ipairs(write_kinds) do
-                put(core, addr, size + 1, input, segment)
-                for _,get in ipairs(read_kinds) do
-                    check_read(core, segment, addr, size + 1, input, get, true)
+        do
+            local env = os.getenv("SKIP_UPPER_BOUND_CHECK_SEGMENT_" .. segment_name)
+            if tonumber(env) ~= 1 then
+                -- ensure segment is not larger than advertised
+                for i,put in ipairs(write_kinds) do
+                    put(core, addr, size + 1, input, segment)
+                    for _,get in ipairs(read_kinds) do
+                        check_read(core, segment, addr, size + 1, input, get, true)
+                    end
                 end
             end
         end
-    end
 
-    do
-        local env = os.getenv("SKIP_LOWER_BOUND_CHECK_SEGMENT_" .. segment_name)
-        if tonumber(env) ~= 1 then
-            -- ensure segment is at least as large as advertised
-            for i,put in ipairs(write_kinds) do
-                put(core, addr, size, input, segment)
-                for _,get in ipairs(read_kinds) do
-                    check_read(core, segment, addr, size, input, get)
+        do
+            local env = os.getenv("SKIP_LOWER_BOUND_CHECK_SEGMENT_" .. segment_name)
+            if tonumber(env) ~= 1 then
+                -- ensure segment is at least as large as advertised
+                for i,put in ipairs(write_kinds) do
+                    put(core, addr, size, input, segment)
+                    for _,get in ipairs(read_kinds) do
+                        check_read(core, segment, addr, size, input, get)
+                    end
                 end
             end
         end
