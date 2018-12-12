@@ -9,7 +9,7 @@ Proto.Core.__overrides.regs =
         regs.__index = function(_,index)
             local output = ffi.new("unsigned long[1]")
             self:peekReg(index, output)
-            return output[0]
+            return tonumber(output[0])
         end
         regs.__newindex = function(_,index,value)
             self:pokeReg(index, value)
@@ -38,7 +38,7 @@ Proto.Core.__overrides.segments =
                 local size = 1
                 local temp = ffi.new("unsigned char[?]", size, { 0 })
                 obj.read(addr, size, temp)
-                return temp[0]
+                return tonumber(temp[0])
             end
             mem.__newindex = function(table, addr, value)
                 -- TODO handle different word sizes between program and data memories ?
