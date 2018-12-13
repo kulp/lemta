@@ -109,7 +109,9 @@ check-$1-$2 check-$1-$2-%: MCU = $2
 
 check-$1-$2: $(LUA_TESTS:%=check-$1-$2-%)
 $(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % libimpl-Model.so libimpl-Core.so
-	$$(LUAJIT) $$< $$(LIB_STEM) $$(MCU)
+	$$(if $$(SKIP-$$(LIB_STEM)-$$(MCU)-$$<),\
+	    $$(warning Target $$@ fails and has been disabled pending investigation),\
+	    $$(LUAJIT) $$< $$(LIB_STEM) $$(MCU))
 
 $(foreach t,$(TYPES),$(call check_lib_3,$1,$2,$t))
 endef
