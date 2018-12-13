@@ -130,6 +130,7 @@ endif
 
 include segment-overrides.mk
 include run-overrides.mk
+include regs-overrides.mk
 
 # The use of $(file ...) here requires Make version 4+
 $(LIB_LIST:%=check-lib-%.mk): check-lib-%.mk:
