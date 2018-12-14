@@ -5,7 +5,6 @@ Proto.Core = { ["__overrides"] = {} }
 Proto.Core.__overrides.regs =
     function(self)
         local regs = {}
-        self.__proto.regs = regs
         regs.__index = function(_,index)
             local output = ffi.new("unsigned long[1]")
             self:peekReg(index, output)
@@ -22,7 +21,6 @@ Proto.Core.__overrides.regs =
 Proto.Core.__overrides.segments =
     function(self)
         local segments = {}
-        self.__proto.segments = segments
         segments.__index = function(_,index)
             local obj = {}
             obj.read = function(addr, size, output)
@@ -75,8 +73,6 @@ for _,stem in ipairs({ "Model", "Core" }) do
             return impl[stem .. "__" .. f](self, ...)
         end
     end
-
-    proto.__proto = proto
 
     local handlers = {
         ["__index"] = function(ct,key)
