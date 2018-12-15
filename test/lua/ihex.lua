@@ -19,4 +19,4 @@ function read_ihex(lines,actor)
     end
 end
 
-return { ["read"] = read_ihex }
+return { read = read_ihex }

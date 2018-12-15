@@ -1,7 +1,7 @@
 local ffi = require("ffi")
 local Proto = {}
 
-Proto.Core = { ["__overrides"] = {} }
+Proto.Core = { __overrides = {} }
 Proto.Core.__overrides.regs =
     function(self)
         local regs = {}
