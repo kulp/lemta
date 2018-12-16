@@ -2,22 +2,15 @@ local ffi = require("ffi")
 local Model = require("model")
 local ihex = require("lua/ihex")
 
-local mcu = arg[1]
-local base = "cases/sum"
-local hex = base .. ".hex"
-
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
+local prog = core.segments["SEG_PROG"]
 
-local function make_loader(segment)
-    return function(n,addr,kind,data,ck)
-        if kind == 0 then
-            segment.write(addr,n,data)
-        end
-    end
+function loader(n,addr,kind,data,ck)
+    return kind == 0 and prog.write(addr,n,data)
 end
 
-ihex.read(io.lines(hex),make_loader(core.segments["SEG_PROG"]))
+ihex.read(io.lines("cases/sum.hex"),loader)
 
 local add1 = 0x12
 local add2 = 0x34
