@@ -8,6 +8,7 @@ LINK.o = $(LINK.cc)
 TARGETS = main call
 
 TYPES = Model Core
+IMPLS = $(TYPES:%=libimpl-%.so)
 
 LIB_DIR = simulator/linux64
 LIB_STEM = $(error LIB_STEM must be set)
@@ -34,7 +35,7 @@ LUAJIT = luajit
 
 .DELETE_ON_ERROR:
 
-all: $(TARGETS) libimpl-Model.so libimpl-Core.so
+all: $(TARGETS) $(IMPLS)
 
 main: LDLIBS += -ldl
 main.o: CPPFLAGS += -I../include/internals
@@ -104,7 +105,7 @@ check-$1: check-$1-$2
 check-$1-$2 check-$1-$2-%: MCU = $2
 
 check-$1-$2: $(LUA_TESTS:%=check-$1-$2-%)
-$(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % libimpl-Model.so libimpl-Core.so
+$(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % $(IMPLS)
 	$$(if $$(SKIP-$$(LIB_STEM)-$$(MCU)-$$<),\
 	    $$(warning Target $$@ fails and has been disabled pending investigation),\
 	    $$(LUAJIT) $$< $$(LIB_STEM) $$(MCU))
