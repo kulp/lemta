@@ -130,6 +130,12 @@ int main(int argc, char **argv)
         if (result != -1) {
             std::printf("index = %d = %#x, result = %d, ul = %lu = %#lx\n", i, i, result, ul, ul);
         }
+        size_t len = 1024;
+        char buf[len];
+        result = mc->getStringProperty(i, len, buf, nullptr);
+        if (result != -1) {
+            std::printf("index = %d = %#x, result = %d, buf = '%s'\n", i, i, result, buf);
+        }
     }
 
     int rc = lib.get_function(model_dtor).invoke(dev);
