@@ -2,6 +2,7 @@
 #define DYNAMIC_HH_
 
 #include <dlfcn.h>
+#include <cstdio>
 
 class Library
 {
@@ -33,7 +34,9 @@ public:
     Library(const char *path)
         : handle(dlopen(path, RTLD_LAZY | RTLD_LOCAL))
     {
-        // no body
+        if (handle == nullptr) {
+            fprintf(stderr, "%s\n", dlerror());
+        }
     }
 
     ~Library()
