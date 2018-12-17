@@ -1,5 +1,3 @@
-#include <svdpi.h>
-
 #include <cassert>
 #include <cstdio>
 #include <setjmp.h>
@@ -47,14 +45,10 @@ int main(int argc, char **argv)
 
     Library lib(argv[1]);
 
-    std::printf("svDpiVersion() = %s\n", lib.get_function(svDpiVersion).invoke());
     std::printf("model_api_ver() = %#x\n", lib.get_function(model_api_ver).invoke());
 
     Model *dev = lib.get_function(model_ctor).invoke(argv[2]);
     assert(("device constructed", dev != NULL));
-
-    svScope scope = lib.get_function(svGetScopeFromName).invoke("TOP.sim_top");
-    assert(("found scope", scope != NULL));
 
     Core *mc = dev->getCore(0);
     assert(("model core exists", mc != NULL));

@@ -1,11 +1,7 @@
-VERILATOR_CFLAGS := $(shell pkg-config --cflags verilator)
-
 CXXFLAGS += -g
 CXXFLAGS += -O3
 CXXFLAGS += -std=c++11
 CXXFLAGS += -Wall -Wextra -Wold-style-cast
-
-CPPFLAGS += $(VERILATOR_CFLAGS)
 
 LINK.o = $(LINK.cc)
 
