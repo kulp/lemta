@@ -126,15 +126,25 @@ int main(int argc, char **argv)
             i++;
         }
         ul = -1;
-        int result = mc->getIntProperty(i, &ul, "");
+        char buf[1024];
+        int result;
+
+        result = mc->getIntProperty(i, &ul, "");
         if (result != -1) {
-            std::printf("index = %d = %#x, result = %d, ul = %lu = %#lx\n", i, i, result, ul, ul);
+            std::printf("(C) index = %d = %#x, result = %d, ul = %lu = %#lx\n", i, i, result, ul, ul);
         }
-        size_t len = 1024;
-        char buf[len];
-        result = mc->getStringProperty(i, len, buf, nullptr);
+        result = mc->getStringProperty(i, sizeof buf, buf, nullptr);
         if (result != -1) {
-            std::printf("index = %d = %#x, result = %d, buf = '%s'\n", i, i, result, buf);
+            std::printf("(C) index = %d = %#x, result = %d, buf = '%s'\n", i, i, result, buf);
+        }
+
+        result = md->getIntProperty(i, &ul, "");
+        if (result != -1) {
+            std::printf("(M) index = %d = %#x, result = %d, ul = %lu = %#lx\n", i, i, result, ul, ul);
+        }
+        result = md->getStringProperty(i, sizeof buf, buf, nullptr);
+        if (result != -1) {
+            std::printf("(M) index = %d = %#x, result = %d, buf = '%s'\n", i, i, result, buf);
         }
     }
 
