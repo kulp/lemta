@@ -25,6 +25,9 @@ class VerilogMemUnit;
 class Vsim_top;
 class model_verilated;
 
+// inferred from manglings
+struct SimProperty;
+
 typedef void *UnknownType;
 
 class Model_core : public Core
@@ -59,6 +62,9 @@ protected:
 
     // byte offset of Model * is 0x1c0 on Linux
     // Model *model;
+
+    // byte offset of props is 0x1d8 on Linux
+    // std::map<int const, SimProperty> props;
 
 public:
     // inherited from Core
@@ -133,6 +139,9 @@ public:
 
     // byte offset of Core * array is 0x28 on Linux
     // Core **cores;
+
+    // byte offset of props is 0x170 on Linux
+    // std::map<int const, SimProperty> props;
 
     // inherited from Model
     virtual Core *getCore(unsigned int);
