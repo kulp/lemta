@@ -98,7 +98,7 @@ public:
     virtual int writeMemory(unsigned long addr, unsigned long count, unsigned char const *data, Segment) = 0;
     virtual int getIntProperty(int, unsigned long*, char const*) = 0;
     virtual int setIntProperty(int, unsigned long, char const*) = 0;
-    virtual int getStringProperty(int, unsigned long, char*, unsigned long const*) = 0;
+    virtual int getStringProperty(int index, unsigned long buflen, char *buf, unsigned long const*) = 0;
     virtual int setStringProperty(int, char*, unsigned long const*) = 0;
     virtual Model *getModel() = 0;
     virtual int addBreakpoint(Breakpoint*) = 0;
@@ -121,7 +121,7 @@ public:
     virtual int removeCycleCallback(int) = 0;
     virtual int getIntProperty(int, unsigned long*, char const*) = 0;
     virtual int setIntProperty(int, unsigned long, char const*) = 0;
-    virtual int getStringProperty(int, unsigned long, char*, unsigned long const*) = 0;
+    virtual int getStringProperty(int index, unsigned long buflen, char *buf, unsigned long const*) = 0;
     virtual int setStringProperty(int, char*, unsigned long const*) = 0;
     virtual int saveSim(SimState*) = 0;
     virtual int loadSim(SimState*) = 0;
