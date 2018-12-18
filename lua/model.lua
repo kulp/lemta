@@ -39,6 +39,15 @@ Proto.Core.__overrides.props =
 
             return obj
         end
+        props.__newindex = function(_,index,value)
+            if type(value) == "number" then
+                return self:setIntProperty(index, value, nil)
+            else
+                -- We assume optimistically that setStringProperty does not
+                -- actually modify its argument
+                return self:setStringProperty(index, ffi.cast("char *", tostring(value)), nil)
+            end
+        end
 
         setmetatable(props, props)
         return props
