@@ -25,17 +25,21 @@ local read_kinds = {
 
 for _,put in ipairs(write_kinds) do
     for _,get in ipairs(read_kinds) do
-        for i = 0,numregs-1 do
-            put(core,i,i * 2)
-        end
-        for i = 0,numregs-1 do
-            local val = get(core,i)
-            local handle = error
-            if val == i * 2 then
-                handle = print
+        for j = 0,31,numregs do -- 16-register cores have their registers mapped twice
+            for i = 0,numregs-1 do
+                local r = i + j
+                put(core,r,r * 2)
             end
+            for i = 0,numregs-1 do
+                local r = i + j
+                local val = get(core,r)
+                local handle = error
+                if val == r * 2 then
+                    handle = print
+                end
 
-            handle("ok reg " .. i)
+                handle("ok reg " .. r)
+            end
         end
     end
 end
