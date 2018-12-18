@@ -3,29 +3,40 @@ local Model = require("model")
 
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
+local numregs = core.props[1028].int() -- magic number not yet enumerated in C interface
 
--- raw peek/poke interface
-local input = 0x12
-core:pokeReg(3, input)
-local output = ffi.new("unsigned long[1]")
-local result = core:peekReg(3, output)
+local write_kinds = {
+        -- raw peek/poke interface
+        function(c,i,v) c:pokeReg(i,v) end,
+        -- simulated-array interface
+        function(c,i,v) c.regs[i] = v end,
+    }
 
-local handle = error
-if result == 1 and input == output[0] then
-    handle = print
+local read_kinds = {
+        -- raw peek/poke interface
+        function(c,i)
+            local f = ffi.new("unsigned long[1]")
+            c:peekReg(i, f)
+            return f[0]
+        end,
+        -- simulated-array interface
+        function(c,i) return c.regs[i] end,
+    }
+
+for _,put in ipairs(write_kinds) do
+    for _,get in ipairs(read_kinds) do
+        for i = 0,numregs-1 do
+            put(core,i,i * 2)
+        end
+        for i = 0,numregs-1 do
+            local val = get(core,i)
+            local handle = error
+            if val == i * 2 then
+                handle = print
+            end
+
+            handle("ok reg " .. i)
+        end
+    end
 end
-
-handle("result = " .. result .. ", input = " .. input .. ", output = " .. tostring(output[0]))
-
--- simulated-array interface
-local input = 0x15
-core.regs[9] = input
-local output = core.regs[9]
-
-local handle = error
-if input == output then
-    handle = print
-end
-
-handle("result = " .. result .. ", input = " .. input .. ", output = " .. tostring(output))
 
