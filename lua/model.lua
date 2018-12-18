@@ -18,6 +18,32 @@ Proto.Core.__overrides.regs =
         return regs
     end
 
+Proto.Core.__overrides.props =
+    function(self)
+        local props = {}
+        props.__index = function(_,index)
+            local obj = {}
+            obj.string = function(_)
+                local size = 1024 -- TODO shrink meaningfully
+                local str = ffi.new("char[?]", size)
+                self:getStringProperty(index, size, str, nil)
+                return ffi.string(str)
+            end
+            obj.int = function(_)
+                local var = ffi.new("unsigned long[1]")
+                self:getIntProperty(index, var, nil)
+                return tonumber(var[0])
+            end
+            obj.__tostring = obj.string
+            setmetatable(obj,obj)
+
+            return obj
+        end
+
+        setmetatable(props, props)
+        return props
+    end
+
 Proto.Core.__overrides.segments =
     function(self)
         local segments = {}
