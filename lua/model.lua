@@ -105,9 +105,17 @@ for _,stem in ipairs({ "Model", "Core" }) do
         end
     end
 
+    local trapper = {
+        __index    = function(_,k)   error("bad get for key='" .. k .. "'") end,
+        __newindex = function(_,k,v) error("bad put for key='" .. k .. "'") end,
+    }
+    setmetatable(trapper, trapper)
+
     local handlers = {
         ["__index"] = function(ct,key)
-            return proto[key] or proto.__overrides[key](ct)
+            return proto[key] or
+                (proto.__overrides[key] and proto.__overrides[key](ct)) or
+                trapper
         end,
         ["__newindex"] = proto,
     }
