@@ -1,6 +1,8 @@
 local ffi = require("ffi")
 local Proto = {}
 
+Proto.Model = { __overrides = {} }
+
 Proto.Core = { __overrides = {} }
 Proto.Core.__overrides.regs =
     function(self)
@@ -52,6 +54,8 @@ Proto.Core.__overrides.props =
         setmetatable(props, props)
         return props
     end
+-- Model has props too, with same access semantics
+Proto.Model.__overrides.props = Proto.Core.__overrides.props
 
 Proto.Core.__overrides.segments =
     function(self)
