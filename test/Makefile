@@ -89,7 +89,7 @@ check-%-z-rhs.txt: call
 LUA_TESTS = $(wildcard cases/*.lua)
 
 check-%.lua: export LD_LIBRARY_PATH=.:unpacked/$(LIB_DIR)
-check-%.lua: export LUA_PATH=;;../lua/?.lua
+check-%.lua: export LUA_PATH := $(LUA_PATH);;../lua/?.lua
 
 define check_lib_1
 
