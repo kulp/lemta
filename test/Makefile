@@ -73,7 +73,7 @@ header.%.h impl.%.cc: gen.lua model.%.xml
 	(echo "extern "'"C"'" const char * get_`echo "$*" | tr -c [:alnum:]_ _`(){ return" ; sed 's/^/"/;s/$$/\\n"/' $< ; echo ';}') > $@
 
 FILES_clean += libimpl-*.so
-libimpl-%.so: CXXFLAGS += -pedantic -Wall -O3
+libimpl-%.so: CXXFLAGS += -pedantic -Wall -O3 -fPIC
 libimpl-%.so: LDFLAGS += -shared
 libimpl-%.so: impl.%.cc header.%.h.strings.cc methods.%.txt.strings.cc | interface.hh
 	$(LINK.cc) -include $| -o $@ $^
