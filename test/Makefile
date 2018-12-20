@@ -140,15 +140,15 @@ get-pack-list: packs/index.html
 FILES_clean += packs.mk
 ifeq ($(wildcard packs/index.html),)
 packs.mk: | packs
-	(echo define PACKS ; ls -1 $|/ ; echo endef) > $@
+	ls -1 $|/ | sed 's/^/PACKS += /' > $@
 else
 packs.mk: packs/index.html
-	(echo define PACKS ; \
-	    xmllint --html --xpath //button/@data-link $< | \
+	xmllint --html --xpath //button/@data-link $< | \
 	    grep -o '"[^"]*"' | tr -d '"' | \
 	    grep $(PACK_TYPES:%=-e %) | \
-	    sort --reverse --field-separator=. --key=1,2 --unique ; \
-	echo endef) > packs.mk
+	    sort --reverse --field-separator=. --key=1,2 --unique | \
+	    sed 's/^/PACKS += /' \
+	    > $@
 endif
 
 include packs.mk
