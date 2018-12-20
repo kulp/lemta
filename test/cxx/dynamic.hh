@@ -1,8 +1,9 @@
 #ifndef DYNAMIC_HH_
 #define DYNAMIC_HH_
 
-#include <dlfcn.h>
+#include <cstddef>
 #include <cstdio>
+#include <dlfcn.h>
 
 class Library
 {
