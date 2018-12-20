@@ -7,7 +7,7 @@ local expected = 0x70000
 
 local handle = error
 if expected == actual then
-    handle = print
+    handle = function() end
 end
 
 handle(string.format("expected = 0x%06x, actual = 0x%06x", expected, actual))

@@ -20,7 +20,7 @@ function check_read(core, segment, addr, size, input, fashion, invert)
     local normal  = not invert and     equal
     local flipped =     invert and not equal
     if normal or flipped then
-        handle = print
+        handle = function() end
     end
 
     handle("input = " .. tostring(input) .. ", output = " .. tostring(output))

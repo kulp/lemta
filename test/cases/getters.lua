@@ -6,7 +6,7 @@ local m2 = core:getModel()
 
 local handle = error
 if model == m2 then
-    handle = print
+    handle = function() end
 end
 
 handle("expected = " .. tostring(model) .. ", actual = " .. tostring(m2))

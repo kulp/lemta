@@ -15,7 +15,7 @@ for j = 0,31,numregs do -- 16-register cores have their registers mapped twice
 
         local handle = error
         if input == output then
-            handle = print
+            handle = function() end
         end
 
         handle("input = " .. input .. ", output = " .. tostring(output))

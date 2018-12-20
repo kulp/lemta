@@ -14,7 +14,7 @@ model:cycle(count)
 
 local handle = error
 if cycles == count then
-    handle = print
+    handle = function() end
 end
 
 handle("expected = " .. count .. ", actual = " .. cycles)

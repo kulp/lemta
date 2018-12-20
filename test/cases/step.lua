@@ -15,7 +15,7 @@ core:step(count)
 
 local handle = error
 if steps == count then
-    handle = print
+    handle = function() end
 end
 
 handle("expected = " .. count .. ", actual = " .. steps)

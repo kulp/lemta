@@ -35,7 +35,7 @@ for _,put in ipairs(write_kinds) do
                 local val = get(core,r)
                 local handle = error
                 if val == r * 2 then
-                    handle = print
+                    handle = function() end
                 end
 
                 handle("ok reg " .. r)

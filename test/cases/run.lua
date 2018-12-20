@@ -22,6 +22,6 @@ while core.regs[19] ~= 1 do
     core:step(1)
 end
 
-local handle = (add1 + add2 == core.regs[18] and print or error)
+local handle = (add1 + add2 == core.regs[18] and function() end or error)
 handle(string.format("expected 0x%02x, got 0x%02x", add1 + add2, core.regs[18]))
 
