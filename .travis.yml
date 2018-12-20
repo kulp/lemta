@@ -1,0 +1,29 @@
+dist: xenial
+language: cpp
+script:
+  - eval `luarocks path`
+  - make -C test get-pack-list
+  - make -C test get-latest-packs
+  - make -C test unpack
+  - make -C test all
+  - make -C test check
+compiler:
+  - clang
+  - gcc
+before_install:
+  - luarocks install --local xmlua
+  - pushd /tmp
+  - curl --retry 2 -o castxml.tar.gz "$CASTXML_TARBALL_URL"
+  - tar xf castxml.tar.gz
+  - popd
+env:
+  global:
+    - PATH=$PATH:/tmp/castxml/bin
+addons:
+  apt:
+    packages:
+      #- castxml # too old a version
+      - libxml2-utils
+      - luajit
+      - luarocks
+
