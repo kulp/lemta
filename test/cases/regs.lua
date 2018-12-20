@@ -3,7 +3,7 @@ local Model = require("model")
 
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
-local numregs = core.props[1028].int() -- magic number not yet enumerated in C interface
+local numregs = core.regs.len()
 
 local write_kinds = {
         -- raw peek/poke interface

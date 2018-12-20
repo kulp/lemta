@@ -4,7 +4,7 @@ local Model = require("model")
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
 local segment = core.segments["SEG_REGS"]
-local numregs = core.props[1028].int() -- magic number not yet enumerated in C interface
+local numregs = core.regs.len()
 
 for j = 0,31,numregs do -- 16-register cores have their registers mapped twice
     for i = 0,numregs-1 do

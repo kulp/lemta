@@ -15,6 +15,10 @@ Proto.Core.__overrides.regs =
         regs.__newindex = function(_,index,value)
             self:pokeReg(index, value)
         end
+        regs.len = function()
+            return self.props[1028].int() -- TODO hoist magic property identifier
+        end
+        regs.__len = regs.len
 
         setmetatable(regs, regs)
         return regs
