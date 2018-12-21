@@ -63,8 +63,11 @@ methods.%.xi: methods.%.txt
 	(echo "#define METHODS_$*_(_) \\"; sed 's/^/    _($*,/; s/$$/) \\/' $<; echo "    // end METHODS_$*_") > $@
 
 FILES_clean += types.xi
+types.xi: open=(
+types.xi: close=)
 types.xi:
-	($(foreach f,$(TYPES),echo '#include "methods.$f.xi"';) echo '#define TYPE_LIST(_) '\\; $(foreach f,$(TYPES),echo '    _($f) '\\;) echo '    // end TYPE_LIST') > $@
+	($(TYPES:%=echo '#include "methods.%.xi"';) ) > $@
+	echo '#define TYPE_LIST(_)' $(TYPES:%= '_$(open)%$(close)') >> $@
 
 FILES_clean += header.*.h impl.*.cc
 # If xmlua can be installed for plain Lua, then the following rule should call
