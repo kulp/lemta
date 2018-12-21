@@ -47,6 +47,9 @@ call.o: CXXFLAGS += -Wno-cast-function-type # this is the whole point of `call`
 call.o: interface.hh dynamic.hh
 call.o: types.xi $(TYPES:%=methods.%.xi)
 
+# dummy rule
+run-call: ;
+
 FILES_clean += model.*.xml
 model.%.xml: interface.hh
 	castxml -o $@ --castxml-output=1 --castxml-start $* $<
@@ -78,7 +81,7 @@ libimpl-%.so: LDFLAGS += -shared
 libimpl-%.so: impl.%.cc header.%.h.strings.cc methods.%.txt.strings.cc | interface.hh
 	$(LINK.cc) -include $| -o $@ $^
 
-check-%-z: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
+run-call-% check-%-z: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
 check-%-z: check-%-z-rhs.txt
 	diff -q $^
 
@@ -96,6 +99,8 @@ define check_lib_1
 check: check-$1
 check-$1 check-$1-%: LIB_STEM = $1
 
+run-call: run-call-$1
+
 $(foreach m,$(call MCU_NAMES,$1),$(call check_lib_2,$1,$m))
 endef
 
@@ -103,6 +108,8 @@ define check_lib_2
 
 check-$1: check-$1-$2
 check-$1-$2 check-$1-$2-%: MCU = $2
+
+run-call-$1: run-call-$1-$2
 
 check-$1-$2: $(LUA_TESTS:%=check-$1-$2-%)
 $(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % $(IMPLS)
@@ -119,6 +126,11 @@ check-$1-$2: check-$1-$2-$3-z
 check-$1-$2-$3: check-$1-$2-$3-z
 check-$1-$2-$3-z: TYPE = $3
 check-$1-$2-$3-z: methods.$3.txt
+
+run-call-$1-$2: run-call-$1-$2-$3
+
+run-call-$1-$2-$3: call
+	$$(realpath $$<) $3 lib$1.so $2
 
 endef
 
