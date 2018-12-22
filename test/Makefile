@@ -19,7 +19,7 @@ LIB = unpacked/$(LIB_DIR)/lib$(LIB_STEM).so
 # because the .pdsc files at the time of this writing erroneously fail to
 # mention some .so files even though they exist, whereas they mention the .dll
 # files that also exist.
-MCU_NAMES = $(shell xmllint unpacked/*.pdsc --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.win32"][@value="simulator/win32/lib$1.dll"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | grep -o '"[^"]*"' | tr -d '"')
+MCU_NAMES = $(shell xmllint unpacked/*.pdsc --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.win32"][@value="simulator/win32/lib$1.dll"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | grep --only-matching '"[^"]*"' | tr --delete '"')
 
 vpath %.hh ../include ../include/internals
 vpath %.hh cxx
@@ -56,7 +56,7 @@ model.%.xml: interface.hh
 
 FILES_clean += methods.*.txt
 methods.%.txt: model.%.xml
-	xmllint --xpath '//Method[@context=string(//Class[@name="$*"]/@id) and @access="public"]/@name' $< | grep -o '"[^"]*"' | tr -d '"' > $@
+	xmllint --xpath '//Method[@context=string(//Class[@name="$*"]/@id) and @access="public"]/@name' $< | grep --only-matching '"[^"]*"' | tr --delete '"' > $@
 
 FILES_clean += methods.*.xi
 methods.%.xi: methods.%.txt
@@ -76,7 +76,7 @@ header.%.h impl.%.cc: gen.lua model.%.xml
 	$(LUAJIT) $^ header.$*.h impl.$*.cc
 
 %.strings.cc: %
-	(echo "extern "'"C"'" const char * get_`echo "$*" | tr -c [:alnum:]_ _`(){ return" ; sed 's/^/"/;s/$$/\\n"/' $< ; echo ';}') > $@
+	(echo "extern "'"C"'" const char * get_`echo "$*" | tr --complement [:alnum:]_ _`(){ return" ; sed 's/^/"/;s/$$/\\n"/' $< ; echo ';}') > $@
 
 FILES_clean += libimpl-*.so
 libimpl-%.so: CXXFLAGS += -pedantic -Wall -O3 -fPIC
@@ -86,11 +86,11 @@ libimpl-%.so: impl.%.cc header.%.h.strings.cc methods.%.txt.strings.cc | interfa
 
 run-call-% check-%-z: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
 check-%-z: check-%-z-rhs.txt
-	diff -q $^
+	diff --brief $^
 
 FILES_clean += check-*-z-rhs.txt
 check-%-z-rhs.txt: call
-	$(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed -n '/.*::/{s///;s/(.*//;p}' > $@
+	$(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed --quiet '/.*::/{s///;s/(.*//;p}' > $@
 
 LUA_TESTS = $(wildcard cases/*.lua)
 
@@ -159,8 +159,8 @@ packs.mk: | packs
 else
 packs.mk: packs/index.html
 	xmllint --html --xpath //button/@data-link $< | \
-	    grep -o '"[^"]*"' | tr -d '"' | \
-	    grep $(PACK_TYPES:%=-e %) | \
+	    grep --only-matching '"[^"]*"' | tr --delete '"' | \
+	    grep --fixed-strings $(PACK_TYPES:%=-e %) | \
 	    sort --reverse --field-separator=. --key=1,2 --unique | \
 	    sed 's/^/PACKS += /' \
 	    > $@
@@ -171,14 +171,14 @@ include packs.mk
 get-latest-packs: $(PACKS:%=packs/%)
 
 packs:
-	mkdir -p $@
+	-mkdir $@
 packs/index.html: | packs
-	curl -o $@ '$(PACKS_URL_BASE)'
+	curl --output $@ '$(PACKS_URL_BASE)'
 packs/%.atpack: | packs
 	curl --continue-at - --output $@ $(PACKS_URL_BASE)$(@F)
 
 unpacked:
-	mkdir -p $@
+	-mkdir $@
 unpack: $(PACKS:%.atpack=unpack-%) | unpacked
 unpack-%: packs/%.atpack | unpacked
 	unzip -qq -n -d $| $< '$(LIB_DIR)/*.so' '*.pdsc' '*.atdf'
