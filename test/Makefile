@@ -153,10 +153,6 @@ PACK_TYPES = ATautomotive ATmega ATtiny XMEGA
 get-pack-list: packs/index.html
 
 FILES_clean += packs.mk
-ifeq ($(wildcard packs/index.html),)
-packs.mk: | packs
-	ls -1 $|/ | sed 's/^/PACKS += /' > $@
-else
 packs.mk: packs/index.html
 	xmllint --html --xpath //button/@data-link $< | \
 	    grep --only-matching '"[^"]*"' | tr --delete '"' | \
@@ -164,7 +160,6 @@ packs.mk: packs/index.html
 	    sort --reverse --field-separator=. --key=1,2 --unique | \
 	    sed 's/^/PACKS += /' \
 	    > $@
-endif
 
 include packs.mk
 
