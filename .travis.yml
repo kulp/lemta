@@ -7,6 +7,7 @@ script:
   - make -C test unpack
   - make -C test all
   - make -C test check
+  - make -C test run-call
 compiler:
   - clang
   - gcc
