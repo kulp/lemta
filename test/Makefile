@@ -1,4 +1,3 @@
-CXXFLAGS += -g
 CXXFLAGS += -O3
 CXXFLAGS += -std=c++11
 CXXFLAGS += -Wall -Wextra -Wold-style-cast
