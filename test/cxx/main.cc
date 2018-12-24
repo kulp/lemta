@@ -14,18 +14,18 @@ static void segv_handler(int /*signo*/, siginfo_t * /*info*/, void *)
 
 static void step_cb(Core *m, void *userdata)
 {
-    printf("%s(%p, %p)\n", __func__, m, userdata);
+    printf("%s(%p, %p)\n", __func__, reinterpret_cast<void*>(m), userdata);
 }
 
 static void cycle_cb(Model *m, void *userdata)
 {
-    printf("%s(%p, %p)\n", __func__, m, userdata);
+    printf("%s(%p, %p)\n", __func__, reinterpret_cast<void*>(m), userdata);
 }
 
 static void stopper_cb(Core *c, void *userdata)
 {
     static int count;
-    printf("%s(%p, %p) : count = %d\n", __func__, c, userdata, count);
+    printf("%s(%p, %p) : count = %d\n", __func__, reinterpret_cast<void*>(c), userdata, count);
     if (count++ >= reinterpret_cast<long>(userdata))
         c->stop();
 }
@@ -33,7 +33,7 @@ static void stopper_cb(Core *c, void *userdata)
 static void mstopper_cb(Model *m, void *userdata)
 {
     static int count;
-    printf("%s(%p, %p) : count = %d\n", __func__, m, userdata, count);
+    printf("%s(%p, %p) : count = %d\n", __func__, reinterpret_cast<void*>(m), userdata, count);
     if (count++ >= reinterpret_cast<long>(userdata))
         m->stop();
 }
