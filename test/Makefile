@@ -2,6 +2,7 @@ CXXFLAGS += -g
 CXXFLAGS += -O3
 CXXFLAGS += -std=c++11
 CXXFLAGS += -Wall -Wextra -Wold-style-cast
+CXXFLAGS += -pedantic
 
 LINK.o = $(LINK.cc)
 
@@ -79,8 +80,8 @@ header.%.h impl.%.cc: gen.lua model.%.xml
 	(echo "extern "'"C"'" const char * get_`echo "$*" | tr --complement [:alnum:]_ _`(){ return" ; sed 's/^/"/;s/$$/\\n"/' $< ; echo ';}') > $@
 
 FILES_clean += libimpl-*.so
-libimpl-%.so: CXXFLAGS += -pedantic -Wall -O3 -fPIC
-libimpl-%.so: LDFLAGS += -shared
+%.so: CXXFLAGS += -fPIC
+%.so: LDFLAGS += -shared
 libimpl-%.so: impl.%.cc header.%.h.strings.cc methods.%.txt.strings.cc | interface.hh
 	$(LINK.cc) -include $| -o $@ $^
 
