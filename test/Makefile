@@ -76,6 +76,7 @@ FILES_clean += header.*.h impl.*.cc
 header.%.h impl.%.cc: gen.lua model.%.xml
 	$(LUAJIT) $^ header.$*.h impl.$*.cc
 
+FILES_clean += *.strings.cc
 %.strings.cc: %
 	(echo "extern "'"C"'" const char * get_`echo "$*" | tr --complement [:alnum:]_ _`(){ return" ; sed 's/^/"/;s/$$/\\n"/' $< ; echo ';}') > $@
 
