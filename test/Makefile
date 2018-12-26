@@ -78,7 +78,7 @@ header.%.h impl.%.cc: gen.lua model.%.xml
 
 FILES_clean += *.strings.cc
 %.strings.cc: %
-	(echo "extern "'"C"'" const char * get_`echo "$*" | tr --complement [:alnum:]_ _`(){ return" ; sed 's/^/"/;s/$$/\\n"/' $< ; echo ';}') > $@
+	(echo "extern "'"C"'" const char * get_`echo "$*" | tr --complement [:alnum:]_ _`(){ return" ; sed 's/.*/"&\\n"/' $< ; echo ';}') > $@
 
 FILES_clean += libimpl-*.so
 %.so: CXXFLAGS += -fPIC
