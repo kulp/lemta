@@ -16,11 +16,13 @@ LIB_STEM = $(error LIB_STEM must be set)
 LIB_LIST = $(patsubst lib%.so,%,$(notdir $(wildcard unpacked/$(LIB_DIR)/libat*.so)))
 LIB = unpacked/$(LIB_DIR)/lib$(LIB_STEM).so
 
+QUOTED_STRINGS = sed 's/[^"]*"\([^"]*\)"/\1\n/g'
+
 # For now we use the win32 library stem instead of the linux64 library stem
 # because the .pdsc files at the time of this writing erroneously fail to
 # mention some .so files even though they exist, whereas they mention the .dll
 # files that also exist.
-MCU_NAMES = $(shell xmllint unpacked/*.pdsc --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.win32"][@value="simulator/win32/lib$1.dll"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | grep --only-matching '"[^"]*"' | tr --delete '"')
+MCU_NAMES = $(shell xmllint unpacked/*.pdsc --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.win32"][@value="simulator/win32/lib$1.dll"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | $(QUOTED_STRINGS))
 
 vpath %.hh ../include ../include/internals
 vpath %.hh cxx
@@ -57,7 +59,7 @@ model.%.xml: interface.hh
 
 FILES_clean += methods.*.txt
 methods.%.txt: model.%.xml
-	xmllint --xpath '//Method[@context=string(//Class[@name="$*"]/@id) and @access="public"]/@name' $< | grep --only-matching '"[^"]*"' | tr --delete '"' > $@
+	xmllint --xpath '//Method[@context=string(//Class[@name="$*"]/@id) and @access="public"]/@name' $< | $(QUOTED_STRINGS) > $@
 
 FILES_clean += methods.*.xi
 methods.%.xi: methods.%.txt
@@ -157,7 +159,7 @@ get-pack-list: packs/index.html
 FILES_clean += packs.mk
 packs.mk: packs/index.html
 	xmllint --html --xpath //button/@data-link $< | \
-	    grep --only-matching '"[^"]*"' | tr --delete '"' | \
+	    $(QUOTED_STRINGS) | \
 	    grep --fixed-strings $(PACK_TYPES:%=-e %) | \
 	    sort --reverse --field-separator=. --key=1,2 --unique | \
 	    sed 's/^/PACKS += /' \
