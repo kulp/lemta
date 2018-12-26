@@ -6,11 +6,11 @@ local model = Model:create(unpack(arg))
 local core = model:getCore(0)
 local prog = core.segments["SEG_PROG"]
 
-function loader(n,addr,kind,data,ck)
-    return kind == 0 and prog.write(addr,n,data)
+function loader(n, addr, kind, data, ck)
+    return kind == 0 and prog.write(addr, n, data)
 end
 
-ihex.read(io.lines("cases/sum.hex"),loader)
+ihex.read(io.lines("cases/sum.hex"), loader)
 
 local add1 = 0x12
 local add2 = 0x34

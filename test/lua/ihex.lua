@@ -6,7 +6,7 @@ function dehex(str)
     return result
 end
 
-function read_ihex(lines,actor)
+function read_ihex(lines, actor)
     for line in lines do
         local _, _, n, addr, kind, data, ck =
             string.find(line, "^:(%x%x)(%x%x%x%x)(%x%x)(%x*)(%x%x)%s*$")
@@ -15,7 +15,7 @@ function read_ihex(lines,actor)
         kind = tonumber(kind, 16)
         data = dehex(data)
         ck   = tonumber(ck  , 16)
-        actor(n,addr,kind,data,ck)
+        actor(n, addr, kind, data, ck)
     end
 end
 

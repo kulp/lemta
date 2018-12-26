@@ -7,12 +7,12 @@ Proto.Core = { __overrides = {} }
 Proto.Core.__overrides.regs =
     function(self)
         local regs = {}
-        regs.__index = function(_,index)
+        regs.__index = function(_, index)
             local output = ffi.new("unsigned long[1]")
             self:peekReg(index, output)
             return tonumber(output[0])
         end
-        regs.__newindex = function(_,index,value)
+        regs.__newindex = function(_, index, value)
             self:pokeReg(index, value)
         end
         regs.len = function()
@@ -27,7 +27,7 @@ Proto.Core.__overrides.regs =
 Proto.Core.__overrides.props =
     function(self)
         local props = {}
-        props.__index = function(_,index)
+        props.__index = function(_, index)
             local obj = {}
             obj.string = function(_)
                 local size = 1024 -- TODO shrink meaningfully
@@ -41,11 +41,11 @@ Proto.Core.__overrides.props =
                 return tonumber(var[0])
             end
             obj.__tostring = obj.string
-            setmetatable(obj,obj)
+            setmetatable(obj, obj)
 
             return obj
         end
-        props.__newindex = function(_,index,value)
+        props.__newindex = function(_, index, value)
             if type(value) == "number" then
                 return self:setIntProperty(index, value, nil)
             else
@@ -64,7 +64,7 @@ Proto.Model.__overrides.props = Proto.Core.__overrides.props
 Proto.Core.__overrides.segments =
     function(self)
         local segments = {}
-        segments.__index = function(_,index)
+        segments.__index = function(_, index)
             local obj = {}
             obj.read = function(addr, size, output)
                 return self:readMemory(addr, size, output, index)
@@ -92,11 +92,11 @@ Proto.Core.__overrides.segments =
         return segments
     end
 
-local function define_c(ret,name,...)
+local function define_c(ret, name, ...)
     return ffi.cdef(ret .. " " .. name .. "(" .. table.concat({...}, ",") .. ");")
 end
 
-for _,stem in ipairs({ "Model", "Core" }) do
+for _, stem in ipairs({ "Model", "Core" }) do
     Proto[stem] = Proto[stem] or {}
     local proto = Proto[stem]
     local impl = ffi.load("impl-" .. stem)
@@ -114,13 +114,13 @@ for _,stem in ipairs({ "Model", "Core" }) do
     end
 
     local trapper = {
-        __index    = function(_,k)   error("bad get for key='" .. k .. "'") end,
-        __newindex = function(_,k,v) error("bad put for key='" .. k .. "'") end,
+        __index    = function(_, k)    error("bad get for key='" .. k .. "'") end,
+        __newindex = function(_, k, v) error("bad put for key='" .. k .. "'") end,
     }
     setmetatable(trapper, trapper)
 
     local handlers = {
-        ["__index"] = function(ct,key)
+        ["__index"] = function(ct, key)
             return proto[key] or
                 (proto.__overrides[key] and proto.__overrides[key](ct)) or
                 trapper
@@ -134,12 +134,12 @@ define_c("int"    , "model_api_ver")
 define_c("Model *", "model_ctor"   , "const char *")
 define_c("void"   , "model_dtor"   , "Model *")
 
-Proto.Model.create = function(proto,libstem,name)
+Proto.Model.create = function(proto, libstem, name)
     local lib = ffi.load(libstem)
     local self = lib.model_ctor(name)
     self._lib = lib
     self._ver = lib.model_api_ver()
-    return ffi.gc(self,self._lib.model_dtor)
+    return ffi.gc(self, self._lib.model_dtor)
 end
 
 --[[
@@ -156,13 +156,13 @@ end
 -- argument can be restored (or _addCycleCallback can be used), but a manual
 -- ffi.cast() will still be required to make most cases useful.
 Proto.Model._addCycleCallback = Proto.Model.addCycleCallback
-Proto.Model.addCycleCallback = function(self,cb)
+Proto.Model.addCycleCallback = function(self, cb)
     return self:_addCycleCallback(cb, nil)
 end
 
 -- wrap addStepCallback in the same way as Model:addCycleCallback
 Proto.Core._addStepCallback = Proto.Core.addStepCallback
-Proto.Core.addStepCallback = function(self,cb)
+Proto.Core.addStepCallback = function(self, cb)
     return self:_addStepCallback(cb, nil)
 end
 

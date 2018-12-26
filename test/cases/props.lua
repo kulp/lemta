@@ -4,7 +4,7 @@ local Model = require("model")
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
 
-for _,g in next,{ core, model } do
+for _, g in next,{ core, model } do
     -- simulated-array interface
     local output = g.props[1028] -- number of registers
 

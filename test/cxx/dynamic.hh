@@ -45,7 +45,7 @@ public:
         dlclose(handle);
     }
 
-    #define get_function(Func) get_function_(static_cast<decltype(Func)*>(0),#Func)
+    #define get_function(Func) get_function_(static_cast<decltype(Func)*>(0), #Func)
     template<typename F>
     auto get_function_(F *, const char *name) -> Calls<F*>
     {

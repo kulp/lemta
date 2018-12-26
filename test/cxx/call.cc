@@ -50,11 +50,11 @@ struct List
 
 static volatile intptr_t *current_pc = nullptr;
 
-#define CAT_(a,b) a##b
-#define CAT(a,b) CAT_(a,b)
+#define CAT_(a, b) a##b
+#define CAT(a, b) CAT_(a, b)
 
-#define Record(Type,Method) &Type::Method,
-#define METHODS(Type) CAT(CAT(METHODS_,Type),_)
+#define Record(Type, Method) &Type::Method,
+#define METHODS(Type) CAT(CAT(METHODS_, Type), _)
 #define DESCRIPTORS(T) \
     template<> CallSite<T> List< CallSite<T> >::array[] = { METHODS(T)(Record) }; \
     template<> CallSite<T> * List< CallSite<T> >::start = &List< CallSite<T> >::array[0]; \
