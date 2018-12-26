@@ -1,4 +1,5 @@
 local Model = require("model")
+local Test = require("test")
 
 local model = Model:create(unpack(arg))
 
@@ -12,10 +13,4 @@ end
 model:addCycleCallback(cycle_cb)
 model:cycle(count)
 
-local handle = error
-if cycles == count then
-    handle = function() end
-end
-
-handle("expected = " .. count .. ", actual = " .. cycles)
-
+Test.expect(count, cycles)

@@ -1,5 +1,6 @@
 local ffi = require("ffi")
 local Model = require("model")
+local Test = require("test")
 
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
@@ -33,12 +34,7 @@ for _, put in ipairs(write_kinds) do
             for i = 0, numregs-1 do
                 local r = i + j
                 local val = get(core, r)
-                local handle = error
-                if val == r * 2 then
-                    handle = function() end
-                end
-
-                handle("ok reg " .. r)
+                Test.expect(r * 2, val)
             end
         end
     end

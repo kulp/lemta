@@ -1,4 +1,5 @@
 local Model = require("model")
+local Test = require("test")
 
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
@@ -13,10 +14,4 @@ end
 core:addStepCallback(step_cb)
 core:step(count)
 
-local handle = error
-if steps == count then
-    handle = function() end
-end
-
-handle("expected = " .. count .. ", actual = " .. steps)
-
+Test.expect(count, steps)

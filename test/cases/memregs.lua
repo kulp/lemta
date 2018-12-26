@@ -1,5 +1,6 @@
 local ffi = require("ffi")
 local Model = require("model")
+local Test = require("test")
 
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
@@ -13,12 +14,7 @@ for j = 0, 31, numregs do -- 16-register cores have their registers mapped twice
         segment.mem[r] = input
         local output = core.regs[r]
 
-        local handle = error
-        if input == output then
-            handle = function() end
-        end
-
-        handle("input = " .. input .. ", output = " .. tostring(output))
+        Test.expect(input, output)
     end
 end
 

@@ -1,6 +1,7 @@
 local ffi = require("ffi")
 local Model = require("model")
 local ihex = require("lua/ihex")
+local Test = require("test")
 
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
@@ -22,6 +23,5 @@ while core.regs[19] ~= 1 do
     core:step(1)
 end
 
-local handle = (add1 + add2 == core.regs[18] and function() end or error)
-handle(string.format("expected 0x%02x, got 0x%02x", add1 + add2, core.regs[18]))
+Test.expect(add1 + add2, core.regs[18])
 

@@ -1,5 +1,6 @@
 local ffi = require("ffi")
 local Model = require("model")
+local Test = require("test")
 
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
@@ -15,15 +16,10 @@ function check_read(core, segment, addr, size, input, fashion, invert)
 
     fashion(core, addr, size, output, segment)
 
-    local handle = error
     local equal = ffi.C.memcmp(input, output, size) == 0
     local normal  = not invert and     equal
     local flipped =     invert and not equal
-    if normal or flipped then
-        handle = function() end
-    end
-
-    handle("input = " .. tostring(input) .. ", output = " .. tostring(output))
+    Test.expect(true, normal or flipped)
 end
 
 local write_kinds = {
