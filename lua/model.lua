@@ -9,8 +9,11 @@ Proto.Core.__overrides.regs =
         local regs = {}
         regs.__index = function(_, index)
             local output = ffi.new("unsigned long[1]")
-            self:peekReg(index, output)
-            return tonumber(output[0])
+            if self:peekReg(index, output) ~= -1 then
+                return tonumber(output[0])
+            else
+                return nil
+            end
         end
         regs.__newindex = function(_, index, value)
             self:pokeReg(index, value)
