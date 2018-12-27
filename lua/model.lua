@@ -32,8 +32,11 @@ Proto.Core.__overrides.props =
             obj.string = function(_)
                 local size = 1024 -- TODO shrink meaningfully
                 local str = ffi.new("char[?]", size)
-                self:getStringProperty(index, size, str, nil)
-                return ffi.string(str)
+                if self:getStringProperty(index, size, str, nil) ~= -1 then
+                    return ffi.string(str)
+                else
+                    return nil
+                end
             end
             obj.int = function(_)
                 local var = ffi.new("unsigned long[1]")

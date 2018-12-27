@@ -14,8 +14,8 @@ for _, g in next,{ core, model } do
         handle = function() end
     end
 
-    handle("output = '" .. tostring(output) .. "' = " .. output.int())
-    handle("prop = " .. tostring(g.props[0]))
+    handle("output = '" .. (output.string() == nil and "<nil>" or tostring(output)) .. "' = " .. output.int())
+    handle("prop = " .. (g.props[0].string() == nil and "<nil>" or tostring(g.props[0])))
 
     -- Currently we do not have a way to test setting properties, except by
     -- ensuring that doing so does not crash us
