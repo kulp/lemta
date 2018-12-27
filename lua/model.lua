@@ -40,8 +40,11 @@ Proto.Core.__overrides.props =
             end
             obj.int = function(_)
                 local var = ffi.new("unsigned long[1]")
-                self:getIntProperty(index, var, nil)
-                return tonumber(var[0])
+                if self:getIntProperty(index, var, nil) ~= -1 then
+                    return tonumber(var[0])
+                else
+                    return -1
+                end
             end
             obj.__tostring = obj.string
             setmetatable(obj, obj)
