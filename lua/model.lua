@@ -120,12 +120,12 @@ for _, stem in ipairs({ "Model", "Core" }) do
     setmetatable(trapper, trapper)
 
     local handlers = {
-        ["__index"] = function(ct, key)
+        __index = function(ct, key)
             return proto[key] or
                 (proto.__overrides[key] and proto.__overrides[key](ct)) or
                 trapper
         end,
-        ["__newindex"] = proto,
+        __newindex = proto,
     }
     ffi.metatype(stem, handlers)
 end
