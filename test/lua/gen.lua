@@ -66,8 +66,7 @@ end
 
 function make_c_decl(fh, class, meth)
     local class_name = class:get_attribute("name")
-    fh:write(elaborate_type(document, meth:get_attribute("returns")))
-    fh:write(class_name .. "__" .. meth:get_attribute("name"))
+    fh:write(elaborate_type(document, meth:get_attribute("returns"), class_name .. "__" .. meth:get_attribute("name")))
     fh:write("(")
     fh:write(class_name .. "*")
     for k, arg in ipairs(meth:children()) do
@@ -81,8 +80,7 @@ function make_cpp_defn(fh, class, meth)
     local class_name = class:get_attribute("name")
     local method_name = meth:get_attribute("name")
     fh:write('extern "C" ')
-    fh:write(elaborate_type(document, meth:get_attribute("returns")))
-    fh:write(class_name .. "__" .. method_name)
+    fh:write(elaborate_type(document, meth:get_attribute("returns"), class_name .. "__" .. method_name))
     fh:write("(")
     fh:write(class_name .. "* _this")
     local args = {}
