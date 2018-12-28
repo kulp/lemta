@@ -116,9 +116,21 @@ for i, class in ipairs(classes) do
     header:write("typedef struct " .. name .. " " .. name .. ";\n")
 end
 
-for i, class in ipairs(structs) do
-    local name = class:get_attribute("name")
-    header:write("typedef struct " .. name .. " " .. name .. ";\n")
+for i, struct in ipairs(structs) do
+    local name = struct:get_attribute("name")
+    header:write("typedef struct " .. name .. " ")
+    if struct.members then
+        header:write("{\n")
+        for v in string.gmatch(struct.members, "%S+") do
+            local fields = document:search("//Field[@id='" .. v .. "']")
+            for j, field in ipairs(fields) do
+                local typ = field:get_attribute("type")
+                header:write("    " .. elaborate_type(document, typ, field:get_attribute("name")) .. ";\n")
+            end
+        end
+        header:write("} ")
+    end
+    header:write(name .. ";\n")
 end
 
 for i, class in ipairs(classes) do
