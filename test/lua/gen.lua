@@ -96,16 +96,6 @@ function make_cpp_defn(fh, class, meth)
     fh:write("    { return _this->" .. method_name .. "(" .. table.concat(args, ", ") .. "); }\n")
 end
 
-for i, class in ipairs(classes) do
-    local name = class:get_attribute("name")
-    header:write("typedef struct " .. name .. " " .. name .. ";\n")
-end
-
-for i, class in ipairs(structs) do
-    local name = class:get_attribute("name")
-    header:write("typedef struct " .. name .. " " .. name .. ";\n")
-end
-
 for _, enum in ipairs(enums) do
     local name = enum:get_attribute("name")
     local children = enum:children()
@@ -119,6 +109,16 @@ for _, enum in ipairs(enums) do
     else
         header:write("typedef int " .. name .. ";\n")
     end
+end
+
+for i, class in ipairs(classes) do
+    local name = class:get_attribute("name")
+    header:write("typedef struct " .. name .. " " .. name .. ";\n")
+end
+
+for i, class in ipairs(structs) do
+    local name = class:get_attribute("name")
+    header:write("typedef struct " .. name .. " " .. name .. ";\n")
 end
 
 for i, class in ipairs(classes) do
