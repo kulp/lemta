@@ -31,6 +31,10 @@ function elaborate_type(doc, id, inner)
             return t:get_attribute("name") .. " " .. inner
         elseif name == "CvQualifiedType" then
             return elaborate_type(doc, typ, "const" .. inner)
+        elseif name == "ArrayType" then
+            local min = tonumber(t:get_attribute("min"))
+            local max = tonumber(t:get_attribute("max"))
+            return elaborate_type(doc, typ, inner .. "[" .. (max - min + 1) .. "]")
         elseif name == "PointerType" then
             return elaborate_type(doc, typ, "*" .. inner)
         elseif name == "ReferenceType" then
