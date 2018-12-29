@@ -1,6 +1,6 @@
 local ffi = require("ffi")
 local Model = require("model")
-local ihex = require("lua/ihex")
+local ihex = require("ihex")
 local Test = require("test")
 
 local model = Model:create(unpack(arg))
