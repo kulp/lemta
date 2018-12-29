@@ -9,7 +9,7 @@ LINK.o = $(LINK.cc)
 TARGETS = main call
 
 TYPES = Model Core
-IMPLS = $(TYPES:%=libimpl-%.so)
+IMPL = libimpl.so
 
 LIB_DIR = simulator/linux64
 LIB_STEM = $(error LIB_STEM must be set)
@@ -38,7 +38,7 @@ LUAJIT = luajit
 
 .DELETE_ON_ERROR:
 
-all: $(TARGETS) $(IMPLS)
+all: $(TARGETS) $(IMPL)
 
 main: LDLIBS += -ldl
 main.o: CPPFLAGS += -I../include/internals
@@ -54,11 +54,11 @@ call.o: types.xi $(TYPES:%=methods.%.xi)
 run-call: ;
 
 FILES_clean += model.*.xml
-model.%.xml: interface.hh
-	castxml -o $@ --castxml-output=1 --castxml-start $* $<
+model.%.xml: %
+	castxml -o $@ --castxml-output=1 $<
 
 FILES_clean += methods.*.txt
-methods.%.txt: model.%.xml
+methods.%.txt: model.interface.hh.xml
 	xmllint --xpath '//Method[@context=string(//Class[@name="$*"]/@id) and @access="public"]/@name' $< | $(QUOTED_STRINGS) > $@
 
 FILES_clean += methods.*.xi
@@ -82,10 +82,10 @@ FILES_clean += *.strings.cc
 %.strings.cc: %
 	(echo "extern "'"C"'" const char * get_`echo "$*" | tr --complement [:alnum:]_ _`(){ return" '""' ; sed 's/.*/"&\\n"/' $< ; echo ';}') > $@
 
-FILES_clean += libimpl-*.so
+FILES_clean += $(IMPL)
 %.so: CXXFLAGS += -fPIC
 %.so: LDFLAGS += -shared
-libimpl-%.so: impl.%.cc header.%.h.strings.cc methods.%.txt.strings.cc | interface.hh
+$(IMPL): impl.interface.hh.cc header.interface.hh.h.strings.cc $(TYPES:%=methods.%.txt.strings.cc) | interface.hh
 	$(LINK.cc) -include $| -o $@ $^
 
 run-call-% check-%-z: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
@@ -119,7 +119,7 @@ check-$1-$2 check-$1-$2-%: MCU = $2
 run-call-$1: run-call-$1-$2
 
 check-$1-$2: $(LUA_TESTS:%=check-$1-$2-%)
-$(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % $(IMPLS)
+$(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % $(IMPL)
 	$$(if $$(SKIP-$$(LIB_STEM)-$$(MCU)-$$<),\
 	    $$(warning Target $$@ fails and has been disabled pending investigation),\
 	    $$(LUAJIT) $$< $$(LIB_STEM) $$(MCU))

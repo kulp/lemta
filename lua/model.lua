@@ -105,15 +105,16 @@ local function define_c(ret, name, ...)
     return ffi.cdef(ret .. " " .. name .. "(" .. table.concat({...}, ",") .. ");")
 end
 
+local impl = ffi.load("impl")
+local get_h = "get_header_interface_hh_h_"
+define_c("const char *", get_h)
+ffi.cdef(ffi.string(impl[get_h]()))
+
 for _, stem in ipairs({ "Model", "Core" }) do
     Proto[stem] = Proto[stem] or {}
     local proto = Proto[stem]
-    local impl = ffi.load("impl-" .. stem)
-    local get_h = "get_header_" .. stem .. "_h_"
     local get_m = "get_methods_" .. stem .. "_txt_"
-    define_c("const char *", get_h)
     define_c("const char *", get_m)
-    ffi.cdef(ffi.string(impl[get_h]()))
 
     -- create Lua entry points for C wrappers for C++ virtual calls
     for f in string.gmatch(ffi.string(impl[get_m]()), "%S+") do
