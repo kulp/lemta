@@ -131,7 +131,7 @@ public:
 
 typedef int model_api_ver_func();
 typedef Model *model_ctor_func(const char *);
-typedef int model_dtor_func(Model *);
+typedef void model_dtor_func(Model *);
 
 extern "C" model_api_ver_func model_api_ver;
 extern "C" model_ctor_func    model_ctor;

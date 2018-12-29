@@ -154,9 +154,9 @@ struct DerivedBehavior<Model> : public BaseBehavior<Model>
         return argc > 0 ? (argc--, model_ctor_p(*argv++)) : nullptr;
     }
 
-    static int destroy(Model *victim)
+    static void destroy(Model *victim)
     {
-        return model_dtor_p(victim);
+        model_dtor_p(victim);
     }
 };
 
@@ -171,9 +171,9 @@ struct DerivedBehavior<Core> : public BaseBehavior<Core>
         return parent->getCore(0);
     }
 
-    static int destroy(Core *victim)
+    static void destroy(Core *victim)
     {
-        return model_dtor_p(victim->getModel());
+        model_dtor_p(victim->getModel());
     }
 };
 
@@ -216,8 +216,7 @@ static int execute(int &argc, char **&argv)
     if (mprotect(base, len, PROT_READ | PROT_EXEC) != 0)
         perror("mprotect");
 
-    if (DerivedBehavior<T>::destroy(rec))
-        return __LINE__;
+    DerivedBehavior<T>::destroy(rec);
 
     DerivedBehavior<T>::unload();
 

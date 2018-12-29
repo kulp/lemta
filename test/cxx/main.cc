@@ -142,8 +142,7 @@ int main(int argc, char **argv)
         }
     }
 
-    int rc = lib.get_function(model_dtor).invoke(dev);
-    assert(("destructor succeeded", rc == 0));
+    lib.get_function(model_dtor).invoke(dev);
 
     return 0;
 }

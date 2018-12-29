@@ -132,7 +132,7 @@ end
 
 define_c("int"    , "model_api_ver")
 define_c("Model *", "model_ctor"   , "const char *")
-define_c("int"    , "model_dtor"   , "Model *")
+define_c("void"   , "model_dtor"   , "Model *")
 
 Proto.Model.create = function(proto,libstem,name)
     local lib = ffi.load(libstem)
