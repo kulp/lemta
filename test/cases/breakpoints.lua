@@ -45,6 +45,10 @@ for _, kind in ipairs({ 1, 2, 4 }) do
         ids[#ids + 1] = id
         Test.expect(false, id == -1)
         Test.expect(false, id == 0)
+
+        -- try to add the same breakpoint a second time
+        id = core:addBreakpoint(bp)
+        Test.expect(-1, id)
     end
 
     local list = core:getBreakpoints(kind)
