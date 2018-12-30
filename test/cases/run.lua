@@ -1,4 +1,3 @@
-local ffi = require("ffi")
 local Model = require("model")
 local ihex = require("ihex")
 local Test = require("test")
