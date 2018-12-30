@@ -34,7 +34,8 @@ function elaborate_type(doc, id, inner)
         elseif name == "ArrayType" then
             local min = tonumber(t:get_attribute("min"))
             local max = tonumber(t:get_attribute("max"))
-            return elaborate_type(doc, typ, inner .. "[" .. (max - min + 1) .. "]")
+            local extent = (max == nil) and "" or (max - min + 1)
+            return elaborate_type(doc, typ, inner .. "[" .. extent .. "]")
         elseif name == "PointerType" then
             return elaborate_type(doc, typ, "*" .. inner)
         elseif name == "ReferenceType" then
