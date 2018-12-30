@@ -176,5 +176,10 @@ Proto.Core.addStepCallback = function(self, cb)
     return self:_addStepCallback(cb, nil)
 end
 
+-- for now, create a zeroed breakpoint taking no arguments
+Proto.Core.createBreakpoint = function()
+    return ffi.new("Breakpoint")
+end
+
 return Proto.Model
 

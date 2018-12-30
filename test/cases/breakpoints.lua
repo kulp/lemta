@@ -1,4 +1,3 @@
-local ffi = require("ffi")
 local Model = require("model")
 local Test = require("test")
 
@@ -37,7 +36,7 @@ local segs = {
 for _, kind in ipairs({ 1, 2, 4 }) do
     local ids = {}
     for i = 0, max - 1 do
-        local bp = ffi.new("Breakpoint")
+        local bp = core:createBreakpoint()
         bp.addr = 100 * kind + i
         bp.size = 1 -- must be nonzero for BP_TRACEPOINT
         bp.type = kind
