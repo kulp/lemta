@@ -41,7 +41,8 @@ enum Segment {
 
 struct Breakpoint
 {
-    char padding0[8];
+    int id; // set by addBreakpoint()
+    int padding0;
     unsigned long addr; // @ 0x8
     char padding1[8];
     unsigned long size; // @ 0x18
