@@ -51,7 +51,7 @@ struct Breakpoint
     bool b000; // @ 0x44
 
     // somewhere there is a breakpoint callback too ?
-    char buf[275]; // sizeof(Breakpoint) is believed to be 344 = 0x56 * 4
+    char buf[331]; // sizeof(Breakpoint) is measured as being 400
 };
 
 class Core
