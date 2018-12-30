@@ -42,13 +42,18 @@ for _, kind in ipairs({ 1, 2, 4 }) do
         end
     end
 
-    local count = 0
-    for v in null_terminated(list) do
-        count = count + 1
+    local function null_terminated_length(list)
+        local count = 0
+        for v in null_terminated(list) do
+            count = count + 1
+        end
+        return count
     end
 
-    Test.expect(max, count)
-    Test.expect( 1, core:removeBreakpoint(ids[max - 2])) -- success first time
+    Test.expect(max, null_terminated_length(list))
+    Test.expect(1, core:removeBreakpoint(ids[max - 2])) -- success first time
+
+    Test.expect(max - 1, null_terminated_length(core:getBreakpoints(kind)))
     Test.expect(-1, core:removeBreakpoint(ids[max - 2])) -- failure second time
 end
 
