@@ -50,7 +50,14 @@ for _, kind in ipairs({ 1, 2, 4 }) do
         return count
     end
 
-    Test.expect(max, null_terminated_length(list))
+    local count = null_terminated_length(list)
+    Test.expect(max, count)
+
+    for i = 0, count - 1 do
+        Test.expect(100 * kind + i + 1, list[i].addr)
+        Test.expect(kind, list[i].type)
+    end
+
     Test.expect(1, core:removeBreakpoint(ids[max - 2])) -- success first time
 
     Test.expect(max - 1, null_terminated_length(core:getBreakpoints(kind)))
