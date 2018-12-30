@@ -42,17 +42,17 @@ enum Segment {
 struct Breakpoint
 {
     int id; // set by addBreakpoint()
-    int padding0;
+    int unknown0;
     unsigned long addr; // @ 0x8
-    char padding1[8];
+    char unknown1[8];
     unsigned long size; // @ 0x18
     Segment segment; // @ 0x20
     BPtype type; // @ 0x24
-    char padding2[28];
-    bool b000; // @ 0x44
+    char unknown2[28];
+    bool unknown3; // @ 0x44
 
     // somewhere there is a breakpoint callback too ?
-    char buf[331]; // sizeof(Breakpoint) is measured as being 400
+    char unknown4[331]; // sizeof(Breakpoint) is measured as being 400
 };
 
 class Core
