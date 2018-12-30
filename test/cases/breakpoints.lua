@@ -5,6 +5,25 @@ local Test = require("test")
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
 
+local function null_terminated(list)
+    local i = 0
+    return function()
+        local result = list[i]
+        if result ~= nil then
+            i = i + 1
+            return result
+        end
+    end
+end
+
+local function null_terminated_length(list)
+    local count = 0
+    for v in null_terminated(list) do
+        count = count + 1
+    end
+    return count
+end
+
 local max = 5
 
 local segs = {
@@ -30,26 +49,6 @@ for _, kind in ipairs({ 1, 2, 4 }) do
     end
 
     local list = core:getBreakpoints(kind)
-
-    local function null_terminated(list)
-        local i = 0
-        return function()
-            local result = list[i]
-            if result ~= nil then
-                i = i + 1
-                return result
-            end
-        end
-    end
-
-    local function null_terminated_length(list)
-        local count = 0
-        for v in null_terminated(list) do
-            count = count + 1
-        end
-        return count
-    end
-
     local count = null_terminated_length(list)
     Test.expect(max, count)
 
