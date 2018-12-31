@@ -47,13 +47,13 @@ struct Breakpoint
 
     int id; // set by addBreakpoint()
     int unknown0;
-    unsigned long addr; // @ 0x8
+    unsigned long addr;
     char unknown1[8];
-    unsigned long size; // @ 0x18
-    Segment segment; // @ 0x20
-    BPtype type; // @ 0x24
+    unsigned long size;
+    Segment segment;
+    BPtype type;
     char unknown2[28];
-    char debugName[32]; // @ 0x44 ; name length here is unknown
+    char debugName[32]; // name length here is unknown
 
     // somewhere there is a breakpoint callback too ?
     char unknown3[300]; // sizeof(Breakpoint) is measured as being 400
