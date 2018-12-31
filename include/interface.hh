@@ -39,8 +39,12 @@ enum Segment {
     SEG_TYPE_6 = 6,
 };
 
+class Core;
+
 struct Breakpoint
 {
+    typedef int BreakCb(Core*, Breakpoint*); // returns 0, 1, or 2 (meaning ?)
+
     int id; // set by addBreakpoint()
     int unknown0;
     unsigned long addr; // @ 0x8
