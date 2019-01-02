@@ -2,10 +2,7 @@ dist: xenial
 language: cpp
 script:
   - eval `luarocks path`
-  - ./configure
-  - make -C test all
-  - make -C test check
-  - make -C test run-call
+  - ./configure && make && make test
 compiler:
   - clang
   - gcc
