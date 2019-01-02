@@ -154,30 +154,16 @@ $(LIB_LIST:%=check-lib-%.mk): check-lib-%.mk:
 	$(file >$@,$(call check_lib_1,$*))
 
 PACKS_URL_BASE = http://packs.download.atmel.com/
-PACK_TYPES = ATautomotive ATmega ATtiny XMEGA
-get-pack-list: packs/index.html
 
-FILES_clean += packs.mk
-packs.mk: packs/index.html
-	xmllint --html --xpath //button/@data-link $< | \
-	    $(QUOTED_STRINGS) | \
-	    grep --fixed-strings $(PACK_TYPES:%=-e %) | \
-	    sort --reverse --field-separator=. --key=1,2 --unique | \
-	    sed 's/^/PACKS += /' \
-	    > $@
-
+FILES_distclean += packs.mk
 include packs.mk
 
-get-latest-packs: $(PACKS:%=packs/%)
-
-packs:
-	-mkdir $@
-packs/index.html: | packs
-	curl --output $@ '$(PACKS_URL_BASE)'
 packs/%.atpack: | packs
 	curl --continue-at - --output $@ $(PACKS_URL_BASE)$(@F)
 
-unpacked:
+.PRECIOUS: $(PACKS:%=packs/%)
+.SECONDARY: $(PACKS:%=packs/%)
+packs unpacked:
 	-mkdir $@
 unpack: $(PACKS:%.atpack=unpack-%) | unpacked
 unpack-%: packs/%.atpack | unpacked
@@ -187,4 +173,4 @@ clean:
 	$(RM) $(TARGETS) *.o $(FILES_clean)
 
 distclean: clean
-	$(RM) -r packs unpacked
+	$(RM) -r packs unpacked $(FILES_distclean)
