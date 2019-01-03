@@ -58,6 +58,7 @@ model.%.xml: %
 	castxml -o $@ --castxml-output=1 $<
 
 FILES_clean += methods.*.txt
+.INTERMEDIATE: $(TYPES:%=methods.%.txt)
 methods.%.txt: model.interface.hh.xml
 	xmllint --xpath '//Method[@context=string(//Class[@name="$*"]/@id) and @access="public"]/@name' $< | $(QUOTED_STRINGS) > $@
 
