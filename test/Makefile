@@ -143,7 +143,7 @@ run-call-$1-$2-$3: call
 endef
 
 FILES_clean += check-lib-*.mk
-ifneq ($(MAKECMDGOALS),clean)
+ifeq ($(findstring clean,$(MAKECMDGOALS)),)
 include $(LIB_LIST:%=check-lib-%.mk)
 endif
 
