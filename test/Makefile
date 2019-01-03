@@ -158,6 +158,7 @@ PACKS_URL_BASE = http://packs.download.atmel.com/
 FILES_distclean += packs.mk
 include packs.mk
 
+FILES_distclean += packs/
 packs/%.atpack: | packs
 	curl --continue-at - --output $@ $(PACKS_URL_BASE)$(@F)
 
@@ -166,6 +167,7 @@ packs/%.atpack: | packs
 packs unpacked:
 	-mkdir $@
 unpack: $(PACKS:%.atpack=unpack-%) | unpacked
+FILES_distclean += unpacked/
 unpack-%: packs/%.atpack | unpacked
 	unzip -qq -n -d $| $< '$(LIB_DIR)/*.so' '*.pdsc' '*.atdf'
 
@@ -173,4 +175,4 @@ clean:
 	$(RM) $(TARGETS) *.o $(FILES_clean)
 
 distclean: clean
-	$(RM) -r packs unpacked $(FILES_distclean)
+	$(RM) -r $(FILES_distclean)
