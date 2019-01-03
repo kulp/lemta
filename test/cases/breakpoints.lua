@@ -1,27 +1,9 @@
 local Model = require("model")
 local Test = require("test")
+local Util = require("util")
 
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
-
-local function null_terminated(list)
-    local i = 0
-    return function()
-        local result = list[i]
-        if result ~= nil then
-            i = i + 1
-            return result
-        end
-    end
-end
-
-local function null_terminated_length(list)
-    local count = 0
-    for v in null_terminated(list) do
-        count = count + 1
-    end
-    return count
-end
 
 local max = 5
 
@@ -54,7 +36,7 @@ for _, kind in ipairs({ 1, 2, 4 }) do
     end
 
     local list = core:getBreakpoints(kind)
-    local count = null_terminated_length(list)
+    local count = Util.null_terminated_length(list)
     Test.expect(max, count)
 
     for i = 0, count - 1 do
@@ -64,7 +46,7 @@ for _, kind in ipairs({ 1, 2, 4 }) do
 
     Test.expect(1, core:removeBreakpoint(ids[max - 2])) -- success first time
 
-    Test.expect(max - 1, null_terminated_length(core:getBreakpoints(kind)))
+    Test.expect(max - 1, Util.null_terminated_length(core:getBreakpoints(kind)))
     Test.expect(-1, core:removeBreakpoint(ids[max - 2])) -- failure second time
 end
 
