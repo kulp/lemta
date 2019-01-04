@@ -14,4 +14,4 @@ packs.mk
 header.*.h
 impl.*.cc
 *.strings.cc
-libimpl-*.so
+libimpl.so
