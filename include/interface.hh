@@ -52,10 +52,9 @@ struct Breakpoint
     Segment segment;
     BPtype type;
     char unknown2[28];
-    char debugName[32]; // name length here is unknown
-
-    // somewhere there is a breakpoint callback too ?
-    char unknown3[300]; // sizeof(Breakpoint) is measured as being 400
+    char debugName[256]; // name length here is inferred but not proven
+    char unknown3[20];
+    // somewhere there is a breakpoint callback among the above fields ?
 };
 
 class Core
