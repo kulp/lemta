@@ -53,8 +53,9 @@ struct Breakpoint
     BPtype type;
     char unknown2[28];
     char debugName[256]; // name length here is inferred but not proven
-    char unknown3[20];
-    // somewhere there is a breakpoint callback among the above fields ?
+    int unknown3;
+    BreakCb *handler;
+    long unknown4;
 };
 
 class Core
