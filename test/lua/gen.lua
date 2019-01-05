@@ -40,7 +40,7 @@ function elaborate_type(doc, id, inner)
             return elaborate_type(doc, typ, "*" .. inner)
         elseif name == "ReferenceType" then
             return elaborate_type(doc, typ, "&" .. inner)
-        elseif name == "Typedef" then
+        elseif name == "Typedef" or name == "ElaboratedType" then
             return elaborate_type(doc, typ, inner)
         elseif name == "Enumeration" then
             return t:get_attribute("name") .. " " .. inner
