@@ -13,7 +13,7 @@ end
 
 ihex.read(io.lines("cases/sum.hex"), loader)
 
-local before = core.regs[0x104]
+local before = core:cycles()
 
 model:reset(0) -- otherwise instruction at address 0 is skipped
 
@@ -48,7 +48,7 @@ end
 
 Test.expect(1, caught)
 
-local after = core.regs[0x104]
+local after = core:cycles()
 
 -- check that we did not run more cycles than expected
 Test.expect(5, after - before)

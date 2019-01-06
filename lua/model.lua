@@ -182,5 +182,9 @@ Proto.Core.createBreakpoint = function()
     return ffi.new("Breakpoint")
 end
 
+Proto.Core.cycles = function(self)
+    return self.regs[0x104]
+end
+
 return Proto.Model
 
