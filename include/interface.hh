@@ -47,11 +47,12 @@ struct Breakpoint
     int id; // set by addBreakpoint()
     // 4 bytes padding (?)
     unsigned long addr;
-    char unknown1[8];
+    long unknown1;
     unsigned long size;
     Segment segment;
     BPtype type;
-    char unknown2[28];
+    long unknown2[3];
+    int unknown3;
     char debugName[256]; // name length here is inferred but not proven
     // 4 bytes padding (?)
     BreakCb *handler;
