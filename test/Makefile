@@ -99,8 +99,8 @@ check-%-z-rhs.txt: call
 
 LUA_TESTS = $(wildcard cases/*.lua)
 
-check-%.lua: export LD_LIBRARY_PATH=.:unpacked/$(LIB_DIR)
-check-%.lua: export LUA_PATH := $(LUA_PATH);;lua/?.lua;../lua/?.lua
+check-%.lua vars-%.mk: export LD_LIBRARY_PATH=.:unpacked/$(LIB_DIR)
+check-%.lua vars-%.mk: export LUA_PATH := $(LUA_PATH);;lua/?.lua;../lua/?.lua
 
 define check_lib_1
 
@@ -124,6 +124,10 @@ $(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % $(IMPL)
 	$$(if $$(SKIP-$$(LIB_STEM)-$$(MCU)-$$<),\
 	    $$(warning Target $$@ fails and has been disabled pending investigation),\
 	    $$(LUAJIT) $$< $$(LIB_STEM) $$(MCU))
+
+vars: vars-$1-$2.mk
+vars-$1-$2.mk: lua/suss.lua libimpl.so
+	$$(LUAJIT) $$< lib$1.so $2 2> /dev/null | grep = > $$@
 
 $(foreach t,$(TYPES),$(call check_lib_3,$1,$2,$t))
 endef
