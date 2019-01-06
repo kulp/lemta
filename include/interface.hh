@@ -45,7 +45,7 @@ struct Breakpoint
     typedef int BreakCb(Core*, Breakpoint*); // returns 0, 1, or 2 (meaning ?)
 
     int id; // set by addBreakpoint()
-    int unknown0;
+    // 4 bytes padding (?)
     unsigned long addr;
     char unknown1[8];
     unsigned long size;
@@ -53,7 +53,7 @@ struct Breakpoint
     BPtype type;
     char unknown2[28];
     char debugName[256]; // name length here is inferred but not proven
-    int unknown3;
+    // 4 bytes padding (?)
     BreakCb *handler;
     void *userdata;
 };
