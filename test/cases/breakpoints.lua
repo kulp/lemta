@@ -1,6 +1,7 @@
 local Model = require("model")
 local Test = require("test")
 local Util = require("util")
+local ffi = require("ffi")
 
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
@@ -25,6 +26,7 @@ for _, kind in ipairs({ 1, 2, 4 }) do
         bp.type = kind
         bp.segment = segs[kind]
         bp.debugName = "" -- non-zero-length strings crash inside dbgVarFind due to null VerilatedScope
+        bp.userdata = ffi.cast("void *", bp.addr * 10)
         local id = core:addBreakpoint(bp)
         ids[#ids + 1] = id
         Test.expect(false, id == -1)
@@ -42,6 +44,7 @@ for _, kind in ipairs({ 1, 2, 4 }) do
     for i = 0, count - 1 do
         Test.expect(make_addr(i), list[i].addr)
         Test.expect(kind, list[i].type)
+        Test.expect(ffi.cast("void *", make_addr(i) * 10), list[i].userdata)
     end
 
     Test.expect(1, core:removeBreakpoint(ids[max - 2])) -- success first time

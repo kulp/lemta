@@ -55,7 +55,7 @@ struct Breakpoint
     char debugName[256]; // name length here is inferred but not proven
     int unknown3;
     BreakCb *handler;
-    long unknown4;
+    void *userdata;
 };
 
 class Core
