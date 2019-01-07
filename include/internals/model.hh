@@ -75,18 +75,21 @@ public:
     virtual int removeStepCallback(int);
     virtual int peekReg(int, unsigned long*);
     virtual int pokeReg(int, unsigned long);
-    virtual void* getMemoryMap(); // implemented trivially : "getMemoryMap should be implemented in children core class"
+    // getMemoryMap() is implemented trivially : "getMemoryMap should be implemented in children core class"
+    virtual void* getMemoryMap();
     virtual int readMemory(unsigned long, unsigned long, unsigned char*, Segment);
     virtual int writeMemory(unsigned long, unsigned long, unsigned char const*, Segment);
     virtual int getIntProperty(int, unsigned long*, char const*);
     virtual int setIntProperty(int, unsigned long, char const*);
     virtual int getStringProperty(int, unsigned long, char*, unsigned long const*);
-    virtual int setStringProperty(int, char*, unsigned long const*); // implemented trivially : `return -1`
+    // setStringProperty() is implemented trivially : `return -1`
+    virtual int setStringProperty(int, char*, unsigned long const*);
     virtual Model *getModel();
     virtual int addBreakpoint(Breakpoint*);
     virtual int removeBreakpoint(int);
-    virtual Breakpoint** getBreakpoints(BPtype); // returned pointer points into class instance
-    virtual int test(int, Test*, int (*)(Model*)); // implemented trivially : `return -1`
+    virtual Breakpoint** getBreakpoints(BPtype);
+    // test() is implemented trivially : `return -1`
+    virtual int test(int, Test*, int (*)(Model*));
 
 protected:
     // in Model_core only
@@ -111,13 +114,15 @@ public:
     virtual int readMemory(unsigned long, unsigned long, unsigned char*, Segment);
 
 protected:
-    // inherited from Model_core
     virtual void core_init();
-    virtual void core_config(char const*); // implemented trivially : `return`
-    virtual int core_reset(ResetType); // implemented trivially : `return 0`
+    // core_config is implemented trivially : `return`
+    virtual void core_config(char const*);
+    // core_reset() is implemented trivially : `return 0`
+    virtual int core_reset(ResetType);
     virtual bool core_isBreakInstr(unsigned int);
     virtual int core_getIntProperty(int, unsigned long*);
-    virtual int core_setIntProperty(int, unsigned long); // implemented trivially : `return -1`
+    // core_setIntProperty() is implemented trivially : `return -1`
+    virtual int core_setIntProperty(int, unsigned long);
 };
 
 class Model_device : public Model
@@ -150,13 +155,20 @@ public:
     virtual int addCycleCallback(void (*)(Model*, void*), void*);
     virtual int removeCycleCallback(int);
     virtual int getIntProperty(int, unsigned long*, char const*);
-    virtual int setIntProperty(int, unsigned long, char const*); // implemented trivially : `return -1`
-    virtual int getStringProperty(int, unsigned long, char*, unsigned long const*); // implemented trivially : `return -1`
-    virtual int setStringProperty(int, char*, unsigned long const*); // implemented trivially : `return -1`
-    virtual int saveSim(SimState*); // implemented trivially : `return -1`
-    virtual int loadSim(SimState*); // implemented trivially : `return -1`
-    virtual int debug(char const*, int (*)(char const*, ...)); // implemented trivially : `return 0`
-    virtual int test(int, Test*, int (*)(Model*)); // implemented trivially : `return -1`
+    // setIntProperty() is implemented trivially : `return -1`
+    virtual int setIntProperty(int, unsigned long, char const*);
+    // getStringProperty() is implemented trivially : `return -1`
+    virtual int getStringProperty(int, unsigned long, char*, unsigned long const*);
+    // setStringProperty() is implemented trivially : `return -1`
+    virtual int setStringProperty(int, char*, unsigned long const*);
+    // saveSim() is implemented trivially : `return -1`
+    virtual int saveSim(SimState*);
+    // loadSim() is implemented trivially : `return -1`
+    virtual int loadSim(SimState*);
+    // debug() is implemented trivially : `return 0`
+    virtual int debug(char const*, int (*)(char const*, ...));
+    // test() is implemented trivially : `return -1`
+    virtual int test(int, Test*, int (*)(Model*));
 };
 
 class model_verilated
@@ -253,11 +265,13 @@ public:
     MemFacade(model_verilated*, bool, int);
     virtual ~MemFacade();
 
-    int write(unsigned int addr, unsigned int count, unsigned char const *data, unsigned int segment); // implements Model_core::writeMemory
+    // write() implements Model_core::writeMemory
+    int write(unsigned int addr, unsigned int count, unsigned char const *data, unsigned int segment);
     UnknownType exists(unsigned int) const;
     MemUnit* getMemUnit(unsigned int);
     MemUnit* getMemUnit(std::string const&);
-    int read(unsigned int addr, unsigned int count, unsigned char *data, unsigned int segment); // implements Model_core::readMemory
+    // read() implements Model_core::readMemory
+    int read(unsigned int addr, unsigned int count, unsigned char *data, unsigned int segment);
     UnknownType addMemUnit(unsigned int, MemUnit*);
     UnknownType addMemUnits(std::map<unsigned int, MemUnit*> const&);
 };

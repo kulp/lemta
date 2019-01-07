@@ -66,7 +66,8 @@ public:
 
     virtual int reset(ResetType) = 0;
     virtual int step(unsigned long) = 0;
-    virtual unsigned long run(unsigned long pc) = 0; // run to a given program counter value
+    // run() runs to a given program counter value
+    virtual unsigned long run(unsigned long pc) = 0;
     virtual void stop() = 0; // could be called by a StepCb
     virtual int addStepCallback(StepCb*, void*) = 0;
     virtual int removeStepCallback(int) = 0;
@@ -108,7 +109,8 @@ public:
     virtual Model *getModel() = 0;
     virtual int addBreakpoint(Breakpoint*) = 0;
     virtual int removeBreakpoint(int) = 0;
-    virtual Breakpoint** getBreakpoints(BPtype) = 0; // returns a nullptr-terminated array member of Core
+    // getBreakpoints() returns a nullptr-terminated array member of Core
+    virtual Breakpoint** getBreakpoints(BPtype) = 0;
     virtual int test(int, Test*, int (*)(Model*)) = 0;
 };
 

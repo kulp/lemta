@@ -113,7 +113,8 @@ struct BaseBehavior : public Fundamental
     static int dump_results()
     {
         std::size_t buflen = 256;
-        char *buf = static_cast<char*>(malloc(buflen)); // need malloc for __cxa_demangle
+        // We need malloc for __cxa_demangle
+        char *buf = static_cast<char*>(malloc(buflen));
         for (auto & c : List< CallSite<T> >::array) {
             void * pc = reinterpret_cast<void*>(c.pc);
             Dl_info info;
