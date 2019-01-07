@@ -3,8 +3,8 @@
 #include <setjmp.h>
 #include <signal.h>
 
-#include "model.hh"
 #include "dynamic.hh"
+#include "model.hh"
 
 static jmp_buf jmp;
 static void segv_handler(int /*signo*/, siginfo_t * /*info*/, void *)
@@ -14,18 +14,19 @@ static void segv_handler(int /*signo*/, siginfo_t * /*info*/, void *)
 
 static void step_cb(Core *m, void *userdata)
 {
-    printf("%s(%p, %p)\n", __func__, reinterpret_cast<void*>(m), userdata);
+    printf("%s(%p, %p)\n", __func__, reinterpret_cast<void *>(m), userdata);
 }
 
 static void cycle_cb(Model *m, void *userdata)
 {
-    printf("%s(%p, %p)\n", __func__, reinterpret_cast<void*>(m), userdata);
+    printf("%s(%p, %p)\n", __func__, reinterpret_cast<void *>(m), userdata);
 }
 
 static void stopper_cb(Core *c, void *userdata)
 {
     static int count;
-    printf("%s(%p, %p) : count = %d\n", __func__, reinterpret_cast<void*>(c), userdata, count);
+    printf("%s(%p, %p) : count = %d\n", __func__, reinterpret_cast<void *>(c),
+           userdata, count);
     if (count++ >= reinterpret_cast<long>(userdata))
         c->stop();
 }
@@ -33,7 +34,8 @@ static void stopper_cb(Core *c, void *userdata)
 static void mstopper_cb(Model *m, void *userdata)
 {
     static int count;
-    printf("%s(%p, %p) : count = %d\n", __func__, reinterpret_cast<void*>(m), userdata, count);
+    printf("%s(%p, %p) : count = %d\n", __func__, reinterpret_cast<void *>(m),
+           userdata, count);
     if (count++ >= reinterpret_cast<long>(userdata))
         m->stop();
 }
@@ -45,7 +47,8 @@ int main(int argc, char **argv)
 
     Library lib(argv[1]);
 
-    std::printf("model_api_ver() = %#x\n", lib.get_function(model_api_ver).invoke());
+    std::printf("model_api_ver() = %#x\n",
+                lib.get_function(model_api_ver).invoke());
 
     Model *dev = lib.get_function(model_ctor).invoke(argv[2]);
     assert(("device constructed", dev != NULL));
@@ -75,12 +78,12 @@ int main(int argc, char **argv)
 
     {
         puts("testing Core stop");
-        int r = mc->addStepCallback(stopper_cb, reinterpret_cast<void*>(5));
+        int r = mc->addStepCallback(stopper_cb, reinterpret_cast<void *>(5));
         mc->run(0);
         mc->removeStepCallback(r);
 
         puts("testing Model stop");
-        md->addCycleCallback(mstopper_cb, reinterpret_cast<void*>(5));
+        md->addCycleCallback(mstopper_cb, reinterpret_cast<void *>(5));
         mc->run(0);
     }
 
@@ -115,7 +118,7 @@ int main(int argc, char **argv)
         perror("sigaction");
 
     for (volatile int i = 0; i < 0x500; ++i) {
-        if (sigsetjmp(jmp, 1/*nonzero*/)) {
+        if (sigsetjmp(jmp, 1 /*nonzero*/)) {
             std::printf("index = %d = %#x caused SIGSEGV, skipping\n", i, i);
             i++;
         }
@@ -125,20 +128,24 @@ int main(int argc, char **argv)
 
         result = mc->getIntProperty(i, &ul, "");
         if (result != -1) {
-            std::printf("(C) index = %d = %#x, result = %d, ul = %lu = %#lx\n", i, i, result, ul, ul);
+            std::printf("(C) index = %d = %#x, result = %d, ul = %lu = %#lx\n",
+                        i, i, result, ul, ul);
         }
         result = mc->getStringProperty(i, sizeof buf, buf, nullptr);
         if (result != -1) {
-            std::printf("(C) index = %d = %#x, result = %d, buf = '%s'\n", i, i, result, buf);
+            std::printf("(C) index = %d = %#x, result = %d, buf = '%s'\n", i, i,
+                        result, buf);
         }
 
         result = md->getIntProperty(i, &ul, "");
         if (result != -1) {
-            std::printf("(M) index = %d = %#x, result = %d, ul = %lu = %#lx\n", i, i, result, ul, ul);
+            std::printf("(M) index = %d = %#x, result = %d, ul = %lu = %#lx\n",
+                        i, i, result, ul, ul);
         }
         result = md->getStringProperty(i, sizeof buf, buf, nullptr);
         if (result != -1) {
-            std::printf("(M) index = %d = %#x, result = %d, buf = '%s'\n", i, i, result, buf);
+            std::printf("(M) index = %d = %#x, result = %d, buf = '%s'\n", i, i,
+                        result, buf);
         }
     }
 
