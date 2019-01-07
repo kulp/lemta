@@ -50,9 +50,6 @@ call.o: CXXFLAGS += -Wno-cast-function-type # this is the whole point of `call`
 call.o: interface.hh dynamic.hh
 call.o: types.xi $(TYPES:%=methods.%.xi)
 
-# dummy rule
-run-call: ;
-
 FILES_clean += model.*.xml
 model.%.xml: %
 	castxml -o $@ --castxml-output=1 $<
