@@ -13,9 +13,9 @@ end
 
 ihex.read(io.lines("cases/sum.hex"), loader)
 
-local before = core:cycles()
-
 model:reset(0) -- otherwise instruction at address 0 is skipped
+
+core:cycles(0) -- reset cycles counter
 
 local add1 = 0x12
 local add2 = 0x34
@@ -48,10 +48,8 @@ end
 
 Test.expect(1, caught)
 
-local after = core:cycles()
-
 -- check that we did not run more cycles than expected
-Test.expect(5, after - before)
+Test.expect(5, core:cycles())
 
 Test.expect(add1 + add2, core.regs[18])
 

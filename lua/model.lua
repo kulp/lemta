@@ -182,8 +182,12 @@ Proto.Core.createBreakpoint = function()
     return ffi.new("Breakpoint")
 end
 
-Proto.Core.cycles = function(self)
-    return self.regs[0x104]
+Proto.Core.cycles = function(self, cyc)
+    local old = self.regs[0x104]
+    if cyc ~= nil then
+        self.regs[0x104] = cyc
+    end
+    return old
 end
 
 return Proto.Model
