@@ -13,7 +13,7 @@ end
 
 ihex.read(io.lines("cases/sum.hex"), loader)
 
-model:reset(0) -- otherwise instruction at address 0 is skipped
+model:reset("RT_TYPE_0") -- otherwise instruction at address 0 is skipped
 
 core:cycles(0) -- reset cycles counter
 

@@ -8,8 +8,11 @@ typedef void SimState; // apparently unused
 struct Test;           // no methods
 
 // placeholder types
-// forward declare C++11 enumerations for which actual values are not yet known
-enum class ResetType : int;
+enum ResetType
+{
+    RT_TYPE_0 = 0,
+};
+
 enum BPtype
 {
     BP_BREAKPOINT = (1 << 0),
