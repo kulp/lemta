@@ -12,8 +12,6 @@ struct Test;           // no methods
 enum class ResetType : int;
 enum BPtype
 {
-    BP_NO_TYPE = 0,
-
     BP_BREAKPOINT = (1 << 0),
 
     // Breakpoints of the following two types are commingled in one list
@@ -22,6 +20,8 @@ enum BPtype
     BP_TYPE_2 = (1 << 2),
 
     BP_TRACEPOINT = (1 << 3),
+
+    BP_ALL_TYPES = (1 << 4) - 1
 };
 
 // segment 0 seems to be consistently the program memory
