@@ -31,7 +31,7 @@ vpath %.cc cxx
 vpath %.lua lua
 
 CPPFLAGS += -I../include
-CPPFLAGS += -I$(CURDIR)
+CPPFLAGS += -I.
 
 LUA = lua
 LUAJIT = luajit
