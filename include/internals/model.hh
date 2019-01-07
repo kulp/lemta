@@ -38,8 +38,7 @@ public:
 protected:
     UnknownType readVerilogSig(char const*, unsigned long*);
     UnknownType deleteBreakpointFrom(int, std::multimap<unsigned int, Breakpoint>&);
-    // need definition of Breakpoint type
-    //UnknownType insertBreakpointTo(Breakpoint&, std::multimap<unsigned int, Breakpoint> >&);
+    UnknownType insertBreakpointTo(Breakpoint&, std::multimap<unsigned int, Breakpoint>&);
     UnknownType execStepCallback();
     UnknownType checkBreak(std::deque<Breakpoint*>&, Breakpoint*&, unsigned int, unsigned long);
     UnknownType checkTrace(std::deque<Breakpoint*>&, Breakpoint*&);
