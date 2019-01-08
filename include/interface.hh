@@ -1,13 +1,6 @@
 #ifndef INTERFACE_HH_
 #define INTERFACE_HH_
 
-class Model;
-
-struct Breakpoint;     // no methods
-typedef void SimState; // apparently unused
-struct Test;           // no methods
-
-// placeholder types
 enum ResetType
 {
     RT_TYPE_0 = 0,
@@ -64,6 +57,9 @@ struct Breakpoint
     BreakCb *handler;
     void *userdata;
 };
+
+class Model;
+struct Test; // no methods
 
 class Core
 {
@@ -122,6 +118,8 @@ public:
     virtual Breakpoint **getBreakpoints(BPtype) = 0;
     virtual int test(int, Test *, int (*)(Model *)) = 0;
 };
+
+typedef void SimState; // apparently unused
 
 class Model
 {
