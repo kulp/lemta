@@ -1,4 +1,4 @@
-local Model = require("model/sugared").Model
+local Model = require("model/base").Model
 local Test = require("test")
 
 local model = Model:create(unpack(arg))
@@ -11,7 +11,7 @@ local function step_cb(core)
     steps = steps + 1
 end
 
-core:addStepCallback(step_cb)
+core:addStepCallback(step_cb, nil)
 core:step(count)
 
 Test.expect(count, steps)
