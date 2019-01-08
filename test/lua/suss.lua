@@ -1,5 +1,5 @@
 local ffi = require("ffi")
-local Model = require("model")
+local Model = require("model/sugared").Model
 
 local lib, chip = unpack(arg)
 local model = Model:create(lib, chip)

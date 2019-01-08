@@ -1,4 +1,4 @@
-local Model = require("model")
+local Model = require("model/sugared").Model
 
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)

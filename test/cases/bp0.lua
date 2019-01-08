@@ -1,4 +1,4 @@
-local Model = require("model")
+local Model = require("model/sugared").Model
 local ihex = require("ihex")
 local Test = require("test")
 local Util = require("util")
