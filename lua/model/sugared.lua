@@ -87,8 +87,11 @@ Proto.Core.__overrides.segments =
             local mem = {}
             mem.__index = function(table, addr)
                 local temp = ffi.new("unsigned char[1]")
-                obj.read(addr, 1, temp)
-                return tonumber(temp[0])
+                if obj.read(addr, 1, temp) ~= -1 then
+                    return tonumber(temp[0])
+                else
+                    return nil
+                end
             end
             mem.__newindex = function(table, addr, value)
                 obj.write(addr, 1, ffi.new("unsigned char[1]", value))
