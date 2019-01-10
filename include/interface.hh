@@ -1,6 +1,7 @@
 #ifndef INTERFACE_HH_
 #define INTERFACE_HH_
 
+// TODO enumerate reset types and determine meanings
 enum ResetType
 {
     RT_TYPE_0 = 0,
@@ -10,22 +11,14 @@ enum BPtype
 {
     BP_BREAKPOINT = (1 << 0),
 
-    // Breakpoints of the following two types are commingled in one list
-    // (watches ?)
-    BP_TYPE_1 = (1 << 1),
-    BP_TYPE_2 = (1 << 2),
+    BP_WATCH_A = (1 << 1),
+    BP_WATCH_B = (1 << 2),
 
     BP_TRACEPOINT = (1 << 3),
 
     BP_ALL_TYPES = (1 << 4) - 1
 };
 
-// segment 0 seems to be consistently the program memory
-// segment 1 seems to be consistently the data address space
-// segment 2 seems to be the EEPROM
-// segment 3 seems to be the bank of 32 registers, but not for all models
-// segments 5 and 6 are called out specially in some compiled models
-// segment 5 seems to be fuses
 enum Segment
 {
     SEG_PROG = 0,
@@ -39,7 +32,7 @@ enum Segment
 
 class Core;
 
-struct Breakpoint
+struct Breakpoint // a POD type
 {
     typedef int BreakCb(Core *, Breakpoint *); // returns 0, 1, or 2 (meaning ?)
 
@@ -52,14 +45,14 @@ struct Breakpoint
     BPtype type;
     long unknown2[3];
     int unknown3;
-    char debugName[256]; // name length here is inferred but not proven
+    char debugName[256];
     // 4 bytes padding (?)
     BreakCb *handler;
     void *userdata;
 };
 
 class Model;
-struct Test; // no methods
+struct Test; // a POD type, contents yet unknown
 
 class Core
 {
@@ -119,7 +112,7 @@ public:
     virtual int test(int, Test *, int (*)(Model *)) = 0;
 };
 
-typedef void SimState; // apparently unused
+typedef void SimState;
 
 class Model
 {
