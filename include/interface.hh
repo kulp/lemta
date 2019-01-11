@@ -40,15 +40,15 @@ struct Breakpoint // a POD type
 
     int id; // set by addBreakpoint()
     // 4 bytes padding (?)
-    unsigned long addr;
-    long unknown1;
+    Address addr;
+    Address addr2; // addr_end, inclusive ?
     unsigned long size;
     Segment segment;
     BPtype type;
-    long qword0;
-    int dword0;
+    Address addr3; // return value of dpiCheckWatchHit
+    int dword0; // output from third param of dpiCheckWatchHit
     // 4 bytes padding (?)
-    long qword1;
+    Address addr4; // from (&core+0x160)
     unsigned int hitcount;
     char debugName[256];
     // 4 bytes padding (?)
