@@ -32,6 +32,7 @@ bp.segment = "SEG_PROG"
 bp.handler = function(core, bp)
     caught = caught + 1
     Test.expect(32, bp.addr)
+    Test.expect(1, bp.hitcount)
     return 0
 end
 local id = core:addBreakpoint(bp)

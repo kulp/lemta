@@ -44,7 +44,7 @@ struct Breakpoint // a POD type
     Segment segment;
     BPtype type;
     long unknown2[3];
-    int unknown3;
+    unsigned int hitcount;
     char debugName[256];
     // 4 bytes padding (?)
     BreakCb *handler;
