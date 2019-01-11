@@ -43,7 +43,10 @@ struct Breakpoint // a POD type
     unsigned long size;
     Segment segment;
     BPtype type;
-    long unknown2[3];
+    long qword0;
+    int dword0;
+    // 4 bytes padding (?)
+    long qword1;
     unsigned int hitcount;
     char debugName[256];
     // 4 bytes padding (?)
