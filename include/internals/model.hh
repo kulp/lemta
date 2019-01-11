@@ -44,7 +44,7 @@ protected:
                                    std::multimap<unsigned int, Breakpoint> &);
     UnknownType execStepCallback();
     UnknownType checkBreak(std::deque<Breakpoint *> &, Breakpoint *&,
-                           unsigned int, unsigned long);
+                           unsigned int, Address);
     UnknownType checkTrace(std::deque<Breakpoint *> &, Breakpoint *&);
     UnknownType checkWatch(std::deque<Breakpoint *> &, Breakpoint *&);
 
@@ -72,8 +72,8 @@ protected:
 public:
     // inherited from Core
     virtual int reset(ResetType);
-    virtual int step(unsigned long);
-    virtual unsigned long run(unsigned long pc);
+    virtual int step(Address);
+    virtual Address run(Address pc);
     virtual void stop();
     virtual int addStepCallback(void (*)(Core *, void *), void *);
     virtual int removeStepCallback(int);
@@ -82,9 +82,9 @@ public:
     // getMemoryMap() is implemented trivially : "getMemoryMap should be
     // implemented in children core class"
     virtual void *getMemoryMap();
-    virtual int readMemory(unsigned long, unsigned long, unsigned char *,
+    virtual int readMemory(Address, unsigned long, unsigned char *,
                            Segment);
-    virtual int writeMemory(unsigned long, unsigned long, unsigned char const *,
+    virtual int writeMemory(Address, unsigned long, unsigned char const *,
                             Segment);
     virtual int getIntProperty(int, unsigned long *, char const *);
     virtual int setIntProperty(int, unsigned long, char const *);
@@ -116,11 +116,11 @@ public:
     ~Avr8();
 
     // inherited from Core
-    virtual int writeMemory(unsigned long, unsigned long, unsigned char const *,
+    virtual int writeMemory(Address, unsigned long, unsigned char const *,
                             Segment);
     virtual int peekReg(int, unsigned long *);
     virtual int pokeReg(int, unsigned long);
-    virtual int readMemory(unsigned long, unsigned long, unsigned char *,
+    virtual int readMemory(Address, unsigned long, unsigned char *,
                            Segment);
 
 protected:
@@ -222,7 +222,7 @@ public:
                                      unsigned int const *) = 0;
     virtual UnknownType dpiGetSupportedAccessType(unsigned int const *,
                                                   int) = 0;
-    virtual UnknownType dpiCheckWatchHit(unsigned int const *,
+    virtual Address     dpiCheckWatchHit(unsigned int const *,
                                          unsigned int const *, unsigned int *,
                                          unsigned int const *, int) = 0;
     virtual UnknownType dpiGetModelState(int) = 0;
@@ -239,11 +239,11 @@ public:
     virtual ~MemUnit();
 
     virtual std::string const &getName() const = 0;
-    virtual UnknownType isChanged(unsigned long, unsigned long) = 0;
-    virtual UnknownType update(unsigned long, unsigned long) = 0;
-    virtual UnknownType read(unsigned long, unsigned long,
+    virtual UnknownType isChanged(Address, unsigned long) = 0;
+    virtual UnknownType update(Address, unsigned long) = 0;
+    virtual UnknownType read(Address, unsigned long,
                              std::vector<unsigned char> &) = 0;
-    virtual UnknownType write(unsigned long, unsigned long,
+    virtual UnknownType write(Address, unsigned long,
                               std::vector<unsigned char> const &) = 0;
     virtual UnknownType getAddress() const = 0;
     virtual UnknownType getSize() const = 0;
@@ -256,11 +256,11 @@ public:
 
     // inherited from MemUnit
     virtual std::string const &getName() const;
-    virtual UnknownType isChanged(unsigned long, unsigned long);
-    virtual UnknownType update(unsigned long, unsigned long);
-    virtual UnknownType read(unsigned long, unsigned long,
+    virtual UnknownType isChanged(Address, unsigned long);
+    virtual UnknownType update(Address, unsigned long);
+    virtual UnknownType read(Address, unsigned long,
                              std::vector<unsigned char> &);
-    virtual UnknownType write(unsigned long, unsigned long,
+    virtual UnknownType write(Address, unsigned long,
                               std::vector<unsigned char> const &);
     virtual UnknownType getAddress() const;
     virtual UnknownType getSize() const;
@@ -273,11 +273,11 @@ public:
 
     // inherited from BasicMemUnit
     virtual std::string const &getName() const;
-    virtual UnknownType isChanged(unsigned long, unsigned long);
-    virtual UnknownType update(unsigned long, unsigned long);
-    virtual UnknownType read(unsigned long, unsigned long,
+    virtual UnknownType isChanged(Address, unsigned long);
+    virtual UnknownType update(Address, unsigned long);
+    virtual UnknownType read(Address, unsigned long,
                              std::vector<unsigned char> &);
-    virtual UnknownType write(unsigned long, unsigned long,
+    virtual UnknownType write(Address, unsigned long,
                               std::vector<unsigned char> const &);
     virtual UnknownType getAddress() const;
     virtual UnknownType getSize() const;

@@ -32,6 +32,8 @@ enum Segment
 
 class Core;
 
+typedef unsigned long Address;
+
 struct Breakpoint // a POD type
 {
     typedef int BreakCb(Core *, Breakpoint *); // returns 0, 1, or 2 (meaning ?)
