@@ -32,6 +32,7 @@ enum Segment
 
 class Core;
 
+typedef unsigned int Instruction;
 typedef unsigned long Address;
 
 struct Breakpoint // a POD type

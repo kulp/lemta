@@ -44,7 +44,7 @@ protected:
                                    std::multimap<unsigned int, Breakpoint> &);
     UnknownType execStepCallback();
     UnknownType checkBreak(std::deque<Breakpoint *> &, Breakpoint *&,
-                           unsigned int, Address);
+                           Instruction, Address);
     UnknownType checkTrace(std::deque<Breakpoint *> &, Breakpoint *&);
     UnknownType checkWatch(std::deque<Breakpoint *> &, Breakpoint *&);
 
