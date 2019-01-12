@@ -50,11 +50,11 @@ struct Breakpoint // a POD type
     BPtype type;
     Address addr3; // return value of dpiCheckWatchHit
     int dword0; // output from third param of dpiCheckWatchHit
-    // 4 bytes padding (?)
+    // 4 bytes padding @ offset 0x34 = 52
     Address addr4; // from (&core+0x160)
     unsigned int hitcount;
     char debugName[256];
-    // 4 bytes padding (?)
+    // 4 bytes padding @ offset 0x144 = 324
     BreakCb *handler;
     void *userdata;
 };
