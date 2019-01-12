@@ -25,7 +25,9 @@ class VerilogMemUnit;
 class Vsim_top;
 class model_verilated;
 
-// inferred from manglings
+// ABI compatibility cannot be maintained, so SimProperty does not have an
+// actual definition, but it consists of an int value followed by a
+// std::string. sizeof(SimProperty) is 24 bytes.
 struct SimProperty;
 
 typedef void *UnknownType;
