@@ -34,7 +34,7 @@ class Core;
 typedef unsigned int Instruction;
 typedef unsigned long Address;
 
-struct Breakpoint // a POD type
+struct Breakpoint
 {
     typedef int BreakCb(Core *, Breakpoint *); // returns 0, 1, or 2 (meaning ?)
 
@@ -54,6 +54,22 @@ struct Breakpoint // a POD type
     // 4 bytes padding @ offset 0x144 = 324
     BreakCb *handler;
     void *userdata;
+
+    Breakpoint()
+        : unknown0(0)
+        , addr(-1ul)
+        , addr2(-1ul)
+        , size(1)
+        , segment(SEG_PROG)
+        , type(BP_BREAKPOINT)
+        , addr3(-1ul)
+        , dword0(0)
+        , addr4(-1ul)
+        , hitcount(0)
+        , debugName()
+        , handler(0)
+        , userdata(0)
+    { /* no body */ }
 };
 
 class Model;
