@@ -16,7 +16,9 @@ enum BPtype
 
     BP_TRACEPOINT = (1 << 3),
 
-    BP_ALL_TYPES = (1 << 4) - 1
+    BP_FOUND = (1 << 4), // i.e. a break instruction in flash
+
+    BP_ALL_TYPES = -1u
 };
 
 enum Segment
