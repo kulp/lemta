@@ -40,7 +40,7 @@ struct Breakpoint // a POD type
     typedef int BreakCb(Core *, Breakpoint *); // returns 0, 1, or 2 (meaning ?)
 
     int id; // set by addBreakpoint()
-    // 4 bytes padding (?)
+    int unknown0; // initialized to *(&core+0x1d0)
     Address addr;
     Address addr2; // addr_end, inclusive ?
     unsigned long size;
