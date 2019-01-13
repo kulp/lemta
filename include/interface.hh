@@ -10,8 +10,8 @@ enum ResetType
 enum BPtype
 {
     BP_BREAKPOINT = (1 << 0),
-    BP_WATCH_A = (1 << 1),
-    BP_WATCH_B = (1 << 2),
+    BP_WATCH_WRITE = (1 << 1),
+    BP_WATCH_READ = (1 << 2),
     BP_TRACEPOINT = (1 << 3),
     BP_FOUND = (1 << 4), // i.e. a break instruction in flash
 
