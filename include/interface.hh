@@ -50,7 +50,7 @@ struct Breakpoint
     // 4 bytes padding @ offset 0x34 = 52
     Address break_pc; // program counter of most recent breakpoint hit
     unsigned int hitcount;
-    char debugName[256];
+    char debug_name[256];
     // 4 bytes padding @ offset 0x144 = 324
     BreakCb *handler;
     void *userdata;
@@ -66,7 +66,7 @@ struct Breakpoint
         , dword0(0)
         , break_pc(-1ul)
         , hitcount(0)
-        , debugName()
+        , debug_name()
         , handler(0)
         , userdata(0)
     { /* no body */ }

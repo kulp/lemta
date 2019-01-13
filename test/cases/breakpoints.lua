@@ -25,7 +25,7 @@ for _, kind in ipairs({ 1, 2, 4 }) do
         bp.size = 1 -- must be nonzero for BP_TRACEPOINT
         bp.type = kind
         bp.segment = segs[kind]
-        bp.debugName = "" -- non-zero-length strings crash inside dbgVarFind due to null VerilatedScope
+        bp.debug_name = "" -- non-zero-length strings crash inside dbgVarFind due to null VerilatedScope
         bp.userdata = ffi.cast("void *", bp.addr * 10)
         local id = core:addBreakpoint(bp)
         ids[#ids + 1] = id
