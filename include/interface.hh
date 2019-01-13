@@ -48,7 +48,7 @@ struct Breakpoint
     Address addr3; // return value of dpiCheckWatchHit
     int dword0; // output from third param of dpiCheckWatchHit
     // 4 bytes padding @ offset 0x34 = 52
-    Address addr4; // from (&core+0x160)
+    Address break_pc; // program counter of most recent breakpoint hit
     unsigned int hitcount;
     char debugName[256];
     // 4 bytes padding @ offset 0x144 = 324
@@ -64,7 +64,7 @@ struct Breakpoint
         , type(BP_BREAKPOINT)
         , addr3(-1ul)
         , dword0(0)
-        , addr4(-1ul)
+        , break_pc(-1ul)
         , hitcount(0)
         , debugName()
         , handler(0)
