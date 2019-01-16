@@ -33,6 +33,7 @@ bp.handler = function(core, bp)
     caught = caught + 1
     Test.expect(32, bp.addr)
     Test.expect(1, bp.hitcount)
+    Test.expect(32, bp.break_pc)
     return 0
 end
 local id = core:addBreakpoint(bp)

@@ -34,6 +34,7 @@ bp.handler = function(core, bp)
     caught = caught + 1
     Test.expect(addr_a, bp.addr)
     Test.expect(1, bp.hitcount)
+    -- break_pc apparently does not get set for a watch
     return 0
 end
 local id = core:addBreakpoint(bp)
