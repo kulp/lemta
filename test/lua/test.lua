@@ -1,16 +1,22 @@
 local Test = {}
 
+local function equal(a, b)
+    return a == b
+end
+
 Test.dummy = function() end
 
-Test.expect = function(expected, actual)
-
+Test.want = function(accepter, compare, actual)
     local handle = error
-    if expected == actual then
+    if accepter(compare, actual) then
         handle = Test.dummy
     end
 
-    handle("expected = " .. tostring(expected) .. ", actual = " .. tostring(actual))
+    handle("compare = " .. tostring(compare) .. ", actual = " .. tostring(actual))
+end
 
+Test.expect = function(expected, actual)
+    return Test.want(equal, expected, actual)
 end
 
 return Test
