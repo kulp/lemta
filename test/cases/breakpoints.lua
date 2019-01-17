@@ -29,8 +29,8 @@ for _, kind in ipairs({ 1, 2, 4 }) do
         bp.userdata = ffi.cast("void *", bp.addr * 10)
         local id = core:addBreakpoint(bp)
         ids[#ids + 1] = id
-        Test.expect(false, id == -1)
-        Test.expect(false, id == 0)
+        Test.expect_not(-1, id)
+        Test.expect_not(0, id)
 
         -- try to add the same breakpoint a second time
         id = core:addBreakpoint(bp)

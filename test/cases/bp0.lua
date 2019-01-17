@@ -37,8 +37,8 @@ bp.handler = function(core, bp)
     return 0
 end
 local id = core:addBreakpoint(bp)
-Test.expect(false, id == -1)
-Test.expect(false, id == 0)
+Test.expect_not(-1, id)
+Test.expect_not(0, id)
 
 local list = core:getBreakpoints(kind)
 local count = Util.null_terminated_length(list)
