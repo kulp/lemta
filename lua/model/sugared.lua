@@ -40,7 +40,7 @@ Proto.Core.__overrides.props =
                 if self:getStringProperty(index, size, str, nil) ~= -1 then
                     return ffi.string(str)
                 else
-                    return nil
+                    return "<nil>"
                 end
             end
             obj.int = function(_)
