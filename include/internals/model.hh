@@ -84,8 +84,7 @@ public:
     // getMemoryMap() is implemented trivially : "getMemoryMap should be
     // implemented in children core class"
     virtual void *getMemoryMap();
-    virtual int readMemory(Address, unsigned long, unsigned char *,
-                           Segment);
+    virtual int readMemory(Address, unsigned long, unsigned char *, Segment);
     virtual int writeMemory(Address, unsigned long, unsigned char const *,
                             Segment);
     virtual int getIntProperty(int, unsigned long *, char const *);
@@ -122,8 +121,7 @@ public:
                             Segment);
     virtual int peekReg(int, unsigned long *);
     virtual int pokeReg(int, unsigned long);
-    virtual int readMemory(Address, unsigned long, unsigned char *,
-                           Segment);
+    virtual int readMemory(Address, unsigned long, unsigned char *, Segment);
 
 protected:
     virtual void core_init();
@@ -224,9 +222,9 @@ public:
                                      unsigned int const *) = 0;
     virtual UnknownType dpiGetSupportedAccessType(unsigned int const *,
                                                   int) = 0;
-    virtual Address     dpiCheckWatchHit(unsigned int const *,
-                                         unsigned int const *, unsigned int *,
-                                         unsigned int const *, int) = 0;
+    virtual Address dpiCheckWatchHit(unsigned int const *, unsigned int const *,
+                                     unsigned int *, unsigned int const *,
+                                     int) = 0;
     virtual UnknownType dpiGetModelState(int) = 0;
     virtual UnknownType dpiInstrFinished(int) = 0;
 };

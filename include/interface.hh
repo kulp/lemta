@@ -38,7 +38,7 @@ struct Breakpoint
 {
     typedef int BreakCb(Core *, Breakpoint *); // returns 0, 1, or 2 (meaning ?)
 
-    int id; // set by addBreakpoint()
+    int id;       // set by addBreakpoint()
     int unknown0; // initialized to *(&core+0x1d0)
     Address addr;
     Address addr2; // addr_end, inclusive ?
@@ -46,7 +46,7 @@ struct Breakpoint
     Segment segment;
     BPtype type;
     Address addr3; // return value of dpiCheckWatchHit
-    int dword0; // output from third param of dpiCheckWatchHit
+    int dword0;    // output from third param of dpiCheckWatchHit
     // 4 bytes padding @ offset 0x34 = 52
     Address break_pc; // program counter of most recent breakpoint hit
     unsigned int hitcount;
@@ -69,7 +69,9 @@ struct Breakpoint
         , debug_name()
         , handler(0)
         , userdata(0)
-    { /* no body */ }
+    {
+        // no body
+    }
 };
 
 class Model;
