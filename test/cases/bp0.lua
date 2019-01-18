@@ -2,6 +2,7 @@ local Model = require("model/sugared").Model
 local ihex = require("ihex")
 local Test = require("test")
 local Util = require("util")
+local ffi = require("ffi")
 
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
@@ -23,17 +24,20 @@ local add2 = 0x34
 core.regs[16] = add1
 core.regs[17] = add2
 
+local nonce = 999
 local caught = 0
 local kind = "BP_BREAKPOINT"
 local bp = core:createBreakpoint()
 bp.addr = 32
 bp.type = kind
 bp.segment = "SEG_PROG"
+bp.userdata = ffi.new("int[1]", nonce)
 bp.handler = function(core, bp)
     caught = caught + 1
     Test.expect(32, bp.addr)
     Test.expect(1, bp.hitcount)
     Test.expect(32, bp.break_pc)
+    Test.expect(nonce, ffi.cast("int*", bp.userdata)[0])
     return 0
 end
 local id = core:addBreakpoint(bp)
