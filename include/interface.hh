@@ -29,6 +29,16 @@ enum Segment
     SEG_TYPE_6 = 6,
 };
 
+enum RegisterSpecial
+{
+    REG_PC = 0x100,       // 4 bytes wide
+    REG_INSTR = 0x101,    // 4 bytes wide
+    REG_SP = 0x102,       // 2 bytes wide
+    REG_SREG = 0x103,     // 1 byte wide
+    REG_CYCLES = 0x104,   // 8 bytes wide
+    REG_LIFETIME = 0x105, // 8 bytes wide
+};
+
 class Core;
 
 typedef unsigned int Instruction;
@@ -93,13 +103,7 @@ public:
      * peekReg
      *
      * [0,31] -> 8-bit register
-     * 0x100 -> calls dpiGetPC, returns 4
-     * 0x101 -> calls dpiGetInstr, returns 4
-     * 0x102 -> calls dpiGetSP, returns 2
-     * 0x103 -> calls dpiGetSreg, returns 1
-     * 0x104 -> calls dpiGetCycleCounter, returns 8
-     * 0x105 -> calls dpiGetLifetimeCounter, returns 8
-     *
+     * [0x100, 0x105] -> special register (see enum RegisterSpecial)
      * returns size in bytes of data returned in `dst`
      */
     virtual int peekReg(int index, unsigned long *dst) = 0;
@@ -107,13 +111,8 @@ public:
      * pokeReg
      *
      * [0,31] -> 8-bit register
-     * 0x100 -> calls dpiSetPC, returns 4
      * 0x101 -> emits error on stderr, returns -1
-     * 0x102 -> calls dpiSetSP, returns 2
-     * 0x103 -> calls dpiSetSreg, returns 1
-     * 0x104 -> calls dpiSetCycleCounter, returns 8
-     * 0x105 -> calls dpiSetLifetimeCounter, returns 8
-     *
+     * [0x100, 0x105] -> special register (see enum RegisterSpecial)
      * returns size in bytes of data used from `src`
      */
     virtual int pokeReg(int index, unsigned long src) = 0;
