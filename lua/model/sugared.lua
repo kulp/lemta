@@ -10,6 +10,9 @@ Proto.Core.__overrides.regs =
     function(self)
         local regs = {}
         regs.__index = function(_, index)
+            if type(index) == "string" then
+                index = ffi.cast("enum RegisterSpecial", index)
+            end
             local output = ffi.new("unsigned long[1]")
             if self:peekReg(index, output) ~= -1 then
                 return tonumber(output[0])
@@ -18,6 +21,9 @@ Proto.Core.__overrides.regs =
             end
         end
         regs.__newindex = function(_, index, value)
+            if type(index) == "string" then
+                index = ffi.cast("enum RegisterSpecial", index)
+            end
             self:pokeReg(index, value)
         end
         regs.len = function()
@@ -137,9 +143,9 @@ Proto.Core.createBreakpoint = function()
 end
 
 Proto.Core.cycles = function(self, cyc)
-    local old = self.regs[0x104]
+    local old = self.regs["REG_CYCLES"]
     if cyc ~= nil then
-        self.regs[0x104] = cyc
+        self.regs["REG_CYCLES"] = cyc
     end
     return old
 end

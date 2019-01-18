@@ -45,7 +45,7 @@ local list = core:getBreakpoints(kind)
 local count = Util.null_terminated_length(list)
 Test.expect(1, count)
 
-local function get_pc() return core.regs[0x100] end
+local function get_pc() return core.regs["REG_PC"] end
 local last, pc = get_pc()
 repeat
     last = pc
