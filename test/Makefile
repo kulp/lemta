@@ -96,8 +96,8 @@ check-%-z-rhs.txt: call
 
 LUA_TESTS = $(wildcard cases/*.lua)
 
-check-%.lua mk/vars-%.mk: export LD_LIBRARY_PATH=.:unpacked/$(LIB_DIR)
-check-%.lua mk/vars-%.mk: export LUA_PATH := $(LUA_PATH);;lua/?.lua;../lua/?.lua
+check-%.lua mk-gen/vars-%.mk: export LD_LIBRARY_PATH=.:unpacked/$(LIB_DIR)
+check-%.lua mk-gen/vars-%.mk: export LUA_PATH := $(LUA_PATH);;lua/?.lua;../lua/?.lua
 
 define check_lib_1
 
@@ -122,9 +122,9 @@ $(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % $(IMPL)
 	    $$(warning Target $$@ fails and has been disabled pending investigation),\
 	    $$(LUAJIT) $$< $$(LIB_STEM) $$(MCU))
 
-vars: mk/vars-$1-$2.mk
+vars: mk-gen/vars-$1-$2.mk
 
-mk/vars-$1-$2.mk: lua/suss.lua libimpl.so | mk
+mk-gen/vars-$1-$2.mk: lua/suss.lua libimpl.so | mk-gen
 	$$(LUAJIT) $$< lib$1.so $2 2> /dev/null | grep = > $$@
 
 $(foreach t,$(TYPES),$(call check_lib_3,$1,$2,$t))
@@ -144,15 +144,15 @@ run-call-$1-$2-$3: call
 
 endef
 
-FILES_clean += mk/check-lib-*.mk
+FILES_clean += mk-gen/check-lib-*.mk
 ifeq ($(findstring clean,$(MAKECMDGOALS)),)
-include $(LIB_LIST:%=mk/check-lib-%.mk)
+include $(LIB_LIST:%=mk-gen/check-lib-%.mk)
 endif
 
 include $(wildcard *-overrides.mk)
 
 # The use of $(file ...) here requires Make version 4+
-$(LIB_LIST:%=mk/check-lib-%.mk): mk/check-lib-%.mk: | mk
+$(LIB_LIST:%=mk-gen/check-lib-%.mk): mk-gen/check-lib-%.mk: | mk-gen
 	$(file >$@,$(call check_lib_1,$*))
 
 PACKS_URL_BASE = http://packs.download.atmel.com/
@@ -166,17 +166,17 @@ packs/%.atpack: | packs
 
 .PRECIOUS: $(PACKS:%=packs/%)
 .SECONDARY: $(PACKS:%=packs/%)
-packs unpacked mk:
+packs unpacked mk-gen:
 	-mkdir $@
 unpack: $(PACKS:%.atpack=unpack-%) | unpacked
 FILES_distclean += unpacked/
 unpack-%: packs/%.atpack | unpacked
 	unzip -qq -n -d $| $< '$(LIB_DIR)/*.so' '*.pdsc' '*.atdf'
 
-FILES_clean += mk/vars-*.mk
+FILES_clean += mk-gen/vars-*.mk
 clean:
 	$(RM) $(TARGETS) *.o $(FILES_clean)
-	-rmdir mk
+	-rmdir mk-gen/
 
 distclean: clean
 	$(RM) -r $(FILES_distclean)

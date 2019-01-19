@@ -9,10 +9,9 @@ call
 main
 packs/
 unpacked/
-mk/check-lib-*.mk
 packs.mk
 header.*.h
 impl.*.cc
 *.strings.cc
 libimpl.so
-mk/vars-*-*.mk
+mk-gen/*
