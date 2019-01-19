@@ -5,6 +5,7 @@
 
 local ffi = require("ffi")
 local Proto = require("model/base")
+local ihex = require("ihex")
 
 Proto.Core.__overrides.regs =
     function(self)
@@ -148,6 +149,16 @@ Proto.Core.cycles = function(self, cyc)
         self.regs["REG_CYCLES"] = cyc
     end
     return old
+end
+
+Proto.Core.load = function(self, hexfile)
+    local prog = self.segments["SEG_PROG"]
+
+    local function loader(n, addr, kind, data, ck)
+        return kind == 0 and prog.write(addr, n, data)
+    end
+
+    ihex.read(io.lines(hexfile), loader)
 end
 
 return Proto
