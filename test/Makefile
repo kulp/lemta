@@ -149,7 +149,7 @@ ifeq ($(findstring clean,$(MAKECMDGOALS)),)
 include $(LIB_LIST:%=mk-gen/check-lib-%.mk)
 endif
 
-include $(wildcard *-overrides.mk)
+include $(wildcard mk/*-overrides.mk)
 
 # The use of $(file ...) here requires Make version 4+
 $(LIB_LIST:%=mk-gen/check-lib-%.mk): mk-gen/check-lib-%.mk: | mk-gen
