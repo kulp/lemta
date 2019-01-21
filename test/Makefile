@@ -86,12 +86,12 @@ FILES_clean += $(IMPL)
 $(IMPL): impl.interface.hh.cc header.interface.hh.h.strings.cc $(TYPES:%=methods.%.txt.strings.cc) | interface.hh
 	$(LINK.cc) -include $| -o $@ $^
 
-check-%-z: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
-check-%-z: check-%-z-rhs.txt
+check-%-call: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
+check-%-call: check-%-call-rhs.txt
 	diff --brief $^
 
-FILES_clean += check-*-z-rhs.txt
-check-%-z-rhs.txt: call
+FILES_clean += check-*-call-rhs.txt
+check-%-call-rhs.txt: call
 	$(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed --quiet '/.*::/{s///;s/(.*//;p}' > $@
 
 LUA_TESTS = $(wildcard cases/*.lua)
@@ -128,10 +128,10 @@ endef
 
 define check_lib_3
 
-check-$1-$2: check-$1-$2-$3-z
-check-$1-$2-$3: check-$1-$2-$3-z
-check-$1-$2-$3-z: TYPE = $3
-check-$1-$2-$3-z: methods.$3.txt
+check-$1-$2: check-$1-$2-$3-call
+check-$1-$2-$3: check-$1-$2-$3-call
+check-$1-$2-$3-call: TYPE = $3
+check-$1-$2-$3-call: methods.$3.txt
 
 endef
 
