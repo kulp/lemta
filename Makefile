@@ -2,7 +2,7 @@
 all:
 	$(MAKE) -C test $@
 test:
-	$(MAKE) -C test check run-call
+	$(MAKE) -C test check
 clean:
 	# no action
 

@@ -86,7 +86,7 @@ FILES_clean += $(IMPL)
 $(IMPL): impl.interface.hh.cc header.interface.hh.h.strings.cc $(TYPES:%=methods.%.txt.strings.cc) | interface.hh
 	$(LINK.cc) -include $| -o $@ $^
 
-run-call-% check-%-z: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
+check-%-z: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
 check-%-z: check-%-z-rhs.txt
 	diff --brief $^
 
@@ -104,8 +104,6 @@ define check_lib_1
 check: check-$1
 check-$1 check-$1-%: LIB_STEM = $1
 
-run-call: run-call-$1
-
 $(foreach m,$(call MCU_NAMES,$1),$(call check_lib_2,$1,$m))
 endef
 
@@ -113,8 +111,6 @@ define check_lib_2
 
 check-$1: check-$1-$2
 check-$1-$2 check-$1-$2-%: MCU = $2
-
-run-call-$1: run-call-$1-$2
 
 check-$1-$2: $(LUA_TESTS:%=check-$1-$2-%)
 $(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % $(IMPL)
@@ -136,11 +132,6 @@ check-$1-$2: check-$1-$2-$3-z
 check-$1-$2-$3: check-$1-$2-$3-z
 check-$1-$2-$3-z: TYPE = $3
 check-$1-$2-$3-z: methods.$3.txt
-
-run-call-$1-$2: run-call-$1-$2-$3
-
-run-call-$1-$2-$3: call
-	$$(realpath $$<) $3 lib$1.so $2
 
 endef
 
