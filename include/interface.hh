@@ -66,7 +66,7 @@ struct Breakpoint
     void *userdata;
 
     Breakpoint()
-        : unknown0(0)
+        : unknown0(-1)
         , addr(-1ul)
         , addr2(-1ul)
         , size(1)
