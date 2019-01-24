@@ -18,20 +18,20 @@ local add2 = 0x34
 core.regs[16] = add1
 core.regs[17] = add2
 
-local nonce = 999
+local nonce = 99
 local caught = 0
 local kind = "BP_BREAKPOINT"
 local bp = core:createBreakpoint()
 bp.addr = 32
 bp.type = kind
 bp.segment = "SEG_PROG"
-bp.userdata = ffi.new("int[1]", nonce)
+bp.userdata = ffi.new("char[sizeof(Breakpoint)]", nonce)
 bp.handler = function(core, bp)
     caught = caught + 1
     Test.expect(32, bp.addr)
     Test.expect(1, bp.hitcount)
     Test.expect(32, bp.break_pc)
-    Test.expect(nonce, ffi.cast("int*", bp.userdata)[0])
+    Test.expect(nonce, ffi.cast("char*", bp.userdata)[0])
     Test.expect(0, bp.unknown0) -- we do not know what this is for, but let us catch it if it changes
     return 0
 end
