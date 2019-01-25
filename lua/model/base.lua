@@ -13,7 +13,8 @@ local function define_c(ret, name, ...)
     return ffi.cdef(ret .. " " .. name .. "(" .. table.concat({...}, ",") .. ");")
 end
 
-local impl = ffi.load("impl")
+local impl = ffi.load(arg[1])
+arg = {select(2, unpack(arg))}
 local get_h = "get_header_interface_hh_h_"
 define_c("const char *", get_h)
 ffi.cdef(ffi.string(impl[get_h]()))
