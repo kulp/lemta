@@ -11,10 +11,11 @@ TARGETS = call
 TYPES = Model Core
 IMPL = libimpl.so
 
+UNPACKED = unpacked
 LIB_DIR = simulator/linux64
 LIB_STEM = $(error LIB_STEM must be set)
-LIB_LIST = $(patsubst lib%.so,%,$(notdir $(wildcard unpacked/$(LIB_DIR)/libat*.so)))
-LIB = unpacked/$(LIB_DIR)/lib$(LIB_STEM).so
+LIB_LIST = $(patsubst lib%.so,%,$(notdir $(wildcard $(UNPACKED)/$(LIB_DIR)/libat*.so)))
+LIB = $(UNPACKED)/$(LIB_DIR)/lib$(LIB_STEM).so
 
 QUOTED_STRINGS = sed 's/[^"]*"\([^"]*\)"/\1\n/g'
 
@@ -22,7 +23,7 @@ QUOTED_STRINGS = sed 's/[^"]*"\([^"]*\)"/\1\n/g'
 # because the .pdsc files at the time of this writing erroneously fail to
 # mention some .so files even though they exist, whereas they mention the .dll
 # files that also exist.
-MCU_NAMES = $(shell xmllint unpacked/*.pdsc --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.win32"][@value="simulator/win32/lib$1.dll"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | $(QUOTED_STRINGS))
+MCU_NAMES = $(shell xmllint $(UNPACKED)/*.pdsc --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.win32"][@value="simulator/win32/lib$1.dll"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | $(QUOTED_STRINGS))
 
 vpath %.hh ../include ../include/internals
 vpath %.hh cxx
@@ -79,7 +80,7 @@ FILES_clean += $(IMPL)
 $(IMPL): impl.interface.hh.cc header.interface.hh.h.strings.cc $(TYPES:%=methods.%.txt.strings.cc) | interface.hh
 	$(LINK.cc) -include $| -o $@ $^
 
-check-%-call: export LD_LIBRARY_PATH=unpacked/$(LIB_DIR)
+check-%-call: export LD_LIBRARY_PATH=$(UNPACKED)/$(LIB_DIR)
 check-%-call: check-%-call-rhs.txt
 	diff --brief $^
 
@@ -89,7 +90,7 @@ check-%-call-rhs.txt: call
 
 LUA_TESTS = $(wildcard cases/*.lua)
 
-check-%.lua mk-gen/vars-%.mk: export LD_LIBRARY_PATH=.:unpacked/$(LIB_DIR)
+check-%.lua mk-gen/vars-%.mk: export LD_LIBRARY_PATH=.:$(UNPACKED)/$(LIB_DIR)
 check-%.lua mk-gen/vars-%.mk: export LUA_PATH := $(LUA_PATH);;lua/?.lua;../lua/?.lua
 
 define check_lib_1
@@ -150,11 +151,11 @@ packs/%.atpack: | packs
 
 .PRECIOUS: $(PACKS:%=packs/%)
 .SECONDARY: $(PACKS:%=packs/%)
-packs unpacked mk-gen:
+packs $(UNPACKED) mk-gen:
 	-mkdir $@
-unpack: $(PACKS:%.atpack=unpack-%) | unpacked
-FILES_distclean += unpacked/
-unpack-%: packs/%.atpack | unpacked
+unpack: $(PACKS:%.atpack=unpack-%) | $(UNPACKED)
+FILES_distclean += $(UNPACKED)/
+unpack-%: packs/%.atpack | $(UNPACKED)
 	unzip -qq -n -d $| $< '$(LIB_DIR)/*.so' '*.pdsc' '*.atdf'
 
 FILES_clean += mk-gen/vars-*.mk
