@@ -30,9 +30,6 @@ vpath %.cc cxx
 
 vpath %.lua lua
 
-CPPFLAGS += -I../include
-CPPFLAGS += -I.
-
 LUA = lua
 LUAJIT = luajit
 
@@ -41,6 +38,7 @@ LUAJIT = luajit
 all: $(TARGETS) $(IMPL)
 
 call: LDLIBS += -ldl
+call.o: CPPFLAGS += -I../include -I.
 call.o: CXXFLAGS += -Wno-cast-function-type # this is the whole point of `call`
 call.o: interface.hh dynamic.hh
 call.o: types.xi $(TYPES:%=methods.%.xi)
