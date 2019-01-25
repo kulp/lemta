@@ -114,7 +114,7 @@ $(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % $(IMPL)
 
 vars: mk-gen/vars-$1-$2.mk
 
-mk-gen/vars-$1-$2.mk: lua/suss.lua libimpl.so | mk-gen
+mk-gen/vars-$1-$2.mk: lua/suss.lua $(IMPL) | mk-gen
 	$$(LUAJIT) $$< lib$1.so $2 2> /dev/null | grep = > $$@
 
 $(foreach t,$(TYPES),$(call check_lib_3,$1,$2,$t))
