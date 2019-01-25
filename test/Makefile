@@ -31,7 +31,6 @@ vpath %.cc cxx
 
 vpath %.lua lua
 
-LUA = lua
 LUAJIT = luajit
 
 .DELETE_ON_ERROR:
@@ -65,8 +64,6 @@ types.xi:
 	echo '#define TYPE_LIST(_)' $(TYPES:%= '_$(open)%$(close)') >> $@
 
 FILES_clean += header.*.h impl.*.cc
-# If xmlua can be installed for plain Lua, then the following rule should call
-# $(LUA) instead of $(LUAJIT)
 header.%.h impl.%.cc: gen.lua model.%.xml
 	$(LUAJIT) $^ header.$*.h impl.$*.cc
 
