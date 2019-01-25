@@ -6,10 +6,10 @@ CXXFLAGS += -pedantic-errors
 
 LINK.o = $(LINK.cc)
 
-TARGETS = call
+IMPL = libimpl.so
+TARGETS = call $(IMPL)
 
 TYPES = Model Core
-IMPL = libimpl.so
 
 UNPACKED = unpacked
 LIB_DIR = simulator/linux64
@@ -36,7 +36,7 @@ LUAJIT = luajit
 
 .DELETE_ON_ERROR:
 
-all: $(TARGETS) $(IMPL)
+all: $(TARGETS)
 
 call: LDLIBS += -ldl
 call.o: CPPFLAGS += -I../include -I.
@@ -74,7 +74,6 @@ FILES_clean += *.strings.cc
 %.strings.cc: %
 	(echo "extern "'"C"'" const char * get_`echo "$*" | tr --complement [:alnum:]_ _`(){ return" '""' ; sed 's/.*/"&\\n"/' $< ; echo ';}') > $@
 
-FILES_clean += $(IMPL)
 %.so: CXXFLAGS += -fPIC
 %.so: LDFLAGS += -shared
 $(IMPL): impl.interface.hh.cc header.interface.hh.h.strings.cc $(TYPES:%=methods.%.txt.strings.cc) | interface.hh
