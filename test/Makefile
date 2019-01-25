@@ -6,7 +6,7 @@ CXXFLAGS += -pedantic
 
 LINK.o = $(LINK.cc)
 
-TARGETS = main call
+TARGETS = call
 
 TYPES = Model Core
 IMPL = libimpl.so
@@ -39,11 +39,6 @@ LUAJIT = luajit
 .DELETE_ON_ERROR:
 
 all: $(TARGETS) $(IMPL)
-
-main: LDLIBS += -ldl
-main.o: CPPFLAGS += -I../include/internals
-main.o: CXXFLAGS += -Wno-unused-value # for asserts
-main.o: model.hh interface.hh dynamic.hh
 
 call: LDLIBS += -ldl
 call.o: CXXFLAGS += -Wno-cast-function-type # this is the whole point of `call`
