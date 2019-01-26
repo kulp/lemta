@@ -14,8 +14,8 @@ local header = io.open(header_out, "w")
 local impl = io.open(impl_out, "w")
 
 local classes = document:search("//Class");
-local structs = document:search('//Struct');
-local enums = document:search('//Enumeration');
+local structs = document:search("//Struct");
+local enums = document:search("//Enumeration");
 
 function elaborate_type(doc, id, inner)
     local t = doc:search("//*[@id='" .. id .. "']") -- must succeed
