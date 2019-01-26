@@ -13,9 +13,15 @@ local document = xmlua.XML.parse(xml)
 local header = io.open(header_out, "w")
 local impl = io.open(impl_out, "w")
 
-local classes = document:search("//Class");
-local structs = document:search("//Struct");
-local enums = document:search("//Enumeration");
+-- prevent builtins from spoiling our pristine output
+local file = document:search("//File[@name='<builtin>']")
+local skip = file[1]:get_attribute("id")
+function get_items(kind, skip_file_id)
+    return document:search("//" .. kind .. "[@file!='" .. skip_file_id .. "']")
+end
+local classes = get_items("Class", skip)
+local structs = get_items("Struct", skip)
+local enums = get_items("Enumeration", skip)
 
 function elaborate_type(doc, id, inner)
     local t = doc:search("//*[@id='" .. id .. "']") -- must succeed
