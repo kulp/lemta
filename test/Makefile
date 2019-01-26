@@ -1,3 +1,4 @@
+# Make config
 CXXFLAGS += -O3
 CXXFLAGS += -std=c++11
 CXXFLAGS += -Wall -Wextra -Wold-style-cast
@@ -6,10 +7,24 @@ CXXFLAGS += -pedantic-errors
 
 LINK.o = $(LINK.cc)
 
+.DELETE_ON_ERROR:
+
+vpath %.hh ../include ../include/internals
+vpath %.hh cxx
+vpath %.cc cxx
+vpath %.lua lua
+
+# Tool config
+LUAJIT = luajit
+PACKS_URL_BASE = http://packs.download.atmel.com/
+
+# Test config
+TYPES = Model Core
+LUA_TESTS = $(wildcard cases/*.lua)
+
+# Target config
 IMPL = libimpl.so
 TARGETS = call $(IMPL)
-
-TYPES = Model Core
 
 UNPACKED = unpacked
 LIB_DIR = simulator/linux64
@@ -24,16 +39,6 @@ QUOTED_STRINGS = sed 's/[^"]*"\([^"]*\)"/\1\n/g'
 # mention some .so files even though they exist, whereas they mention the .dll
 # files that also exist.
 MCU_NAMES = $(shell xmllint $(UNPACKED)/*.pdsc --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.win32"][@value="simulator/win32/lib$1.dll"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | $(QUOTED_STRINGS))
-
-vpath %.hh ../include ../include/internals
-vpath %.hh cxx
-vpath %.cc cxx
-
-vpath %.lua lua
-
-LUAJIT = luajit
-
-.DELETE_ON_ERROR:
 
 all: $(TARGETS)
 
@@ -83,8 +88,6 @@ FILES_clean += check-*-call-rhs.txt
 check-%-call-rhs.txt: call
 	$(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed --quiet '/.*::/{s///;s/(.*//;p}' > $@
 
-LUA_TESTS = $(wildcard cases/*.lua)
-
 check-%.lua mk-gen/vars-%.mk: export LUA_PATH := $(LUA_PATH);;lua/?.lua;../lua/?.lua
 
 define check_lib_1
@@ -133,8 +136,6 @@ include $(wildcard mk/*-overrides.mk)
 # The use of $(file ...) here requires Make version 4+
 $(LIB_LIST:%=mk-gen/check-lib-%.mk): mk-gen/check-lib-%.mk: | mk-gen
 	$(file >$@,$(call check_lib_1,$*))
-
-PACKS_URL_BASE = http://packs.download.atmel.com/
 
 FILES_distclean += packs.mk
 include packs.mk
