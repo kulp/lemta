@@ -76,7 +76,6 @@ FILES_clean += *.strings.cc
 $(IMPL): impl.interface.hh.cc header.interface.hh.h.strings.cc $(TYPES:%=methods.%.txt.strings.cc) | interface.hh
 	$(LINK.cc) -include $| -o $@ $^
 
-check-%-call: export LD_LIBRARY_PATH=$(UNPACKED)/$(LIB_DIR)
 check-%-call: check-%-call-rhs.txt
 	diff --brief $^
 
@@ -86,7 +85,6 @@ check-%-call-rhs.txt: call
 
 LUA_TESTS = $(wildcard cases/*.lua)
 
-check-%.lua mk-gen/vars-%.mk: export LD_LIBRARY_PATH=.:$(UNPACKED)/$(LIB_DIR)
 check-%.lua mk-gen/vars-%.mk: export LUA_PATH := $(LUA_PATH);;lua/?.lua;../lua/?.lua
 
 define check_lib_1
@@ -103,15 +101,15 @@ check-$1: check-$1-$2
 check-$1-$2 check-$1-$2-%: MCU = $2
 
 check-$1-$2: $(LUA_TESTS:%=check-$1-$2-%)
-$(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % $$(IMPL)
+$(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % | $$(IMPL)
 	$$(if $$(SKIP-$$(LIB_STEM)-$$(MCU)-$$<),\
 	    $$(warning Target $$@ fails and has been disabled pending investigation),\
-	    $$(LUAJIT) $$^ $$(LIB_STEM) $$(MCU))
+	    $$(LUAJIT) $$< ./$$| $$(LIB) $$(MCU))
 
 vars: mk-gen/vars-$1-$2.mk
 
-mk-gen/vars-$1-$2.mk: lua/suss.lua $$(IMPL) | mk-gen
-	$$(LUAJIT) $$^ lib$1.so $2 2> /dev/null | grep = > $$@
+mk-gen/vars-$1-$2.mk: lua/suss.lua | $$(IMPL) mk-gen
+	$$(LUAJIT) $$< ./$$(firstword $$|) lib$1.so $2 2> /dev/null | grep = > $$@
 
 $(foreach t,$(TYPES),$(call check_lib_3,$1,$2,$t))
 endef
