@@ -11,21 +11,15 @@ Proto.Core.__overrides.regs =
     function(self)
         local regs = {}
         regs.__index = function(_, index)
-            if type(index) == "string" then
-                index = ffi.cast("enum RegisterSpecial", index)
-            end
             local output = ffi.new("unsigned long[1]")
-            if self:peekReg(index, output) ~= -1 then
+            if self:peekReg(ffi.cast("enum RegisterSpecial", index), output) ~= -1 then
                 return tonumber(output[0])
             else
                 return nil
             end
         end
         regs.__newindex = function(_, index, value)
-            if type(index) == "string" then
-                index = ffi.cast("enum RegisterSpecial", index)
-            end
-            self:pokeReg(index, value)
+            self:pokeReg(ffi.cast("enum RegisterSpecial", index), value)
         end
         regs.len = function()
             return self.props[1028].int() -- TODO hoist magic property identifier
