@@ -67,9 +67,10 @@ Proto.Core.__overrides.props =
             if type(value) == "number" then
                 return self:setIntProperty(index, value, nil)
             else
-                -- We assume optimistically that setStringProperty does not
-                -- actually modify its argument
-                return self:setStringProperty(index, ffi.cast("char *", tostring(value)), nil)
+                -- We assume pessimistically that setStringProperty may
+                -- modify its argument, although this is unlikely
+                local str = tostring(value)
+                return self:setStringProperty(index, ffi.new("char[?]", str:len() + 1, str), nil)
             end
         end
 
