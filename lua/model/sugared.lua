@@ -12,11 +12,8 @@ Proto.Core.__overrides.regs =
         local regs = {}
         regs.__index = function(_, index)
             local output = ffi.new("unsigned long[1]")
-            if self:peekReg(ffi.cast("enum RegisterSpecial", index), output) ~= -1 then
-                return tonumber(output[0])
-            else
-                return nil
-            end
+            local rc = self:peekReg(ffi.cast("enum RegisterSpecial", index), output)
+            return rc >= 0 and tonumber(output[0]) or nil
         end
         regs.__newindex = function(_, index, value)
             self:pokeReg(ffi.cast("enum RegisterSpecial", index), value)
@@ -38,19 +35,13 @@ Proto.Core.__overrides.props =
             obj.string = function(_)
                 local size = 1024 -- TODO shrink meaningfully
                 local output = ffi.new("char[?]", size)
-                if self:getStringProperty(index, size, output, nil) ~= -1 then
-                    return ffi.string(output)
-                else
-                    return "<nil>"
-                end
+                local rc = self:getStringProperty(index, size, output, nil)
+                return rc >= 0 and ffi.string(output) or "<nil>"
             end
             obj.int = function(_)
                 local output = ffi.new("unsigned long[1]")
-                if self:getIntProperty(index, output, nil) ~= -1 then
-                    return tonumber(output[0])
-                else
-                    return -1
-                end
+                local rc = self:getIntProperty(index, output, nil)
+                return rc >= 0 and tonumber(output[0]) or -1
             end
             obj.__tostring = obj.string
             setmetatable(obj, obj)
@@ -89,11 +80,8 @@ Proto.Core.__overrides.segments =
             local mem = {}
             mem.__index = function(_, addr)
                 local temp = ffi.new("unsigned char[1]")
-                if obj.read(addr, 1, temp) ~= -1 then
-                    return tonumber(temp[0])
-                else
-                    return nil
-                end
+                local rc = obj.read(addr, 1, temp)
+                return rc >= 0 and tonumber(temp[0]) or nil
             end
             mem.__newindex = function(_, addr, value)
                 obj.write(addr, 1, ffi.new("unsigned char[1]", value))

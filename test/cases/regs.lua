@@ -17,11 +17,8 @@ local read_kinds = {
         -- raw peek/poke interface
         function(c, i)
             local f = ffi.new("unsigned long[1]")
-            if c:peekReg(i, f) ~= -1 then
-                return f[0]
-            else
-                return nil
-            end
+            local rc = c:peekReg(i, f)
+            return rc >= 0 and f[0] or nil
         end,
         -- simulated-array interface
         function(c, i) return c.regs[i] end,
