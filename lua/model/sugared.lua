@@ -121,9 +121,12 @@ Proto.Core.addStepCallback = function(self, cb)
     return self:_addStepCallback(cb, nil)
 end
 
--- for now, create a zeroed breakpoint taking no arguments
-Proto.Core.createBreakpoint = function()
-    return ffi.new("Breakpoint")
+Proto.Core.createBreakpoint = function(self, fields)
+    local bp = ffi.new("Breakpoint")
+    for k, v in pairs(fields or {}) do
+        bp[k] = v
+    end
+    return bp
 end
 
 Proto.Core.cycles = function(self, cyc)
