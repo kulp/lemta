@@ -21,11 +21,13 @@ core.regs[17] = add2
 local nonce = 99
 local caught = 0
 local kind = "BP_BREAKPOINT"
-local bp = core:createBreakpoint()
-bp.addr = 32
-bp.type = kind
-bp.segment = "SEG_PROG"
-bp.userdata = ffi.new("char[sizeof(Breakpoint)]", nonce)
+local bp = core:createBreakpoint({
+        addr = 32,
+        type = kind,
+        segment = "SEG_PROG",
+        userdata = ffi.new("char[sizeof(Breakpoint)]", nonce),
+    })
+
 bp.handler = function(core, bp)
     caught = caught + 1
     Test.expect(32, bp.addr)
