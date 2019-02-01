@@ -20,7 +20,6 @@ define_c("const char *", get_h)
 ffi.cdef(ffi.string(impl[get_h]()))
 
 for _, stem in ipairs({ "Model", "Core" }) do
-    Proto[stem] = Proto[stem] or {}
     local proto = Proto[stem]
     local get_m = "get_methods_" .. stem .. "_txt_"
     define_c("const char *", get_m)
