@@ -33,7 +33,7 @@ for _, stem in ipairs({ "Model", "Core" }) do
 
     local trapper = {
         __index    = function(_, k)    error("bad get for key='" .. k .. "'") end,
-        __newindex = function(_, k, v) error("bad put for key='" .. k .. "'") end,
+        __newindex = function(_, k, _) error("bad put for key='" .. k .. "'") end,
     }
     setmetatable(trapper, trapper)
 
@@ -52,7 +52,7 @@ define_c("int"    , "model_api_ver")
 define_c("Model *", "model_ctor"   , "const char *")
 define_c("void"   , "model_dtor"   , "Model *")
 
-Proto.Model.create = function(proto, libstem, name)
+Proto.Model.create = function(_, libstem, name)
     local lib = ffi.load(libstem)
     local self = lib.model_ctor(name)
     self._lib = lib

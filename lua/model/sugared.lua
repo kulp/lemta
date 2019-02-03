@@ -121,7 +121,7 @@ Proto.Core.addStepCallback = function(self, cb)
     return self:_addStepCallback(cb, nil)
 end
 
-Proto.Core.createBreakpoint = function(self, fields)
+Proto.Core.createBreakpoint = function(_, fields)
     local bp = ffi.new("Breakpoint")
     for k, v in pairs(fields or {}) do
         bp[k] = v
@@ -140,7 +140,7 @@ end
 Proto.Core.load = function(self, hexfile)
     local prog = self.segments["SEG_PROG"]
 
-    local function loader(n, addr, kind, data, ck)
+    local function loader(n, addr, kind, data, _)
         return kind == 0 and prog.write(addr, n, data)
     end
 

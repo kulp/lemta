@@ -28,7 +28,7 @@ local bp = core:createBreakpoint({
         userdata = ffi.new("char[sizeof(Breakpoint)]", nonce),
     })
 
-bp.handler = function(core, bp)
+bp.handler = function(_, bp)
     caught = caught + 1
     Test.expect(32, bp.addr)
     Test.expect(1, bp.hitcount)
