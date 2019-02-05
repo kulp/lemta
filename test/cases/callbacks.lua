@@ -45,11 +45,12 @@ function run_test(model, transform, add_cb)
 end
 
 for i, path in ipairs(model_paths) do
-    local Model = require(path).Model
-    local model = Model:create(unpack(arg))
+    -- do the "require" as late as possible, because later requires overwrite
+    -- state that earlier requires provide
+    local model = require(path).Model:create(unpack(arg))
     for _, tf in ipairs(transformations) do
         for j, cb in ipairs(arities) do
-            local result, code = pcall(function () run_test(model, tf, cb) end)
+            local result = pcall(function () run_test(model, tf, cb) end)
             Test.expect(results[i][j], result)
         end
     end
