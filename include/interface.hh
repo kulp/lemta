@@ -73,12 +73,12 @@ struct Breakpoint
         , segment(SEG_PROG)
         , type(BP_BREAKPOINT)
         , addr3(-1ul)
-        , dword0(0)
+        , dword0()
         , break_pc(-1ul)
         , hitcount(0)
         , debug_name()
-        , handler(0)
-        , userdata(0)
+        , handler()
+        , userdata()
     {
         // no body
     }
