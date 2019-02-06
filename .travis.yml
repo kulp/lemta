@@ -18,7 +18,9 @@ env:
 addons:
   apt:
     packages:
+      - avr-libc
       #- castxml # too old a version
+      - gcc-avr
       - libxml2-utils
       - luajit
       - luarocks
