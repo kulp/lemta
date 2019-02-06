@@ -1,5 +1,7 @@
 local Test = require("test")
 
+local expected = 10
+
 -- cannot require them both up front because sugared actually modifies the
 -- table imported from base
 local model_paths = { "model/base", "model/sugared" }
@@ -31,7 +33,6 @@ function run_test(model, transform, add_cb)
     model:reset("RT_TYPE_0")
 
     local achieved = 0
-    local count = 10
 
     local function achiever(_,_)
         achieved = achieved + 1
@@ -39,9 +40,9 @@ function run_test(model, transform, add_cb)
 
     local obj = transform.finder(model)
     add_cb(obj, transform.adder, achiever)
-    transform.invoker(obj, count)
+    transform.invoker(obj, expected)
 
-    Test.expect(count, achieved)
+    Test.expect(expected, achieved)
 end
 
 for i, path in ipairs(model_paths) do
