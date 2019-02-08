@@ -1,4 +1,6 @@
 # Make config
+.DEFAULT_GOAL = all
+
 CXXFLAGS += -O3
 CXXFLAGS += -std=c++11
 CXXFLAGS += -Wall -Wextra -Wold-style-cast
@@ -39,6 +41,11 @@ QUOTED_STRINGS = sed 's/[^"]*"\([^"]*\)"/\1\n/g'
 # mention some .so files even though they exist, whereas they mention the .dll
 # files that also exist.
 MCU_NAMES = $(shell xmllint $(UNPACKED)/*.pdsc --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.win32"][@value="simulator/win32/lib$1.dll"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | $(QUOTED_STRINGS))
+
+FILES_distclean += packs.mk
+include packs.mk
+include mk/generate.mk
+include $(wildcard mk/*-overrides.mk)
 
 all: $(TARGETS)
 
@@ -89,12 +96,6 @@ check-%-call-rhs.txt: call
 	$(realpath $<) "$(TYPE)" "$(LIB)" "$(MCU)" | sed --quiet '/.*::/{s///;s/(.*//;p}' > $@
 
 check-%.lua mk-gen/vars-%.mk: export LUA_PATH := $(LUA_PATH);;lua/?.lua;../lua/?.lua
-
-include mk/generate.mk
-include $(wildcard mk/*-overrides.mk)
-
-FILES_distclean += packs.mk
-include packs.mk
 
 FILES_distclean += packs/
 packs/%.atpack: | packs
