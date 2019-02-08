@@ -56,3 +56,5 @@ Test.expect(5, core:cycles())
 
 Test.expect(add1 + add2, core.regs[18])
 
+Test.expect(1, core:removeBreakpoint(id))
+
