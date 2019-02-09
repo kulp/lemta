@@ -1,6 +1,8 @@
 AS = avr-gcc
 CC = avr-gcc
 
+CFLAGS = -Wall -Wextra -Werror -pedantic-errors
+
 MCUFLAGS = $(if $(MCU),-mmcu=$(MCU))
 CFLAGS  += $(MCUFLAGS)
 ASFLAGS += $(MCUFLAGS)
