@@ -1,3 +1,4 @@
+$(MCU_LIST:%=%-cases/break.lua): cases/break.hex
 $(MCU_LIST:%=%-cases/break.lua): cases/sum.hex
 $(MCU_LIST:%=%-cases/watch.lua): cases/rw.hex
 
