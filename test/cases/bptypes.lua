@@ -9,15 +9,23 @@ local core = model:getCore(0)
 local max = 5
 
 local segs = {
-    [1] = "SEG_PROG",
-    [2] = "SEG_DATA",
-    [4] = "SEG_DATA",
-    [8] = "SEG_PROG",
+    BP_BREAKPOINT  = "SEG_PROG",
+    BP_WATCH_WRITE = "SEG_DATA",
+    BP_WATCH_READ  = "SEG_DATA",
+    BP_TRACEPOINT  = "SEG_PROG",
+    BP_FOUND       = "SEG_PROG",
 }
 
--- TODO make BPType 8 work (addBreakpoint fails in some cases for unknown reasons)
-for _, kind in ipairs({ 1, 2, 4 }) do
-    local function make_addr(i) return 100 * kind + i end -- arbitrary
+local bptypes = {
+    "BP_BREAKPOINT",
+    "BP_WATCH_WRITE",
+    "BP_WATCH_READ",
+    --"BP_TRACEPOINT", -- TODO make BP_TRACEPOINT work (addBreakpoint fails in some cases for unknown reasons)
+    --"BP_FOUND", -- BP_FOUND is not appropriate for looping over
+}
+
+for _, kind in ipairs(bptypes) do
+    local function make_addr(i) return 100 * tonumber(ffi.cast("enum BPtype", kind)) + i end -- arbitrary
     local ids = {}
     for i = 0, max - 1 do
         local bp = core:createBreakpoint()
