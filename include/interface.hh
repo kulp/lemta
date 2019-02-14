@@ -22,7 +22,7 @@ enum Segment
 {
     SEG_PROG = 0,
     SEG_DATA = 1,
-    SEG_EEPROM = 2,
+    SEG_IO = 2,
     SEG_REGS = 3,
 
     SEG_FUSES = 5,

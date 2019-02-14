@@ -4,7 +4,7 @@ local Test = require("test")
 
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
-local segment_names = { "SEG_PROG", "SEG_DATA", "SEG_EEPROM" }
+local segment_names = { "SEG_PROG", "SEG_DATA", "SEG_IO" }
 
 ffi.cdef[[int memcmp(const void *s1, const void *s2, size_t n);]]
 
