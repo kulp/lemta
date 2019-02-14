@@ -55,7 +55,7 @@ struct Breakpoint
     unsigned long size;
     Segment segment;
     BPtype type;
-    Address addr3; // return value of dpiCheckWatchHit
+    Address watch_base_addr; // return value of dpiCheckWatchHit
     int dword0;    // output from third param of dpiCheckWatchHit
     // 4 bytes padding @ offset 0x34 = 52
     Address break_pc; // program counter of most recent breakpoint hit
@@ -72,7 +72,7 @@ struct Breakpoint
         , size(1)
         , segment(SEG_PROG)
         , type(BP_BREAKPOINT)
-        , addr3(-1ul)
+        , watch_base_addr(-1ul)
         , dword0()
         , break_pc(-1ul)
         , hitcount(0)
