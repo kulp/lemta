@@ -12,6 +12,7 @@ VPATH += src
 
 rw.%: MCU = attiny84a
 sum.%: MCU =# none
+io.%: MCU =# none
 
 %.elf: %.o
 	$(LINK.o) -o $@ $^
