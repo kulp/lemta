@@ -7,7 +7,7 @@ CXXFLAGS += -Wall -Wextra -Wold-style-cast
 CXXFLAGS += -Werror -Wno-unknown-warning-option
 CXXFLAGS += -pedantic-errors
 
-CFLAGS = -Wall -Wextra -Werror -pedantic-errors
+CFLAGS   += -Wall -Wextra -Werror -pedantic-errors
 
 LINK.o = $(LINK.cc)
 
@@ -48,6 +48,7 @@ FILES_distclean += packs.mk
 include packs.mk
 include mk/generate.mk
 include $(wildcard mk/*-overrides.mk)
+include mk/avr.mk
 
 all: $(TARGETS)
 
@@ -111,31 +112,6 @@ unpack: $(PACKS:%.atpack=unpack-%) | $(UNPACKED)
 FILES_distclean += $(UNPACKED)/
 unpack-%: packs/%.atpack | $(UNPACKED)
 	unzip -qq -n -d $| $< '$(LIB_DIR)/*.so' '*.pdsc' '*.atdf'
-
-%.elf: AS  = avr-gcc
-%.elf: CC  = avr-gcc
-%.elf: CXX = avr-g++
-
-MCUFLAGS = $(if $(MCU),-mmcu=$$(echo $(MCU) | tr '[[:upper:]]' '[[:lower:]]'))
-%.elf: CFLAGS  += $(MCUFLAGS)
-%.elf: ASFLAGS += $(MCUFLAGS)
-%.elf: LDFLAGS += $(MCUFLAGS)
-
-vpath %.S cases/src
-vpath %.c cases/src
-
-rw.%: MCU = ATtiny84A
-sum.%: MCU =# none
-io.%: MCU =# none
-break.%: MCU =# none
-
-%.elf: %.o
-	$(LINK.o) -o $@ $^
-
-FILES_clean += *.hex
-FLASH_SECTIONS = text data vectors
-%.hex: %.elf
-	avr-objcopy $(FLASH_SECTIONS:%=-j .%) -O ihex $< $@
 
 FILES_clean += mk-gen/vars-*.mk
 clean:
