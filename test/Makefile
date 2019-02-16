@@ -116,7 +116,7 @@ unpack-%: packs/%.atpack | $(UNPACKED)
 %.elf: CC  = avr-gcc
 %.elf: CXX = avr-g++
 
-MCUFLAGS = $(if $(MCU),-mmcu=$(MCU))
+MCUFLAGS = $(if $(MCU),-mmcu=$$(echo $(MCU) | tr '[[:upper:]]' '[[:lower:]]'))
 %.elf: CFLAGS  += $(MCUFLAGS)
 %.elf: ASFLAGS += $(MCUFLAGS)
 %.elf: LDFLAGS += $(MCUFLAGS)
@@ -124,7 +124,7 @@ MCUFLAGS = $(if $(MCU),-mmcu=$(MCU))
 vpath %.S cases/src
 vpath %.c cases/src
 
-rw.%: MCU = attiny84a
+rw.%: MCU = ATtiny84A
 sum.%: MCU =# none
 io.%: MCU =# none
 break.%: MCU =# none
