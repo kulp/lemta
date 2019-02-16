@@ -9,7 +9,7 @@ local core = model:getCore(0)
 --[[
     Test BP_BREAKPOINT
 --]]
-core:load("cases/sum.hex")
+core:load("sum.hex")
 
 model:reset("RT_TYPE_0") -- otherwise instruction at address 0 is skipped
 
@@ -67,7 +67,7 @@ Test.expect(1, core:removeBreakpoint(id))
 --[[
     Test BP_FOUND
 --]]
-core:load("cases/break.hex")
+core:load("break.hex")
 
 model:reset("RT_TYPE_0") -- otherwise instruction at address 0 is skipped
 

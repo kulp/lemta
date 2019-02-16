@@ -5,7 +5,7 @@ local Util = require("util")
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
 
-core:load("cases/io.hex")
+core:load("io.hex")
 
 model:reset("RT_TYPE_0") -- otherwise instruction at address 0 is skipped
 

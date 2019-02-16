@@ -6,7 +6,7 @@ local ffi = require("ffi")
 local model = Model:create(unpack(arg))
 local core = model:getCore(0)
 
-core:load("cases/rw.hex")
+core:load("rw.hex")
 
 model:reset("RT_TYPE_0") -- otherwise instruction at address 0 is skipped
 
