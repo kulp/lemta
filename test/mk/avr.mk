@@ -17,7 +17,7 @@ io.%: MCU =# none
 break.%: MCU =# none
 
 %.elf: %.o
-	$(LINK.o) -o $@ $^
+	$(LINK.o) -o $@ $^ $(LDLIBS)
 
 FILES_clean += *.hex
 FLASH_SECTIONS = text data vectors
