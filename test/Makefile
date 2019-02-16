@@ -1,14 +1,15 @@
 # Make config
 .DEFAULT_GOAL = all
 
+# enable warnings as soon as possible, in the preprocessor (applies to both C++
+# and C compilation0
+CPPFLAGS += -Wall -Wextra -Werror -pedantic-errors
+
 CXXFLAGS += -O3
 CXXFLAGS += -std=c++11
-CXXFLAGS += -Wall -Wextra -Wold-style-cast
-CXXFLAGS += -Werror -Wno-unknown-warning-option
-CXXFLAGS += -pedantic-errors
+CXXFLAGS += -Wold-style-cast -Wno-unknown-warning-option
 
-CFLAGS   += -Wall -Wextra -Werror -pedantic-errors
-
+# by default we link using the C++ linker
 LINK.o = $(LINK.cc)
 
 .DELETE_ON_ERROR:
