@@ -41,7 +41,7 @@ for _, stem in ipairs({ "Model", "Core" }) do
         __index = function(ct, key)
             return proto[key] or
                 (proto.__overrides[key] and proto.__overrides[key](ct)) or
-                trapper
+                trapper[key]
         end,
         __newindex = proto,
     }
