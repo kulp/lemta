@@ -2,11 +2,8 @@
 model.*.*
 methods.*.xi
 methods.*.txt
-supposed.*
-actual.*
 types.xi
 call
-main
 packs/
 unpacked/
 packs.mk
