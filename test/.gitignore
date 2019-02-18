@@ -17,3 +17,7 @@ rw.hex
 sum.hex
 break.hex
 io.hex
+rw.elf
+sum.elf
+break.elf
+io.elf
