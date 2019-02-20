@@ -88,7 +88,6 @@ Proto.Core.__overrides.segments =
             end
             setmetatable(mem, mem)
             obj.mem = mem
-            setmetatable(obj, mem) -- allow .segments[x][y] as well as .segments[x].mem[y]
 
             return obj
         end
