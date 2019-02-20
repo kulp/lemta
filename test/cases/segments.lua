@@ -36,17 +36,13 @@ local read_kinds = {
 
 for _, segment_name in ipairs(segment_names) do
     local segment = ffi.cast("Segment", segment_name)
-    local temp = ffi.new("unsigned long[1]", 0)
     -- integer property index N*2+5 appears to be the size of segment N
-    local width = model:getIntProperty(segment * 2 + 5, temp, nil)
-    local size = tonumber(temp[0])
+    local size = model.props[segment * 2 + 5].int()
     if size > 0 then
         local input = ffi.new("unsigned char[?]", size * 2)
 
-        temp[0] = 0
         -- integer property index N*2+6 appears to be the base address of segment N
-        model:getIntProperty(segment * 2 + 6, temp, nil)
-        local addr = tonumber(temp[0])
+        local addr = model.props[segment * 2 + 6].int()
 
         for i = 0, size*2-1 do
             input[i] = 0xff - i
