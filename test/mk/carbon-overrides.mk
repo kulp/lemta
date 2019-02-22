@@ -20,5 +20,7 @@ NEED_CARBON += atxmega32c4
 NEED_CARBON += atxmega384c3
 NEED_CARBON += atxmega64c3
 
-$(NEED_CARBON:%=check-%-%): export LD_LIBRARY_PATH = $(UNPACKED)/$(LIB_DIR)
+NEED_CARBON_TARGETS += $(NEED_CARBON:%=check-%-%)
+
+$(NEED_CARBON_TARGETS): export LD_LIBRARY_PATH = $(UNPACKED)/$(LIB_DIR)
 
