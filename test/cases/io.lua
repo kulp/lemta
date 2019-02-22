@@ -9,8 +9,6 @@ core:load("io.hex")
 
 model:reset("RT_TYPE_0") -- otherwise instruction at address 0 is skipped
 
-core:cycles(0) -- reset cycles counter
-
 local io_addr = 12 -- arbitrary, determined by io.S source code
 local caught = 0
 local kind = "BP_WATCH_READ"
