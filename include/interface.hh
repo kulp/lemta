@@ -39,6 +39,13 @@ enum RegisterSpecial
     REG_LIFETIME = 0x105, // 8 bytes wide
 };
 
+enum BreakResult
+{
+    BR_CONTINUE = 0,
+    BR_TYPE_1 = 1,
+    BR_TYPE_2 = 2,
+};
+
 class Core;
 
 typedef unsigned int Instruction;
@@ -46,7 +53,7 @@ typedef unsigned long Address;
 
 struct Breakpoint
 {
-    typedef int BreakCb(Core *, Breakpoint *); // returns 0, 1, or 2 (meaning ?)
+    typedef BreakResult BreakCb(Core *, Breakpoint *);
 
     int id;       // set by addBreakpoint()
     int unknown0; // initialized to *(&core+0x1d0)

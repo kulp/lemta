@@ -40,7 +40,7 @@ do
         Test.expect(32, bp.break_pc)
         Test.expect(nonce, ffi.cast("char*", bp.userdata)[0])
         Test.expect(0, bp.unknown0) -- we do not know what this is for, but let us catch it if it changes
-        return 0
+        return "BR_CONTINUE"
     end
     id = core:addBreakpoint(bp)
     Test.expect_not(-1, id)

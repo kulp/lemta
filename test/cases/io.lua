@@ -25,7 +25,7 @@ bp.handler = function(_, bp)
     Test.expect(io_addr, bp.addr2)
     Test.expect(1, bp.hitcount)
     Test.expect(32, bp.break_pc)
-    return 1 -- 0 would mean "keep running"
+    return "BR_TYPE_1"
 end
 id = core:addBreakpoint(bp)
 Test.expect_not(-1, id)
