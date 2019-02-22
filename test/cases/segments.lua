@@ -34,22 +34,24 @@ local read_kinds = {
         function(c, a, s, m, p) for i = 0, s-1 do m[i] = c.segments[p].mem[a + i] end end,
     }
 
-for _, segment_name in ipairs(segment_names) do
-    local segment = ffi.cast("Segment", segment_name)
-    -- integer property index N*2+5 appears to be the size of segment N
-    local size = model.props[segment * 2 + 5].int()
+local function prop_index(segment)
+    -- integer property indices N*2+{5,6} appear to be the {size,base address} of segment N
+    return 5 + 2 * ffi.cast("Segment", segment)
+end
+
+for _, segment in ipairs(segment_names) do
+    local size = model.props[prop_index(segment)].int()
     if size > 0 then
         local input = ffi.new("unsigned char[?]", size * 2)
 
-        -- integer property index N*2+6 appears to be the base address of segment N
-        local addr = model.props[segment * 2 + 6].int()
+        local addr = model.props[prop_index(segment) + 1].int()
 
         for i = 0, size*2-1 do
             input[i] = 0xff - i
         end
 
         do
-            local env = os.getenv("SKIP_UPPER_BOUND_CHECK_SEGMENT_" .. segment_name)
+            local env = os.getenv("SKIP_UPPER_BOUND_CHECK_SEGMENT_" .. segment)
             if tonumber(env) ~= 1 then
                 -- ensure segment is not larger than advertised
                 for i, put in ipairs(write_kinds) do
@@ -62,7 +64,7 @@ for _, segment_name in ipairs(segment_names) do
         end
 
         do
-            local env = os.getenv("SKIP_LOWER_BOUND_CHECK_SEGMENT_" .. segment_name)
+            local env = os.getenv("SKIP_LOWER_BOUND_CHECK_SEGMENT_" .. segment)
             if tonumber(env) ~= 1 then
                 -- ensure segment is at least as large as advertised
                 for i, put in ipairs(write_kinds) do
