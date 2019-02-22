@@ -19,9 +19,10 @@ $(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % | $$(IMPL)
 	    $$(LUAJIT) $$< ./$$| $$(LIB) $$(MCU))
 
 vars: mk-gen/vars-$1-$2.mk
+mk-gen/vars-$1-$2.mk: LIB_STEM = $1
 
 mk-gen/vars-$1-$2.mk: lua/suss.lua | $$(IMPL) mk-gen
-	$$(LUAJIT) $$< ./$$(firstword $$|) lib$1.so $2 2> /dev/null | grep = > $$@
+	$$(LUAJIT) $$< ./$$(firstword $$|) "$$(LIB)" "$2" 2> /dev/null | grep = > $$@
 
 $(foreach t,$(TYPES),$(call check_lib_3,$1,$2,$t))
 endef
