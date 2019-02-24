@@ -22,6 +22,7 @@ vpath %.lua lua
 # Tool config
 LUAJIT = luajit
 PACKS_URL_BASE = http://packs.download.atmel.com/
+CURL = curl
 
 # Test config
 TYPES = Model Core
@@ -103,7 +104,7 @@ check-%.lua mk-gen/vars-%.mk: export LUA_PATH := $(LUA_PATH);;lua/?.lua;../lua/?
 
 FILES_distclean += packs/
 packs/%.atpack: | packs
-	curl --continue-at - --output $@ $(PACKS_URL_BASE)$(@F)
+	$(CURL) --continue-at - --output $@ $(PACKS_URL_BASE)$(@F)
 
 .PRECIOUS: $(PACKS:%=packs/%)
 .SECONDARY: $(PACKS:%=packs/%)
