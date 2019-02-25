@@ -11,7 +11,7 @@ model:reset("RT_TYPE_0") -- otherwise instruction at address 0 is skipped
 
 local caught = 0
 
-function make_watchpoint(kind, io_addr)
+function make_watchpoint(kind, io_addr, break_pc)
     local bp = core:createBreakpoint({
             addr = io_addr,
             addr2 = io_addr,
@@ -24,7 +24,7 @@ function make_watchpoint(kind, io_addr)
         caught = caught + 1
         Test.expect(io_addr, bp.addr2)
         Test.expect(1, bp.hitcount)
-        Test.expect(32, bp.break_pc)
+        Test.expect(break_pc, bp.break_pc)
         return "BR_TYPE_1"
     end
     local id = core:addBreakpoint(bp)
@@ -36,9 +36,12 @@ function make_watchpoint(kind, io_addr)
     Test.expect(1, count)
 end
 
-make_watchpoint("BP_WATCH_READ", 12) -- arbitrary I/O addr is determined by io.S source code
+make_watchpoint("BP_WATCH_READ" , 12, 32) -- arbitrary I/O addr is determined by io.S source code
+make_watchpoint("BP_WATCH_WRITE", 14, 38) -- arbitrary I/O addr is determined by io.S source code
 
 core:run(0)
-
 Test.expect(1, caught)
+
+core:run(0)
+Test.expect(2, caught)
 
