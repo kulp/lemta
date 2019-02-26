@@ -37,7 +37,7 @@ function make_watchpoint(kind, io_addr, break_pc)
 end
 
 make_watchpoint("BP_WATCH_READ" , 12, 32) -- arbitrary I/O addr is determined by io.S source code
-make_watchpoint("BP_WATCH_WRITE", 14, 38) -- arbitrary I/O addr is determined by io.S source code
+make_watchpoint("BP_WATCH_WRITE", 14, 40) -- arbitrary I/O addr is determined by io.S source code
 
 core:run(0)
 Test.expect(1, caught)
