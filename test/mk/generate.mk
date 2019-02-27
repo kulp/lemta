@@ -16,7 +16,7 @@ check-$1-$2: $(LUA_TESTS:%=check-$1-$2-%)
 $(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % | $$(IMPL)
 	$$(if $$(FORCE_SKIP)$$(SKIP-$$(LIB_STEM)-$$(MCU)-$$<),\
 	    $$(warning Target $$@ fails and has been disabled pending investigation),\
-	    $$(LUAJIT) $$< ./$$| $$(LIB) $$(MCU))
+	    $$(LUAJIT) $$< ./$$| "$$(LIB)" "$$(MCU)")
 
 vars: mk-gen/vars-$1-$2.mk
 mk-gen/vars-$1-$2.mk: LIB_STEM = $1
