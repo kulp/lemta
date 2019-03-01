@@ -56,6 +56,7 @@ Proto.Model.create = function(_, libstem, name)
     local lib = ffi.load(libstem)
     local self = lib.model_ctor(name)
     self._lib = lib
+    self._impl = impl
     self._ver = lib.model_api_ver()
     return ffi.gc(self, self._lib.model_dtor)
 end
