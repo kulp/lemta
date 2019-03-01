@@ -90,7 +90,8 @@ FILES_clean += *.strings.cc
 
 %.so: CXXFLAGS += -fPIC
 %.so: LDFLAGS += -shared
-$(IMPL): impl.interface.hh.cc header.interface.hh.h.strings.cc $(TYPES:%=methods.%.txt.strings.cc) | interface.hh
+$(IMPL): CPPFLAGS += -I../include
+$(IMPL): shim.cc impl.interface.hh.cc header.interface.hh.h.strings.cc $(TYPES:%=methods.%.txt.strings.cc) | interface.hh
 	$(LINK.cc) -include $| -o $@ $^
 
 check-%-call: check-%-call-rhs.txt
