@@ -33,7 +33,7 @@ bp.handler = function(core, bp)
     Test.expect(1, bp.hitcount)
     Test.expect(nonce, ffi.cast("int*", bp.userdata)[0])
     -- break_pc apparently does not get set for a watch
-    Test.expect(0, bp.unknown0) -- we do not know what this is for, but let us catch it if it changes
+    Test.expect(-1, bp.unknown0) -- we do not know what this is for, but let us catch it if it changes
     return "BR_CONTINUE"
 end
 local id = core:addBreakpoint(bp)

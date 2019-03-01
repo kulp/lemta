@@ -120,8 +120,9 @@ Proto.Core.addStepCallback = function(self, cb)
     return self:_addStepCallback(cb, nil)
 end
 
-Proto.Core.createBreakpoint = function(_, fields)
-    local bp = ffi.new("Breakpoint")
+ffi.cdef[[Breakpoint * Breakpoint__ctor(Breakpoint *self);]]
+Proto.Core.createBreakpoint = function(self, fields)
+    local bp = self:getModel()._impl.Breakpoint__ctor(ffi.new("Breakpoint"))
     for k, v in pairs(fields or {}) do
         bp[k] = v
     end
