@@ -41,6 +41,10 @@ ifeq ($(findstring clean,$(MAKECMDGOALS)),)
 include $(LIB_LIST:%=mk-gen/check-lib-%.mk)
 endif
 
+ifneq (4, $(MAKE_VERSION:4.%=4))
+    $(error This Makefile uses features that require Make 4.x)
+endif
+
 # The use of $(file ...) here requires Make version 4+
 $(LIB_LIST:%=mk-gen/check-lib-%.mk): mk-gen/check-lib-%.mk: | mk-gen
 	$(file >$@,$(call check_lib_1,$*))
