@@ -1,8 +1,8 @@
-$(MCU_LIST:%=%-cases/break.lua): break.hex
-$(MCU_LIST:%=%-cases/break.lua): sum.hex
-$(MCU_LIST:%=%-cases/watch.lua): rw.hex
-$(MCU_LIST:%=%-cases/io.lua): io.hex
-$(MCU_LIST:%=%-cases/io.lua): FORCE_SKIP = 1
+$(MCU_LIST:%=check-%-cases/break.lua): break.hex
+$(MCU_LIST:%=check-%-cases/break.lua): sum.hex
+$(MCU_LIST:%=check-%-cases/watch.lua): rw.hex
+$(MCU_LIST:%=check-%-cases/io.lua): io.hex
+$(MCU_LIST:%=check-%-cases/io.lua): FORCE_SKIP = 1
 
 # Only a few combinations currently work with io.S
 check-attiny10-ATtiny10-cases/io.lua: FORCE_SKIP =#off

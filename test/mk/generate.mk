@@ -11,7 +11,7 @@ define check_lib_2
 check-$1: check-$1-$2
 check-$1-$2 check-$1-$2-%: MCU = $2
 
-MCU_LIST += check-$1-$2
+MCU_LIST += $1-$2
 check-$1-$2: $(LUA_TESTS:%=check-$1-$2-%)
 $(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % | $$(IMPL)
 	$$(if $$(FORCE_SKIP)$$(SKIP-$$(LIB_STEM)-$$(MCU)-$$<),\
