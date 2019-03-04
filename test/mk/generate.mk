@@ -13,16 +13,16 @@ check-$1-$2 check-$1-$2-%: MCU = $2
 
 MCU_LIST += $1-$2
 check-$1-$2: $(LUA_TESTS:%=check-$1-$2-%)
-$(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % | $$(IMPL)
+$(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % $$(IMPL)
 	$$(if $$(FORCE_SKIP)$$(SKIP-$$(LIB_STEM)-$$(MCU)-$$<),\
 	    $$(warning Target $$@ fails and has been disabled pending investigation),\
-	    $$(LUAJIT) $$< ./$$| "$$(LIB)" "$$(MCU)")
+	    $$(LUAJIT) $$< "./$$(IMPL)" "$$(LIB)" "$$(MCU)")
 
 vars: mk-gen/vars-$1-$2.mk
 mk-gen/vars-$1-$2.mk: LIB_STEM = $1
 
-mk-gen/vars-$1-$2.mk: lua/suss.lua | $$(IMPL) mk-gen
-	$$(LUAJIT) $$< ./$$(firstword $$|) "$$(LIB)" "$2" 2> /dev/null | grep = > $$@
+mk-gen/vars-$1-$2.mk: lua/suss.lua $$(IMPL) | mk-gen
+	$$(LUAJIT) $$< "./$$(IMPL)" "$$(LIB)" "$2" 2> /dev/null | grep = > $$@
 
 $(foreach t,$(TYPES),$(call check_lib_3,$1,$2,$t))
 endef

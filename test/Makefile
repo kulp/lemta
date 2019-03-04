@@ -91,8 +91,8 @@ FILES_clean += *.strings.cc
 %.so: CXXFLAGS += -fPIC
 %.so: LDFLAGS += -shared
 $(IMPL): CPPFLAGS += -I../include
-$(IMPL): shim.cc impl.interface.hh.cc header.interface.hh.h.strings.cc $(TYPES:%=methods.%.txt.strings.cc) | interface.hh
-	$(LINK.cc) -include $| -o $@ $^
+$(IMPL): interface.hh shim.cc impl.interface.hh.cc header.interface.hh.h.strings.cc $(TYPES:%=methods.%.txt.strings.cc)
+	$(LINK.cc) -include $(filter %.hh,$^) -o $@ $^
 
 check-%-call: check-%-call-rhs.txt
 	diff --brief $^
