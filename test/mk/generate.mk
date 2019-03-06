@@ -31,7 +31,6 @@ define check_lib_3
 
 check-$1-$2: check-$1-$2-$3-call
 check-$1-$2-$3: check-$1-$2-$3-call
-check-$1-$2-$3-call: TYPE = $3
 check-$1-$2-$3-call: methods.$3.txt
 
 endef
@@ -49,4 +48,4 @@ endif
 $(LIB_LIST:%=mk-gen/check-lib-%.mk): mk-gen/check-lib-%.mk: | mk-gen
 	$(file >$@,$(call check_lib_1,$*))
 
-
+$(foreach t,$(TYPES),$(eval check-%-$t-call: TYPE = $t))
