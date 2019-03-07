@@ -2,6 +2,7 @@ define check_lib_1
 
 check: check-$1
 check-$1 check-$1-%: LIB_STEM = $1
+mk-gen/vars-$1-%.mk: LIB_STEM = $1
 
 $(foreach m,$(call MCU_NAMES,$1),$(call check_lib_2,$1,$m))
 endef
@@ -19,7 +20,6 @@ $$(LUA_TESTS:%=check-$1-$2-%): check-$1-$2-%: % $$(IMPL)
 	    $$(LUAJIT) $$< "./$$(IMPL)" "$$(LIB)" "$$(MCU)")
 
 vars: mk-gen/vars-$1-$2.mk
-mk-gen/vars-$1-$2.mk: LIB_STEM = $1
 
 mk-gen/vars-$1-$2.mk: lua/suss.lua $$(IMPL) | mk-gen
 	$$(LUAJIT) $$< "./$$(IMPL)" "$$(LIB)" "$2" 2> /dev/null | grep = > $$@
