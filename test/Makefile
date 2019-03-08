@@ -31,6 +31,7 @@ LUA_TESTS = $(wildcard cases/*.lua)
 # Target config
 IMPL = libimpl.so
 TARGETS = call $(IMPL)
+FILES_clean += $(TARGETS)
 
 UNPACKED = unpacked
 LIB_DIR = simulator/linux64
@@ -118,7 +119,7 @@ unpack-%: packs/%.atpack | $(UNPACKED)
 
 FILES_clean += mk-gen/vars-*.mk
 clean:
-	$(RM) $(TARGETS) *.o $(FILES_clean)
+	$(RM) *.o $(FILES_clean)
 	-rmdir mk-gen/
 
 distclean: clean
