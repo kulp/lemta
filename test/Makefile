@@ -120,7 +120,7 @@ unpack-%: packs/%.atpack | $(UNPACKED)
 FILES_clean += mk-gen/vars-*.mk
 clean:
 	$(RM) *.o $(FILES_clean)
-	-rmdir mk-gen/
+	-rmdir mk-gen
 
 distclean: clean
 	$(RM) -r $(FILES_distclean)
