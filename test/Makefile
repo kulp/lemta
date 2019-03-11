@@ -34,6 +34,7 @@ TARGETS = call $(IMPL)
 FILES_clean += $(TARGETS)
 
 UNPACKED = unpacked
+PACKED = packs
 LIB_DIR = simulator/linux64
 LIB_STEM = $(error LIB_STEM must be set)
 LIB_LIST = $(patsubst lib%.so,%,$(notdir $(wildcard $(UNPACKED)/$(LIB_DIR)/libat*.so)))
@@ -104,17 +105,17 @@ check-%-call-rhs.txt: call
 
 check-%.lua mk-gen/vars-%.mk: export LUA_PATH := $(LUA_PATH);;lua/?.lua;../lua/?.lua
 
-FILES_distclean += packs/
-packs/%.atpack: | packs
+FILES_distclean += $(PACKED)
+$(PACKED)/%.atpack: | $(PACKED)
 	$(CURL) --continue-at - --output $@ $(PACKS_URL_BASE)$(@F)
 
-.PRECIOUS: $(PACKS:%=packs/%)
-.SECONDARY: $(PACKS:%=packs/%)
-packs $(UNPACKED) mk-gen:
+.PRECIOUS: $(PACKS:%=$(PACKED)/%)
+.SECONDARY: $(PACKS:%=$(PACKED)/%)
+$(PACKED) $(UNPACKED) mk-gen:
 	-mkdir $@
 unpack: $(PACKS:%.atpack=unpack-%) | $(UNPACKED)
 FILES_distclean += $(UNPACKED)/
-unpack-%: packs/%.atpack | $(UNPACKED)
+unpack-%: $(PACKED)/%.atpack | $(UNPACKED)
 	unzip -qq -n -d $| $< '$(LIB_DIR)/*.so' '*.pdsc' '*.atdf'
 
 FILES_clean += mk-gen/vars-*.mk
