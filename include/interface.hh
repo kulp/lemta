@@ -63,7 +63,7 @@ struct Breakpoint
     Segment segment;
     BPtype type;
     Address watch_base_addr; // return value of dpiCheckWatchHit
-    int dword0;    // output from third param of dpiCheckWatchHit
+    int dword0;              // output from third param of dpiCheckWatchHit
     // 4 bytes padding @ offset 0x34 = 52
     Address break_pc; // program counter of most recent breakpoint hit
     unsigned int hitcount;

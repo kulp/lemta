@@ -2,8 +2,7 @@
 
 #include <new> /* for placement new */
 
-extern "C" Breakpoint * Breakpoint__ctor(Breakpoint *self)
+extern "C" Breakpoint *Breakpoint__ctor(Breakpoint *self)
 {
     return new (self) Breakpoint();
 }
-
