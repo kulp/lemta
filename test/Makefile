@@ -42,11 +42,16 @@ LIB = $(UNPACKED)/$(LIB_DIR)/lib$(LIB_STEM).so
 
 QUOTED_STRINGS = sed 's/[^"]*"\([^"]*\)"/\1\n/g'
 
+XMLLINT = xmllint
+ifeq ($(shell which $(XMLLINT) 2> /dev/null),)
+$(error Need xmllint -- set XMLLINT (currently '$(XMLLINT)'))
+endif
+
 # For now we use the win32 library stem instead of the linux64 library stem
 # because the .pdsc files at the time of this writing erroneously fail to
 # mention some .so files even though they exist, whereas they mention the .dll
 # files that also exist.
-MCU_NAMES = $(shell xmllint $(UNPACKED)/*.pdsc --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.win32"][@value="simulator/win32/lib$1.dll"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | $(QUOTED_STRINGS))
+MCU_NAMES = $(shell $(XMLLINT) $(UNPACKED)/*.pdsc --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.win32"][@value="simulator/win32/lib$1.dll"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | $(QUOTED_STRINGS))
 
 FILES_distclean += packs.mk
 include packs.mk
@@ -69,7 +74,7 @@ model.%.xml: %
 FILES_clean += methods.*.txt
 .INTERMEDIATE: $(TYPES:%=methods.%.txt)
 methods.%.txt: model.interface.hh.xml
-	xmllint --xpath '//Method[@context=string(//Class[@name="$*"]/@id) and @access="public"]/@name' $< | $(QUOTED_STRINGS) > $@
+	$(XMLLINT) --xpath '//Method[@context=string(//Class[@name="$*"]/@id) and @access="public"]/@name' $< | $(QUOTED_STRINGS) > $@
 
 FILES_clean += methods.*.xi
 methods.%.xi: methods.%.txt
