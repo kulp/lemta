@@ -4,7 +4,7 @@
 // TODO enumerate reset types and determine meanings
 enum ResetType
 {
-    RT_TYPE_0 = 0,
+    RT_TYPE_0 = 0
 };
 
 enum BPtype
@@ -26,7 +26,7 @@ enum Segment
     SEG_REGS = 3,
 
     SEG_FUSES = 5,
-    SEG_TYPE_6 = 6,
+    SEG_TYPE_6 = 6
 };
 
 enum RegisterSpecial
@@ -36,14 +36,14 @@ enum RegisterSpecial
     REG_SP = 0x102,       // 2 bytes wide
     REG_SREG = 0x103,     // 1 byte wide
     REG_CYCLES = 0x104,   // 8 bytes wide
-    REG_LIFETIME = 0x105, // 8 bytes wide
+    REG_LIFETIME = 0x105  // 8 bytes wide
 };
 
 enum BreakResult
 {
     BR_CONTINUE = 0,
     BR_TYPE_1 = 1,
-    BR_TYPE_2 = 2,
+    BR_TYPE_2 = 2
 };
 
 class Core;
