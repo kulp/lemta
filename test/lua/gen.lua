@@ -106,11 +106,13 @@ for _, enum in ipairs(enums) do
     local children = enum:children()
     if #children > 0 then
         header:write("typedef enum " .. name .. " { ")
-        for _, val in ipairs(children) do
+        for i, val in ipairs(children) do
             local init = val:get_attribute("init")
-            header:write(val:get_attribute("name") .. (init and " = " .. init or "") .. ", ")
+            local comma = ""
+            if i ~= 1 then comma = ", " end
+            header:write(comma .. val:get_attribute("name") .. (init and " = " .. init or ""))
         end
-        header:write("} " .. name .. ";\n")
+        header:write(" } " .. name .. ";\n")
     else
         header:write("typedef int " .. name .. ";\n")
     end
