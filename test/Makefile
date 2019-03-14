@@ -6,7 +6,7 @@
 CPPFLAGS += -Wall -Wextra -Werror -pedantic-errors
 
 CXXFLAGS += -O3
-CXXFLAGS += -std=c++11
+CXXFLAGS += -std=c++03
 CXXFLAGS += -Wold-style-cast -Wno-unknown-warning-option
 
 # by default we link using the C++ linker
@@ -62,6 +62,7 @@ include mk/avr.mk
 all: $(TARGETS)
 
 call: LDLIBS += -ldl
+call.o: CXXFLAGS += -std=c++11
 call.o: CPPFLAGS += -I../include -I.
 call.o: CXXFLAGS += -Wno-cast-function-type # this is the whole point of `call`
 call.o: interface.hh dynamic.hh
