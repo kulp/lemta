@@ -7,7 +7,7 @@ PACK_TYPES=(ATautomotive ATmega ATtiny XMEGA)
 
 mkdir -p packs
 curl --output packs/index.html "$PACKS_URL_BASE"
-xmllint --html --xpath //button/@data-link packs/index.html |
+xmllint --nowarning --html --xpath //button/@data-link packs/index.html |
     sed 's/[^"]*"\([^"]*\)"/\1\n/g' |
     grep --fixed-strings ${PACK_TYPES[@]/#/-e } |
     sort --reverse --field-separator=. --key=1,2 --unique |
