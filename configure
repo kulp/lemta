@@ -5,12 +5,20 @@ echo "Configuring within $PWD"
 export PACKS_URL_BASE=http://packs.download.atmel.com/
 PACK_TYPES=(ATautomotive ATmega ATtiny XMEGA)
 
+temp=$(mktemp)
+trap "rm '$temp'" EXIT
+
 mkdir -p packs
 curl --output packs/index.html "$PACKS_URL_BASE"
 xmllint --nowarning --html --xpath //button/@data-link packs/index.html |
     sed 's/[^"]*"\([^"]*\)"/\1\n/g' |
     grep --fixed-strings ${PACK_TYPES[@]/#/-e } |
-    sort --reverse --field-separator=. --key=1,2 --unique |
-    sed 's/^/PACKS += /' > packs.mk
+    sort --reverse --version-sort --unique |
+    tee $temp |
+    cut --delimiter=. --fields=2 |
+    sort --unique |
+    xargs --max-args=1 -I{} grep --max-count=1 --fixed-strings {} $temp |
+    sed 's/^/PACKS += /' |
+    cat > packs.mk
 
 make --environment-overrides --always-make unpack
