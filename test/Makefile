@@ -6,7 +6,7 @@
 CPPFLAGS += -Wall -Wextra -Werror -pedantic-errors
 
 CXXFLAGS += -O3
-CXXFLAGS += -std=c++03
+CXXFLAGS += -ansi -Wno-unused-command-line-argument
 CXXFLAGS += -Wold-style-cast -Wno-unknown-warning-option
 
 # by default we link using the C++ linker
