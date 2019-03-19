@@ -8,6 +8,7 @@ CPPFLAGS += -Wall -Wextra -Werror -pedantic-errors
 CXXFLAGS += -O3
 CXXFLAGS += -ansi -Wno-unused-command-line-argument
 CXXFLAGS += -Wold-style-cast -Wno-unknown-warning-option
+CXXFLAGS += -Wc++11-compat -Wc++14-compat
 
 # by default we link using the C++ linker
 LINK.o = $(LINK.cc)
