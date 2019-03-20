@@ -37,7 +37,10 @@ function elaborate_type(doc, id, inner)
         elseif name == "Class" or name == "Struct" then
             return t:get_attribute("name") .. pad(inner)
         elseif name == "CvQualifiedType" then
-            return elaborate_type(doc, typ, "const" .. pad(inner))
+            local quals = {}
+            if t:get_attribute("const"   ) then quals[#quals + 1] = "const"    end
+            if t:get_attribute("volatile") then quals[#quals + 1] = "volatile" end
+            return elaborate_type(doc, typ, table.concat(quals, " ") .. pad(inner))
         elseif name == "ArrayType" then
             local min = tonumber(t:get_attribute("min"))
             local max = tonumber(t:get_attribute("max"))
