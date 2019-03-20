@@ -30,13 +30,14 @@ function elaborate_type(doc, id, inner)
     for i, t in ipairs(t) do
         local name = t:name()
         local typ = t:get_attribute("type")
+        local function pad(inner) return string.len(inner) > 0 and (" " .. inner) or inner end
 
         if name == "FundamentalType" then
-            return t:get_attribute("name") .. " " .. inner
+            return t:get_attribute("name") .. pad(inner)
         elseif name == "Class" or name == "Struct" then
-            return t:get_attribute("name") .. " " .. inner
+            return t:get_attribute("name") .. pad(inner)
         elseif name == "CvQualifiedType" then
-            return elaborate_type(doc, typ, "const" .. inner)
+            return elaborate_type(doc, typ, "const" .. pad(inner))
         elseif name == "ArrayType" then
             local min = tonumber(t:get_attribute("min"))
             local max = tonumber(t:get_attribute("max"))
@@ -49,9 +50,9 @@ function elaborate_type(doc, id, inner)
         elseif name == "Typedef" or name == "ElaboratedType" then
             return elaborate_type(doc, typ, inner)
         elseif name == "Enumeration" then
-            return t:get_attribute("name") .. " " .. inner
+            return t:get_attribute("name") .. pad(inner)
         elseif name == "FunctionType" then
-            local start = elaborate_type(doc, t:get_attribute("returns")) .. "(" .. inner .. ") ("
+            local start = elaborate_type(doc, t:get_attribute("returns")) .. " (" .. inner .. ")("
             local first = true
             for i, arg in ipairs(t:children()) do
                 if not first then
@@ -75,7 +76,7 @@ function make_c_decl(fh, class, meth)
     local class_name = class:get_attribute("name")
     fh:write(elaborate_type(document, meth:get_attribute("returns"), class_name .. "__" .. meth:get_attribute("name")))
     fh:write("(")
-    fh:write(class_name .. "*")
+    fh:write(class_name .. " *")
     for k, arg in ipairs(meth:children()) do
         local typ = arg:get_attribute("type")
         fh:write(", " .. elaborate_type(document, typ))
@@ -89,7 +90,7 @@ function make_cpp_defn(fh, class, meth)
     fh:write('extern "C" ')
     fh:write(elaborate_type(document, meth:get_attribute("returns"), class_name .. "__" .. method_name))
     fh:write("(")
-    fh:write(class_name .. "* _this")
+    fh:write(class_name .. " * _this")
     local args = {}
     for k, arg in ipairs(meth:children()) do
         local typ = arg:get_attribute("type")
