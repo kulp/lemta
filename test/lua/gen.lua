@@ -93,7 +93,7 @@ function make_cpp_defn(fh, class, meth)
     fh:write('extern "C" ')
     fh:write(elaborate_type(document, meth:get_attribute("returns"), class_name .. "__" .. method_name))
     fh:write("(")
-    fh:write(class_name .. " * _this")
+    fh:write(class_name .. " *_this")
     local args = {}
     for k, arg in ipairs(meth:children()) do
         local typ = arg:get_attribute("type")
