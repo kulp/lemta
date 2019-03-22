@@ -90,7 +90,6 @@ end
 function make_cpp_defn(fh, class, meth)
     local class_name = class:get_attribute("name")
     local method_name = meth:get_attribute("name")
-    fh:write('extern "C" ')
     fh:write(elaborate_type(document, meth:get_attribute("returns"), class_name .. "__" .. method_name))
     fh:write("(")
     fh:write(class_name .. " *_this")
@@ -143,6 +142,8 @@ for i, struct in ipairs(structs) do
     end
 end
 
+impl:write('extern "C" {\n')
+
 for i, class in ipairs(classes) do
     if class.members then
         for v in string.gmatch(class.members, "%S+") do
@@ -154,3 +155,5 @@ for i, class in ipairs(classes) do
         end
     end
 end
+
+impl:write("}\n")
