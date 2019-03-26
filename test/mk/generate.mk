@@ -1,3 +1,9 @@
+# For now we use the win32 library stem instead of the linux64 library stem
+# because the .pdsc files at the time of this writing erroneously fail to
+# mention some .so files even though they exist, whereas they mention the .dll
+# files that also exist.
+MCU_NAMES = $(shell $(XMLLINT) $(UNPACKED)/*.pdsc --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.win32"][@value="simulator/win32/lib$1.dll"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | $(QUOTED_STRINGS))
+
 define check_lib_1
 
 check: check-$1
