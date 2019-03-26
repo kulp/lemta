@@ -4,7 +4,7 @@
 # files that also exist.
 FILES_clean += mk-gen/mcus-*.mk
 mk-gen/mcus-%.mk: $(UNPACKED)/*.pdsc | mk-gen
-	$(XMLLINT) $^ --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.win32"][@value="simulator/win32/lib$*.dll"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | grep --only-matching '"[^"]*"' | sed 's/^/MCU_NAMES_$* += /; s/"//g' > $@
+	grep --files-with-matches "$*" $^ | xargs $(XMLLINT) --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.win32"][@value="simulator/win32/lib$*.dll"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' | grep --only-matching '"[^"]*"' | sed 's/^/MCU_NAMES_$* += /; s/"//g' > $@
 
 define check_lib_1
 
