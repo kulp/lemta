@@ -2,7 +2,9 @@
 # because the .pdsc files at the time of this writing erroneously fail to
 # mention some .so files even though they exist, whereas they mention the .dll
 # files that also exist.
-MCU_NAMES = $(shell $(XMLLINT) $(UNPACKED)/*.pdsc --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.win32"][@value="simulator/win32/lib$1.dll"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | $(QUOTED_STRINGS))
+FILES_clean += mk-gen/mcus-*.mk
+mk-gen/mcus-%.mk: $(UNPACKED)/*.pdsc | mk-gen
+	$(XMLLINT) $^ --xpath '//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.model.win32"][@value="simulator/win32/lib$*.dll"]/ancestor::device//*[local-name()="property"][@name="com.atmel.avrdbg.tool.simulator.key"]/@value' 2> /dev/null | grep --only-matching '"[^"]*"' | sed 's/^/MCU_NAMES_$* += /; s/"//g' > $@
 
 define check_lib_1
 
@@ -10,7 +12,7 @@ check: check-$1
 check-$1 check-$1-%: LIB_STEM = $1
 mk-gen/vars-$1-%.mk: LIB_STEM = $1
 
-$(foreach m,$(call MCU_NAMES,$1),$(call check_lib_2,$1,$m))
+$(foreach m,$(MCU_NAMES_$1),$(call check_lib_2,$1,$m))
 endef
 
 define check_lib_2
@@ -44,6 +46,7 @@ endef
 FILES_clean += mk-gen/check-lib-*.mk
 ifeq ($(findstring clean,$(MAKECMDGOALS)),)
 include $(LIB_LIST:%=mk-gen/check-lib-%.mk)
+include $(LIB_LIST:%=mk-gen/mcus-%.mk)
 endif
 
 ifneq (4, $(MAKE_VERSION:4.%=4))
