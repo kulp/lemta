@@ -41,7 +41,7 @@ LIB_STEM = $(error LIB_STEM must be set)
 LIB_LIST = $(patsubst lib%.so,%,$(notdir $(wildcard $(UNPACKED)/$(LIB_DIR)/libat*.so)))
 LIB = $(UNPACKED)/$(LIB_DIR)/lib$(LIB_STEM).so
 
-QUOTED_STRINGS = sed 's/[^"]*"\([^"]*\)"/\1\n/g'
+QUOTED_STRINGS = grep --only-matching '"[^"]*"' | tr -d '"'
 
 XMLLINT = xmllint
 ifeq ($(shell which $(XMLLINT) 2> /dev/null),)
