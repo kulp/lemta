@@ -5,7 +5,13 @@
 # and C compilation0
 CPPFLAGS += -Wall -Wextra -Werror -pedantic-errors
 
+ifeq ($(DEBUG),)
 CXXFLAGS += -O3
+else
+CXXFLAGS += -g
+LDFLAGS  += -g
+endif
+
 CXXFLAGS += -std=c++98
 CXXFLAGS += -Wold-style-cast -Wno-unknown-warning-option
 CXXFLAGS += -Wc++11-compat -Wc++14-compat
