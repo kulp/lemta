@@ -39,5 +39,8 @@ PROPS_OVERRIDE_TARGETS += check-attinyxg-ATmega1608-cases/props.lua
 PROPS_OVERRIDE_TARGETS += check-attinyxg-ATmega1609-cases/props.lua
 PROPS_OVERRIDE_TARGETS += check-attinyxg-ATmega808-cases/props.lua
 PROPS_OVERRIDE_TARGETS += check-attinyxg-ATmega809-cases/props.lua
+PROPS_OVERRIDE_TARGETS += check-attinyxh-ATtiny1624-cases/props.lua
+PROPS_OVERRIDE_TARGETS += check-attinyxh-ATtiny1626-cases/props.lua
+PROPS_OVERRIDE_TARGETS += check-attinyxh-ATtiny1627-cases/props.lua
 
 $(PROPS_OVERRIDE_TARGETS): export SKIP_MODEL_PROP_CHECK = 1
