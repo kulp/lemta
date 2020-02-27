@@ -23,6 +23,9 @@ DATA_TARGETS += check-attinyxe-ATmega3209-cases/segments.lua
 DATA_TARGETS += check-attinyxe-ATmega4809-cases/segments.lua
 DATA_TARGETS += check-attinyxe-ATmega4808-cases/segments.lua
 DATA_TARGETS += check-atmegaapb-ATMEGA48PB-cases/segments.lua
+DATA_TARGETS += check-attinyxh-ATtiny1624-cases/segments.lua
+DATA_TARGETS += check-attinyxh-ATtiny1626-cases/segments.lua
+DATA_TARGETS += check-attinyxh-ATtiny1627-cases/segments.lua
 
 $(DATA_TARGETS): export SKIP_UPPER_BOUND_CHECK_SEGMENT_SEG_DATA = 1
 
