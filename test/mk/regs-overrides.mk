@@ -39,3 +39,6 @@ export SKIP-attinyxg-ATmega1608-cases/memregs.lua = 1
 export SKIP-attinyxg-ATmega1609-cases/memregs.lua = 1
 export SKIP-attinyxg-ATmega808-cases/memregs.lua = 1
 export SKIP-attinyxg-ATmega809-cases/memregs.lua = 1
+export SKIP-attinyxh-ATtiny1624-cases/memregs.lua = 1
+export SKIP-attinyxh-ATtiny1626-cases/memregs.lua = 1
+export SKIP-attinyxh-ATtiny1627-cases/memregs.lua = 1
