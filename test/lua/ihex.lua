@@ -1,6 +1,6 @@
 function dehex(str)
     local result = ""
-    for group in string.gfind(str, "%x%x") do
+    for group in string.gmatch(str, "%x%x") do
         result = result .. string.char(tonumber(group, 16))
     end
     return result
