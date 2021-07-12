@@ -2,6 +2,7 @@ name: CI
 
 env:
   CASTXML_TARBALL_URL: https://data.kitware.com/api/v1/file/5b6c5b4d8d777f06857c323b/download
+  CARBON_MEM_DISABLE: 1
 
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
