@@ -18,8 +18,7 @@ simulator needs to use in order to provide its simulation functionality).
 As of this writing, the project consists essentially of the partially-inferred
 interface heaers in `include/` and a few testbench programs in `test/`. Run
 `make -C test check` from the top level to run self-tests. The test suite is
-run as a "build" on Travis: [![Build
-Status](https://travis-ci.org/kulp/lemta.svg?branch=master)](https://travis-ci.org/kulp/lemta)
+run as [a "build" on GitHub Actions][1]: ![CI Status][2]
 
 A primordial [LuaJIT](http://luajit.org)-based interface is present in `lua/`.
 LuaJIT (as opposed to [Lua](http://www.lua.org)) is specifically required
@@ -34,3 +33,6 @@ well).
 The testbenches use [CastXML](https://github.com/CastXML/CastXML) and
 [xmllint](http://xmlsoft.org/xmllint.html) to extract information from the
 inferred interface headers.
+
+[1]: https://github.com/kulp/lemta/actions/workflows/simple.yaml
+[2]: https://github.com/kulp/lemta/actions/workflows/simple.yaml/badge.svg
