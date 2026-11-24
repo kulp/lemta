@@ -34,5 +34,10 @@ The testbenches use [CastXML](https://github.com/CastXML/CastXML) and
 [xmllint](http://xmlsoft.org/xmllint.html) to extract information from the
 inferred interface headers.
 
+`test/packs.mk` pins the packs that the tests and the skip-lists were cut
+against, so `make test` downloads them and needs nothing else; run
+`./configure` when you want to move to the newest pack of each family, and
+commit the diff it produces.
+
 [1]: https://github.com/kulp/lemta/actions/workflows/simple.yaml
 [2]: https://github.com/kulp/lemta/actions/workflows/simple.yaml/badge.svg

@@ -54,7 +54,6 @@ ifeq ($(shell which $(XMLLINT) 2> /dev/null),)
 $(error Need xmllint -- set XMLLINT (currently '$(XMLLINT)'))
 endif
 
-FILES_distclean += packs.mk
 include packs.mk
 include mk/generate.mk
 include $(wildcard mk/*-overrides.mk)

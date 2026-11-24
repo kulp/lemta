@@ -1,7 +1,6 @@
 name: CI
 
 env:
-  CASTXML_TARBALL_URL: https://data.kitware.com/api/v1/file/5b6c5b4d8d777f06857c323b/download
   CARBON_MEM_DISABLE: 1
 
 on:
@@ -22,15 +21,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Install needed packages
         run: |
-          sudo apt install libxml2-utils avr-libc gcc-avr luajit luarocks
+          sudo apt install libxml2-utils libxml2-dev avr-libc gcc-avr luajit castxml luarocks
           luarocks install --local xmlua
-      - name: Install a recent CastXML
-        run: |
-          curl --retry 2 "$CASTXML_TARBALL_URL" | tar --directory=/tmp --extract --gunzip
-          echo /tmp/castxml/bin >> $GITHUB_PATH
       - name: Download packs
         run: ./configure
       - name: Run tests

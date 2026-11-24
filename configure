@@ -10,8 +10,13 @@ trap "rm '$temp'" EXIT
 
 mkdir -p packs
 curl --output packs/index.html "$PACKS_URL_BASE"
-xmllint --nowarning --html --xpath //button/@data-link packs/index.html |
-    sed 's/[^"]*"\([^"]*\)"/\1\n/g' |
+# packs.mk is checked in, so date the regenerated copy: a stale pin is then
+# obvious from version control rather than from a failed test run.
+echo "# Newest pack per family as of $(date -u +%F), regenerate with ./configure" > packs.mk
+# The packs index lists each download as a plain anchor, so keep only the
+# .atpack hrefs: the page also links to per-pack anchors and product pages.
+xmllint --nowarning --html --xpath '//a/@href[contains(.,".atpack")]' packs/index.html |
+    sed 's/[^"]*"\([^"]*\)"/\1/g' |
     grep --fixed-strings ${PACK_TYPES[@]/#/-e } |
     sort --reverse --version-sort --unique |
     tee $temp |
@@ -19,6 +24,6 @@ xmllint --nowarning --html --xpath //button/@data-link packs/index.html |
     sort --unique |
     xargs --max-args=1 -I{} grep --max-count=1 --fixed-strings {} $temp |
     sed 's/^/PACKS += /' |
-    cat > packs.mk
+    cat >> packs.mk
 
 make --environment-overrides --always-make unpack

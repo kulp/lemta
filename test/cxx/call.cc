@@ -25,7 +25,7 @@ struct CallSite
     intptr_t pc;
 
     template <typename _>
-    CallSite<T>(_ T::*in)
+    CallSite(_ T::*in)
         : holder(reinterpret_cast<Type>(in))
         , pc(0)
     {
