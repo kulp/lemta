@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Install needed packages
         run: |
           sudo apt install libxml2-utils libxml2-dev avr-libc gcc-avr luajit castxml luarocks
